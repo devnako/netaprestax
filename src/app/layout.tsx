@@ -19,6 +19,9 @@ export const metadata: Metadata = {
     "micro-entreprise",
     "freelance",
   ],
+  icons: {
+    icon: "/icon.svg",
+  },
 };
 
 export default function RootLayout({
