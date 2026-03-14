@@ -2,18 +2,26 @@
 
 import { resetPassword } from "@/lib/auth-client";
 import Link from "next/link";
-import { useState } from "react";
+import { useSearchParams } from "next/navigation";
+import { useState, Suspense } from "react";
 
-export default function ResetPasswordPage() {
+function ResetPasswordForm() {
+  const searchParams = useSearchParams();
+  const token = searchParams.get("token");
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState<string | null>(null);
+  const [error, setError] = useState<string | null>(token ? null : "Lien invalide ou expiré");
   const [done, setDone] = useState(false);
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
+
+    if (!token) {
+      setError("Lien invalide ou expiré");
+      return;
+    }
 
     if (password.length < 8) {
       setError("Le mot de passe doit faire au moins 8 caractères");
@@ -29,6 +37,7 @@ export default function ResetPasswordPage() {
 
     const result = await resetPassword({
       newPassword: password,
+      token,
     });
 
     if (result.error) {
@@ -111,5 +120,13 @@ export default function ResetPasswordPage() {
         </button>
       </form>
     </>
+  );
+}
+
+export default function ResetPasswordPage() {
+  return (
+    <Suspense fallback={<p className="text-muted-foreground">Chargement...</p>}>
+      <ResetPasswordForm />
+    </Suspense>
   );
 }
