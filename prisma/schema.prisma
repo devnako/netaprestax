@@ -1,0 +1,151 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// ==========================================
+// Auth (Better Auth)
+// ==========================================
+
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique
+  name          String?
+  emailVerified Boolean   @default(false)
+  image         String?
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  sessions Session[]
+  accounts Account[]
+  profile  FiscalProfile?
+  revenues Revenue[]
+  expenses Expense[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  ipAddress String?
+  userAgent String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Account {
+  id                    String    @id @default(cuid())
+  userId                String
+  accountId             String
+  providerId            String
+  accessToken           String?
+  refreshToken          String?
+  accessTokenExpiresAt  DateTime?
+  refreshTokenExpiresAt DateTime?
+  scope                 String?
+  idToken               String?
+  password              String?
+  createdAt             DateTime  @default(now())
+  updatedAt             DateTime  @updatedAt
+  user                  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Verification {
+  id         String   @id @default(cuid())
+  identifier String
+  value      String
+  expiresAt  DateTime
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+}
+
+// ==========================================
+// Domain Models
+// ==========================================
+
+model FiscalProfile {
+  id                   String               @id @default(cuid())
+  userId               String               @unique
+  activityType         ActivityType
+  versementLiberatoire Boolean
+  declarationFrequency DeclarationFrequency
+  tvaAssujetti         Boolean              @default(false)
+  acre                 Boolean              @default(false)
+  acreDateDebut        DateTime?
+  situationFamiliale   SituationFamiliale?
+  enfantsACharge       Int                  @default(0)
+  createdAt            DateTime             @default(now())
+  updatedAt            DateTime             @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Revenue {
+  id          String   @id @default(cuid())
+  userId      String
+  amount      Decimal  @db.Decimal(10, 2)
+  month       Int
+  year        Int
+  description String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, month, year])
+  @@index([userId, year])
+}
+
+model Expense {
+  id        String          @id @default(cuid())
+  userId    String
+  amount    Decimal         @db.Decimal(10, 2)
+  category  ExpenseCategory
+  label     String
+  month     Int
+  year      Int
+  createdAt DateTime        @default(now())
+  updatedAt DateTime        @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, month, year])
+}
+
+// ==========================================
+// Enums
+// ==========================================
+
+enum ActivityType {
+  BIC_VENTE
+  BIC_PRESTATION
+  BNC_LIBERAL_URSSAF
+  BNC_LIBERAL_CIPAV
+}
+
+enum DeclarationFrequency {
+  MENSUELLE
+  TRIMESTRIELLE
+}
+
+enum SituationFamiliale {
+  CELIBATAIRE
+  EN_COUPLE
+}
+
+enum ExpenseCategory {
+  LOGICIEL
+  TRANSPORT
+  MATERIEL
+  TELEPHONE
+  BUREAU
+  FORMATION
+  ASSURANCE
+  AUTRE
+}
