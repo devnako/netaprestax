@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2 } from "lucide-react";
+import { CheckCircle2, User } from "lucide-react";
+import { useSession, updateUser, changePassword } from "@/lib/auth-client";
 
 type ActivityType = "BIC_VENTE" | "BIC_PRESTATION" | "BNC_LIBERAL_URSSAF" | "BNC_LIBERAL_CIPAV";
 type DeclarationFrequency = "MENSUELLE" | "TRIMESTRIELLE";
@@ -27,11 +28,29 @@ const ACTIVITY_OPTIONS = [
 
 export default function SettingsPage() {
   const router = useRouter();
+  const { data: session } = useSession();
   const [profile, setProfile] = useState<ProfileData | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [saved, setSaved] = useState(false);
+
+  // User profile state
+  const [name, setName] = useState("");
+  const [savingName, setSavingName] = useState(false);
+  const [nameSaved, setNameSaved] = useState(false);
+
+  // Password state
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [savingPassword, setSavingPassword] = useState(false);
+  const [passwordError, setPasswordError] = useState<string | null>(null);
+  const [passwordSaved, setPasswordSaved] = useState(false);
+
+  useEffect(() => {
+    if (session?.user?.name) setName(session.user.name);
+  }, [session]);
 
   const loadProfile = useCallback(async () => {
     const res = await fetch("/api/settings");
@@ -79,12 +98,141 @@ export default function SettingsPage() {
     return <p className="text-muted-foreground">Profil non trouvé.</p>;
   }
 
+  const handleNameSave = async () => {
+    setSavingName(true);
+    await updateUser({ name });
+    setSavingName(false);
+    setNameSaved(true);
+    setTimeout(() => setNameSaved(false), 3000);
+  };
+
+  const handlePasswordChange = async () => {
+    setPasswordError(null);
+    if (newPassword.length < 8) {
+      setPasswordError("Le mot de passe doit faire au moins 8 caractères");
+      return;
+    }
+    if (newPassword !== confirmPassword) {
+      setPasswordError("Les mots de passe ne correspondent pas");
+      return;
+    }
+    setSavingPassword(true);
+    const result = await changePassword({
+      currentPassword,
+      newPassword,
+      revokeOtherSessions: false,
+    });
+    if (result.error) {
+      setPasswordError(result.error.message ?? "Mot de passe actuel incorrect");
+      setSavingPassword(false);
+      return;
+    }
+    setSavingPassword(false);
+    setPasswordSaved(true);
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
+    setTimeout(() => setPasswordSaved(false), 3000);
+  };
+
   return (
     <div>
       <h1 className="text-2xl font-bold text-foreground">Paramètres</h1>
-      <p className="mt-2 text-muted-foreground">
-        Modifie ton profil fiscal. Les calculs seront mis à jour automatiquement.
-      </p>
+
+      {/* User Profile Section */}
+      <section className="mt-6 max-w-lg">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+          <User className="h-5 w-5" />
+          Mon compte
+        </h2>
+
+        <div className="mt-4 space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-foreground">Email</label>
+            <p className="mt-1 rounded-lg border border-border bg-muted px-4 py-2.5 text-sm text-muted-foreground">
+              {session?.user?.email ?? "—"}
+            </p>
+          </div>
+
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-foreground">Nom</label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button
+              onClick={handleNameSave}
+              disabled={savingName}
+              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            >
+              {savingName ? "Enregistrement..." : "Modifier le nom"}
+            </button>
+            {nameSaved && (
+              <span className="flex items-center gap-1 text-sm text-accent">
+                <CheckCircle2 className="h-4 w-4" /> Enregistré
+              </span>
+            )}
+          </div>
+        </div>
+
+        {/* Password Change */}
+        <div className="mt-6 space-y-4 border-t border-border pt-6">
+          <h3 className="text-sm font-semibold text-foreground">Changer le mot de passe</h3>
+
+          {passwordError && (
+            <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+              {passwordError}
+            </div>
+          )}
+          {passwordSaved && (
+            <div className="flex items-center gap-2 rounded-lg bg-accent/10 p-3 text-sm text-accent">
+              <CheckCircle2 className="h-4 w-4" /> Mot de passe modifié
+            </div>
+          )}
+
+          <input
+            type="password"
+            placeholder="Mot de passe actuel"
+            value={currentPassword}
+            onChange={(e) => setCurrentPassword(e.target.value)}
+            className="block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            type="password"
+            placeholder="Nouveau mot de passe (8 car. min)"
+            value={newPassword}
+            onChange={(e) => setNewPassword(e.target.value)}
+            className="block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <input
+            type="password"
+            placeholder="Confirmer le nouveau mot de passe"
+            value={confirmPassword}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+            className="block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+          />
+          <button
+            onClick={handlePasswordChange}
+            disabled={savingPassword || !currentPassword || !newPassword}
+            className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+          >
+            {savingPassword ? "Modification..." : "Changer le mot de passe"}
+          </button>
+        </div>
+      </section>
+
+      {/* Fiscal Profile Section */}
+      <section className="mt-10 max-w-lg border-t border-border pt-6">
+        <h2 className="text-lg font-semibold text-foreground">Profil fiscal</h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Modifie ton profil fiscal. Les calculs seront mis à jour automatiquement.
+        </p>
 
       {error && (
         <div className="mt-4 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
@@ -99,7 +247,7 @@ export default function SettingsPage() {
         </div>
       )}
 
-      <div className="mt-6 max-w-lg space-y-6">
+      <div className="mt-4 space-y-6">
         {/* Activity Type */}
         <div>
           <label className="block text-sm font-medium text-foreground">
@@ -249,6 +397,7 @@ export default function SettingsPage() {
           {saving ? "Enregistrement..." : "Enregistrer les modifications"}
         </button>
       </div>
+      </section>
     </div>
   );
 }
