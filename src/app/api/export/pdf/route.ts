@@ -131,10 +131,16 @@ export async function GET(request: NextRequest) {
     .summary-card strong { display: block; font-size: 20px; margin-top: 4px; }
     .summary-card.accent strong { color: #16a34a; }
     .footer { margin-top: 40px; padding-top: 16px; border-top: 1px solid #e5e7eb; font-size: 11px; color: #9ca3af; }
-    @media print { body { padding: 20px; } }
+    .print-bar { position: fixed; top: 0; left: 0; right: 0; background: #2563eb; color: white; padding: 12px 24px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; z-index: 100; }
+    .print-bar button { background: white; color: #2563eb; border: none; padding: 8px 20px; border-radius: 6px; font-weight: 600; cursor: pointer; }
+    @media print { body { padding: 20px; } .print-bar { display: none; } }
   </style>
 </head>
-<body>
+<body style="padding-top: 60px;">
+  <div class="print-bar">
+    <span>Enregistre en PDF via la boîte de dialogue</span>
+    <button onclick="window.print()">Enregistrer en PDF</button>
+  </div>
   <h1>NetAprèsTax</h1>
   <p class="subtitle">Récapitulatif annuel ${year} — ${session.user.name || session.user.email}</p>
 

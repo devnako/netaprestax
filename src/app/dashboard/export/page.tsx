@@ -23,19 +23,8 @@ export default function ExportPage() {
     setLoadingCSV(false);
   };
 
-  const handlePDF = async () => {
-    setLoadingPDF(true);
-    const res = await fetch(`/api/export/pdf?year=${year}`);
-    if (res.ok) {
-      const blob = await res.blob();
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = `netaprestax-${year}.pdf`;
-      a.click();
-      URL.revokeObjectURL(url);
-    }
-    setLoadingPDF(false);
+  const handlePDF = () => {
+    window.open(`/api/export/pdf?year=${year}`, "_blank");
   };
 
   return (
