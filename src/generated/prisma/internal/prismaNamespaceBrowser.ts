@@ -57,7 +57,8 @@ export const ModelName = {
   Verification: 'Verification',
   FiscalProfile: 'FiscalProfile',
   Revenue: 'Revenue',
-  Expense: 'Expense'
+  Expense: 'Expense',
+  AlertLog: 'AlertLog'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -179,6 +180,17 @@ export const ExpenseScalarFieldEnum = {
 } as const
 
 export type ExpenseScalarFieldEnum = (typeof ExpenseScalarFieldEnum)[keyof typeof ExpenseScalarFieldEnum]
+
+
+export const AlertLogScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  alertType: 'alertType',
+  year: 'year',
+  sentAt: 'sentAt'
+} as const
+
+export type AlertLogScalarFieldEnum = (typeof AlertLogScalarFieldEnum)[keyof typeof AlertLogScalarFieldEnum]
 
 
 export const SortOrder = {

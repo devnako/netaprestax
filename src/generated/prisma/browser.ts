@@ -52,3 +52,8 @@ export type Revenue = Prisma.RevenueModel
  * 
  */
 export type Expense = Prisma.ExpenseModel
+/**
+ * Model AlertLog
+ * 
+ */
+export type AlertLog = Prisma.AlertLogModel

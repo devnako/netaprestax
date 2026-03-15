@@ -35,6 +35,17 @@ export const SituationFamiliale = {
 export type SituationFamiliale = (typeof SituationFamiliale)[keyof typeof SituationFamiliale]
 
 
+export const AlertType = {
+  SEUIL_75: 'SEUIL_75',
+  SEUIL_90: 'SEUIL_90',
+  SEUIL_100: 'SEUIL_100',
+  TVA_APPROCHE: 'TVA_APPROCHE',
+  TVA_DEPASSE: 'TVA_DEPASSE'
+} as const
+
+export type AlertType = (typeof AlertType)[keyof typeof AlertType]
+
+
 export const ExpenseCategory = {
   LOGICIEL: 'LOGICIEL',
   TRANSPORT: 'TRANSPORT',
