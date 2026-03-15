@@ -20,6 +20,7 @@ export interface CalculInput {
   ca: number;
   fraisReels: number;
   profile: FiscalProfile;
+  referenceDate?: Date;
 }
 
 export interface CalculResult {

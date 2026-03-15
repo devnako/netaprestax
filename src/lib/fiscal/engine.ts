@@ -50,19 +50,53 @@ export function calculerIRBaremeProgressif(
 }
 
 /**
+ * Calcule la date de fin d'ACRE à partir de la date de création.
+ * L'ACRE dure 4 trimestres civils : le trimestre de création + les 3 suivants.
+ */
+export function getAcreEndDate(dateCreation: Date): Date {
+  const month = dateCreation.getMonth(); // 0-indexed
+  const year = dateCreation.getFullYear();
+  const quarterStartMonth = Math.floor(month / 3) * 3; // 0, 3, 6, 9
+  // Fin du 4e trimestre = dernier jour du mois (quarterStart + 11)
+  return new Date(year, quarterStartMonth + 12, 0);
+}
+
+/**
+ * Vérifie si l'ACRE est encore active à une date donnée.
+ */
+export function isAcreActive(
+  acre: boolean,
+  acreDateDebut?: Date | null,
+  referenceDate?: Date
+): boolean {
+  if (!acre || !acreDateDebut) return false;
+  const endDate = getAcreEndDate(acreDateDebut);
+  const now = referenceDate ?? new Date();
+  return now <= endDate;
+}
+
+/**
  * Détermine le taux de cotisations applicable (avec ou sans ACRE).
+ * Prend en compte l'expiration automatique de l'ACRE.
  */
 export function getTauxCotisations(
   tauxNormal: number,
   acre: boolean,
-  acreDateDebut?: Date | null
+  acreDateDebut?: Date | null,
+  referenceDate?: Date
 ): number {
   if (!acre) return tauxNormal;
 
-  if (acreDateDebut && acreDateDebut < ACRE_REFORM_DATE) {
-    return tauxNormal * (1 - ACRE_REDUCTION_BEFORE_JULY_2026);
+  // Si on a une date, vérifier que l'ACRE est encore active
+  if (acreDateDebut) {
+    if (!isAcreActive(acre, acreDateDebut, referenceDate)) return tauxNormal;
+    if (acreDateDebut < ACRE_REFORM_DATE) {
+      return tauxNormal * (1 - ACRE_REDUCTION_BEFORE_JULY_2026);
+    }
+    return tauxNormal * (1 - ACRE_REDUCTION_AFTER_JULY_2026);
   }
 
+  // Sans date : applique le nouveau régime (backward compat)
   return tauxNormal * (1 - ACRE_REDUCTION_AFTER_JULY_2026);
 }
 
@@ -70,12 +104,12 @@ export function getTauxCotisations(
  * Moteur principal de calcul du revenu net réel.
  */
 export function calculerNetReel(input: CalculInput): CalculResult {
-  const { ca, fraisReels, profile } = input;
+  const { ca, fraisReels, profile, referenceDate } = input;
   const { activityType, versementLiberatoire, acre, acreDateDebut } = profile;
 
   // 1. Cotisations sociales
   const tauxNormal = COTISATIONS_RATES[activityType];
-  const tauxCotisations = getTauxCotisations(tauxNormal, acre, acreDateDebut);
+  const tauxCotisations = getTauxCotisations(tauxNormal, acre, acreDateDebut, referenceDate);
   const cotisationsSociales = Math.round(ca * tauxCotisations * 100) / 100;
 
   // 2. CFP

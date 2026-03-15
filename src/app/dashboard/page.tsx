@@ -2,11 +2,11 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
-import { calculerNetReel } from "@/lib/fiscal/engine";
+import { calculerNetReel, isAcreActive, getAcreEndDate } from "@/lib/fiscal/engine";
 import { ACTIVITY_LABELS, SEUILS_CA } from "@/lib/fiscal/rates";
 import { formatCurrency, formatPercent } from "@/lib/utils";
 import type { FiscalProfile } from "@/lib/fiscal/types";
-import { Wallet, TrendingDown, PiggyBank, AlertTriangle } from "lucide-react";
+import { Wallet, TrendingDown, PiggyBank, AlertTriangle, Clock } from "lucide-react";
 
 export default async function DashboardPage() {
   const session = await auth.api.getSession({
@@ -140,6 +140,46 @@ export default async function DashboardPage() {
           {ACTIVITY_LABELS[profile.activityType as keyof typeof ACTIVITY_LABELS]}
         </p>
       </div>
+
+      {/* ACRE Banner */}
+      {profile.acre && profile.acreDateDebut && (() => {
+        const dateDebut = new Date(profile.acreDateDebut);
+        const dateFin = getAcreEndDate(dateDebut);
+        const active = isAcreActive(true, dateDebut);
+        const reformDate = new Date("2026-07-01");
+        const reduction = dateDebut < reformDate ? "50 %" : "25 %";
+
+        if (active) {
+          const diffMs = dateFin.getTime() - now.getTime();
+          const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+          const diffMonths = Math.floor(diffDays / 30);
+          return (
+            <div className="flex items-center gap-3 rounded-xl border border-accent/30 bg-accent/5 px-4 py-3">
+              <Clock className="h-5 w-5 shrink-0 text-accent" />
+              <div className="text-sm">
+                <span className="font-medium text-accent">ACRE active</span>
+                <span className="text-muted-foreground">
+                  {" — "}cotisations réduites de {reduction} · encore{" "}
+                  {diffMonths > 0 ? `~${diffMonths} mois` : `${diffDays} jours`}
+                  {" "}(fin le {dateFin.toLocaleDateString("fr-FR")})
+                </span>
+              </div>
+            </div>
+          );
+        }
+
+        return (
+          <div className="flex items-center gap-3 rounded-xl border border-orange-300 bg-orange-50 px-4 py-3">
+            <AlertTriangle className="h-5 w-5 shrink-0 text-orange-500" />
+            <div className="text-sm">
+              <span className="font-medium text-orange-600">ACRE expirée</span>
+              <span className="text-muted-foreground">
+                {" — "}depuis le {dateFin.toLocaleDateString("fr-FR")}. Les taux normaux s&apos;appliquent.
+              </span>
+            </div>
+          </div>
+        );
+      })()}
 
       {ca === 0 ? (
         <div className="rounded-2xl border border-border bg-white p-8 text-center">

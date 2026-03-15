@@ -22,11 +22,14 @@ export async function POST(request: Request) {
     declarationFrequency,
     tvaAssujetti,
     acre,
+    acreDateDebut,
   } = body;
 
   if (!activityType || versementLiberatoire === null || !declarationFrequency || tvaAssujetti === null || acre === null) {
     return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
   }
+
+  const acreDate = acre && acreDateDebut ? new Date(acreDateDebut) : null;
 
   await prisma.fiscalProfile.upsert({
     where: { userId: session.user.id },
@@ -37,6 +40,7 @@ export async function POST(request: Request) {
       declarationFrequency,
       tvaAssujetti,
       acre,
+      acreDateDebut: acreDate,
       situationFamiliale: versementLiberatoire ? null : situationFamiliale || null,
       enfantsACharge: versementLiberatoire ? 0 : enfantsACharge,
     },
@@ -46,6 +50,7 @@ export async function POST(request: Request) {
       declarationFrequency,
       tvaAssujetti,
       acre,
+      acreDateDebut: acreDate,
       situationFamiliale: versementLiberatoire ? null : situationFamiliale || null,
       enfantsACharge: versementLiberatoire ? 0 : enfantsACharge,
     },

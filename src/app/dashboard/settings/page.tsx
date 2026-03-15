@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, User } from "lucide-react";
+import { CheckCircle2, User, Clock, AlertTriangle } from "lucide-react";
 import { useSession, updateUser, changePassword } from "@/lib/auth-client";
+import { getAcreEndDate, isAcreActive } from "@/lib/fiscal/engine";
 
 type ActivityType = "BIC_VENTE" | "BIC_PRESTATION" | "BNC_LIBERAL_URSSAF" | "BNC_LIBERAL_CIPAV";
 type DeclarationFrequency = "MENSUELLE" | "TRIMESTRIELLE";
@@ -15,6 +16,7 @@ interface ProfileData {
   declarationFrequency: DeclarationFrequency;
   tvaAssujetti: boolean;
   acre: boolean;
+  acreDateDebut: string | null;
   situationFamiliale: SituationFamiliale | null;
   enfantsACharge: number;
 }
@@ -377,7 +379,7 @@ export default function SettingsPage() {
           <div className="mt-2 flex gap-4">
             <RadioButton
               selected={profile.acre === false}
-              onClick={() => setProfile({ ...profile, acre: false })}
+              onClick={() => setProfile({ ...profile, acre: false, acreDateDebut: null })}
               label="Non"
             />
             <RadioButton
@@ -386,6 +388,71 @@ export default function SettingsPage() {
               label="Oui"
             />
           </div>
+
+          {profile.acre && (
+            <div className="mt-3 space-y-3 rounded-lg bg-muted p-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground">
+                  Date de création de l&apos;entreprise
+                </label>
+                <p className="mt-0.5 text-xs text-muted-foreground">
+                  L&apos;ACRE dure 4 trimestres civils à partir de cette date.
+                </p>
+                <input
+                  type="date"
+                  value={profile.acreDateDebut ? profile.acreDateDebut.slice(0, 10) : ""}
+                  onChange={(e) =>
+                    setProfile({ ...profile, acreDateDebut: e.target.value || null })
+                  }
+                  className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                />
+              </div>
+
+              {profile.acreDateDebut && (() => {
+                const dateDebut = new Date(profile.acreDateDebut);
+                const dateFin = getAcreEndDate(dateDebut);
+                const active = isAcreActive(true, dateDebut);
+                const reformDate = new Date("2026-07-01");
+                const reduction = dateDebut < reformDate ? "50 %" : "25 %";
+
+                return (
+                  <div className={`rounded-lg border p-3 ${
+                    active
+                      ? "border-accent/30 bg-accent/5"
+                      : "border-orange-300 bg-orange-50"
+                  }`}>
+                    <div className="flex items-center gap-2">
+                      {active ? (
+                        <Clock className="h-4 w-4 text-accent" />
+                      ) : (
+                        <AlertTriangle className="h-4 w-4 text-orange-500" />
+                      )}
+                      <span className={`text-sm font-medium ${active ? "text-accent" : "text-orange-600"}`}>
+                        {active ? "ACRE active" : "ACRE expirée"}
+                      </span>
+                    </div>
+                    <div className="mt-2 space-y-1 text-xs text-muted-foreground">
+                      <p>Réduction : {reduction} sur les cotisations sociales</p>
+                      <p>Fin de l&apos;ACRE : {dateFin.toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" })}</p>
+                      {active && (() => {
+                        const now = new Date();
+                        const diffMs = dateFin.getTime() - now.getTime();
+                        const diffDays = Math.ceil(diffMs / (1000 * 60 * 60 * 24));
+                        const diffMonths = Math.floor(diffDays / 30);
+                        return (
+                          <p className="font-medium text-foreground">
+                            {diffMonths > 0
+                              ? `Encore ~${diffMonths} mois (${diffDays} jours)`
+                              : `Plus que ${diffDays} jours`}
+                          </p>
+                        );
+                      })()}
+                    </div>
+                  </div>
+                );
+              })()}
+            </div>
+          )}
         </div>
 
         {/* Save */}

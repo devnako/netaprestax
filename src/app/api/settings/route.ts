@@ -26,6 +26,7 @@ export async function GET() {
     declarationFrequency: profile.declarationFrequency,
     tvaAssujetti: profile.tvaAssujetti,
     acre: profile.acre,
+    acreDateDebut: profile.acreDateDebut,
     situationFamiliale: profile.situationFamiliale,
     enfantsACharge: profile.enfantsACharge,
   });

@@ -4,6 +4,8 @@ import {
   calculerPartsFiscales,
   calculerIRBaremeProgressif,
   getTauxCotisations,
+  getAcreEndDate,
+  isAcreActive,
 } from "../engine";
 
 // ==========================================
@@ -83,22 +85,78 @@ describe("calculerIRBaremeProgressif", () => {
 // Tests ACRE
 // ==========================================
 
+describe("getAcreEndDate", () => {
+  it("création en Q1 (janvier) → fin le 31 décembre", () => {
+    const end = getAcreEndDate(new Date("2026-01-15"));
+    expect(end.getFullYear()).toBe(2026);
+    expect(end.getMonth()).toBe(11); // décembre
+    expect(end.getDate()).toBe(31);
+  });
+
+  it("création en Q2 (avril) → fin le 31 mars suivant", () => {
+    const end = getAcreEndDate(new Date("2026-04-01"));
+    expect(end.getFullYear()).toBe(2027);
+    expect(end.getMonth()).toBe(2); // mars
+    expect(end.getDate()).toBe(31);
+  });
+
+  it("création en Q3 (juillet) → fin le 30 juin suivant", () => {
+    const end = getAcreEndDate(new Date("2026-07-15"));
+    expect(end.getFullYear()).toBe(2027);
+    expect(end.getMonth()).toBe(5); // juin
+    expect(end.getDate()).toBe(30);
+  });
+
+  it("création en Q4 (octobre) → fin le 30 septembre suivant", () => {
+    const end = getAcreEndDate(new Date("2026-10-01"));
+    expect(end.getFullYear()).toBe(2027);
+    expect(end.getMonth()).toBe(8); // septembre
+    expect(end.getDate()).toBe(30);
+  });
+});
+
+describe("isAcreActive", () => {
+  it("active pendant la période", () => {
+    expect(isAcreActive(true, new Date("2026-03-01"), new Date("2026-06-15"))).toBe(true);
+  });
+
+  it("expirée après la période", () => {
+    expect(isAcreActive(true, new Date("2026-01-01"), new Date("2027-01-01"))).toBe(false);
+  });
+
+  it("false si acre=false", () => {
+    expect(isAcreActive(false, new Date("2026-03-01"), new Date("2026-06-15"))).toBe(false);
+  });
+
+  it("false si pas de date", () => {
+    expect(isAcreActive(true, null, new Date("2026-06-15"))).toBe(false);
+  });
+});
+
 describe("getTauxCotisations", () => {
   it("sans ACRE = taux normal", () => {
     expect(getTauxCotisations(0.212, false)).toBe(0.212);
   });
 
-  it("ACRE avant juillet 2026 = -50%", () => {
+  it("ACRE avant juillet 2026 et encore active = -50%", () => {
     const date = new Date("2026-03-01");
-    expect(getTauxCotisations(0.212, true, date)).toBeCloseTo(0.106);
+    const ref = new Date("2026-06-15");
+    expect(getTauxCotisations(0.212, true, date, ref)).toBeCloseTo(0.106);
   });
 
-  it("ACRE après juillet 2026 = -25%", () => {
+  it("ACRE après juillet 2026 et encore active = -25%", () => {
     const date = new Date("2026-08-01");
-    expect(getTauxCotisations(0.212, true, date)).toBeCloseTo(0.159);
+    const ref = new Date("2026-10-15");
+    expect(getTauxCotisations(0.212, true, date, ref)).toBeCloseTo(0.159);
   });
 
-  it("ACRE sans date = -25% (nouveau régime)", () => {
+  it("ACRE expirée = taux normal", () => {
+    const date = new Date("2025-01-15");
+    const ref = new Date("2026-03-01");
+    expect(getTauxCotisations(0.212, true, date, ref)).toBe(0.212);
+  });
+
+  it("ACRE sans date = -25% (backward compat)", () => {
     expect(getTauxCotisations(0.212, true, null)).toBeCloseTo(0.159);
   });
 });
@@ -214,6 +272,7 @@ describe("calculerNetReel", () => {
     const result = calculerNetReel({
       ca: 3000,
       fraisReels: 0,
+      referenceDate: new Date("2026-06-01"),
       profile: {
         activityType: "BIC_PRESTATION",
         versementLiberatoire: true,

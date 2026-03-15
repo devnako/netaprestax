@@ -16,6 +16,7 @@ interface OnboardingData {
   declarationFrequency: DeclarationFrequency | "";
   tvaAssujetti: boolean | null;
   acre: boolean | null;
+  acreDateDebut: string | null;
 }
 
 const STEPS = [
@@ -38,6 +39,7 @@ export default function OnboardingPage() {
     declarationFrequency: "",
     tvaAssujetti: null,
     acre: null,
+    acreDateDebut: null,
   });
 
   const canNext = () => {
@@ -272,7 +274,7 @@ export default function OnboardingPage() {
               <div className="mt-3 space-y-3">
                 <RadioOption
                   selected={data.acre === false}
-                  onClick={() => setData({ ...data, acre: false })}
+                  onClick={() => setData({ ...data, acre: false, acreDateDebut: null })}
                   label="Non"
                   description="Taux de cotisations normal"
                 />
@@ -280,9 +282,28 @@ export default function OnboardingPage() {
                   selected={data.acre === true}
                   onClick={() => setData({ ...data, acre: true })}
                   label="Oui"
-                  description="Taux réduits pendant 4 trimestres"
+                  description="Taux réduits pendant 4 trimestres civils"
                 />
               </div>
+
+              {data.acre === true && (
+                <div className="mt-3 rounded-lg bg-muted p-4">
+                  <label className="block text-sm font-medium text-foreground">
+                    Date de création de ton entreprise
+                  </label>
+                  <p className="mt-0.5 text-xs text-muted-foreground">
+                    Nécessaire pour calculer la durée exacte de ton ACRE.
+                  </p>
+                  <input
+                    type="date"
+                    value={data.acreDateDebut ?? ""}
+                    onChange={(e) =>
+                      setData({ ...data, acreDateDebut: e.target.value || null })
+                    }
+                    className="mt-2 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  />
+                </div>
+              )}
             </div>
           </div>
         )}
