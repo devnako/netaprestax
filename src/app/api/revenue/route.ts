@@ -19,14 +19,24 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Mois et année requis" }, { status: 400 });
   }
 
-  const revenues = await prisma.revenue.findMany({
-    where: { userId: session.user.id, month, year },
-    orderBy: { createdAt: "desc" },
-  });
+  const [revenues, profile] = await Promise.all([
+    prisma.revenue.findMany({
+      where: { userId: session.user.id, month, year },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.fiscalProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { activityType: true },
+    }),
+  ]);
 
   const total = revenues.reduce((sum, r) => sum + Number(r.amount), 0);
 
-  return NextResponse.json({ revenues, total });
+  return NextResponse.json({
+    revenues,
+    total,
+    defaultActivityType: profile?.activityType ?? null,
+  });
 }
 
 export async function POST(request: Request) {
@@ -38,7 +48,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
   }
 
-  const { amount, month, year, description } = await request.json();
+  const { amount, month, year, description, activityType } = await request.json();
 
   if (!amount || !month || !year) {
     return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
@@ -55,6 +65,7 @@ export async function POST(request: Request) {
       month,
       year,
       description,
+      activityType: activityType || null,
     },
   });
 

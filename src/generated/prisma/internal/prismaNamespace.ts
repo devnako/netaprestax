@@ -1125,6 +1125,7 @@ export const RevenueScalarFieldEnum = {
   month: 'month',
   year: 'year',
   description: 'description',
+  activityType: 'activityType',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

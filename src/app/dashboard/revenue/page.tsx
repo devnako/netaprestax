@@ -7,8 +7,16 @@ interface RevenueEntry {
   id: string;
   amount: string;
   description: string | null;
+  activityType: string | null;
   createdAt: string;
 }
+
+const ACTIVITY_OPTIONS = [
+  { value: "BIC_VENTE", label: "Vente de marchandises", short: "Vente" },
+  { value: "BIC_PRESTATION", label: "Prestation de services (BIC)", short: "Prestation BIC" },
+  { value: "BNC_LIBERAL_URSSAF", label: "Activité libérale — URSSAF", short: "Libéral URSSAF" },
+  { value: "BNC_LIBERAL_CIPAV", label: "Activité libérale — CIPAV", short: "Libéral CIPAV" },
+];
 
 function formatEuro(value: number) {
   return new Intl.NumberFormat("fr-FR", {
@@ -30,9 +38,11 @@ export default function RevenuePage() {
   const [entries, setEntries] = useState<RevenueEntry[]>([]);
   const [total, setTotal] = useState(0);
   const [loading, setLoading] = useState(true);
+  const [defaultActivityType, setDefaultActivityType] = useState<string>("BIC_PRESTATION");
 
   // Form
   const [amount, setAmount] = useState("");
+  const [activityType, setActivityType] = useState("");
   const [description, setDescription] = useState("");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -52,6 +62,10 @@ export default function RevenuePage() {
       const data = await res.json();
       setEntries(data.revenues);
       setTotal(data.total);
+      if (data.defaultActivityType) {
+        setDefaultActivityType(data.defaultActivityType);
+        if (!activityType) setActivityType(data.defaultActivityType);
+      }
     }
     setLoading(false);
   }, [month, year]);
@@ -91,6 +105,7 @@ export default function RevenuePage() {
         month,
         year,
         description: description || null,
+        activityType: activityType || defaultActivityType,
       }),
     });
 
@@ -103,6 +118,7 @@ export default function RevenuePage() {
 
     setAmount("");
     setDescription("");
+    setActivityType(defaultActivityType);
     setSaving(false);
     loadRevenues();
   };
@@ -257,16 +273,23 @@ export default function RevenuePage() {
 
           <form onSubmit={handleAdd} className="mt-4 space-y-3">
             <div className="flex gap-3">
-              <div className="flex-1">
-                <input
-                  type="text"
-                  placeholder="Description (ex: Mission client X)"
-                  value={description}
-                  onChange={(e) => setDescription(e.target.value)}
-                  className="block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-                />
-              </div>
-              <div className="relative w-36">
+              <select
+                value={activityType || defaultActivityType}
+                onChange={(e) => setActivityType(e.target.value)}
+                className="w-44 shrink-0 rounded-lg border border-border px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              >
+                {ACTIVITY_OPTIONS.map((opt) => (
+                  <option key={opt.value} value={opt.value}>{opt.short}</option>
+                ))}
+              </select>
+              <input
+                type="text"
+                placeholder="Description (ex: Mission client X)"
+                value={description}
+                onChange={(e) => setDescription(e.target.value)}
+                className="flex-1 rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+              <div className="relative w-32 shrink-0">
                 <input
                   type="number"
                   step="0.01"
@@ -275,7 +298,7 @@ export default function RevenuePage() {
                   value={amount}
                   onChange={(e) => setAmount(e.target.value)}
                   required
-                  className="block w-full rounded-lg border border-border px-4 py-2.5 pr-8 text-right font-semibold text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                  className="block w-full rounded-lg border border-border px-3 py-2.5 pr-8 text-right font-semibold text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">€</span>
               </div>
@@ -314,6 +337,8 @@ export default function RevenuePage() {
                     {entry.description || "Revenu"}
                   </p>
                   <p className="text-xs text-muted-foreground">
+                    {ACTIVITY_OPTIONS.find((a) => a.value === (entry.activityType || defaultActivityType))?.short ?? "—"}
+                    {" · "}
                     {new Date(entry.createdAt).toLocaleDateString("fr-FR")}
                   </p>
                 </div>

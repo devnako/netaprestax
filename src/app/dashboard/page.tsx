@@ -54,7 +54,50 @@ export default async function DashboardPage() {
   const seuilCA = SEUILS_CA[profile.activityType as keyof typeof SEUILS_CA];
   const seuilPercent = Math.min((yearlyCA / seuilCA) * 100, 100);
 
-  const fiscalProfile: FiscalProfile = {
+  // Group revenues by activity type for accurate calculation
+  const revenuesByActivity = new Map<string, number>();
+  for (const rev of monthRevenues) {
+    const type = rev.activityType || profile.activityType;
+    revenuesByActivity.set(type, (revenuesByActivity.get(type) || 0) + Number(rev.amount));
+  }
+
+  // Calculate per activity type and sum results
+  let totalCotisations = 0;
+  let totalCFP = 0;
+  let totalIR = 0;
+  let mainTauxCotisations = 0;
+  let mainTauxCFP = 0;
+  let mainTauxIR: number | null = null;
+  let mainPartsFiscales = 1;
+  let mainRevenuImposable: number | null = null;
+
+  for (const [actType, actCA] of revenuesByActivity) {
+    const actProfile: FiscalProfile = {
+      activityType: actType as FiscalProfile["activityType"],
+      versementLiberatoire: profile.versementLiberatoire,
+      tvaAssujetti: profile.tvaAssujetti,
+      acre: profile.acre,
+      acreDateDebut: profile.acreDateDebut,
+      situationFamiliale: profile.situationFamiliale as FiscalProfile["situationFamiliale"],
+      enfantsACharge: profile.enfantsACharge,
+    };
+    const actResult = calculerNetReel({ ca: actCA, fraisReels: 0, profile: actProfile });
+    totalCotisations += actResult.cotisationsSociales;
+    totalCFP += actResult.cfp;
+    totalIR += actResult.impotRevenu;
+
+    // Use the largest activity's rates for display
+    if (actCA >= (revenuesByActivity.get(profile.activityType) || 0)) {
+      mainTauxCotisations = actResult.tauxCotisations;
+      mainTauxCFP = actResult.tauxCFP;
+      mainTauxIR = actResult.tauxIR;
+      mainPartsFiscales = actResult.partsFiscales;
+      mainRevenuImposable = actResult.revenuImposable;
+    }
+  }
+
+  // Fallback for single activity type
+  const defaultProfile: FiscalProfile = {
     activityType: profile.activityType as FiscalProfile["activityType"],
     versementLiberatoire: profile.versementLiberatoire,
     tvaAssujetti: profile.tvaAssujetti,
@@ -63,12 +106,23 @@ export default async function DashboardPage() {
     situationFamiliale: profile.situationFamiliale as FiscalProfile["situationFamiliale"],
     enfantsACharge: profile.enfantsACharge,
   };
+  const fallbackResult = calculerNetReel({ ca, fraisReels: totalFrais, profile: defaultProfile });
 
-  const result = calculerNetReel({
-    ca,
-    fraisReels: totalFrais,
-    profile: fiscalProfile,
-  });
+  const result = revenuesByActivity.size > 1
+    ? {
+        ca,
+        cotisationsSociales: totalCotisations,
+        cfp: totalCFP,
+        impotRevenu: totalIR,
+        fraisReels: totalFrais,
+        netReel: Math.round((ca - totalCotisations - totalCFP - totalIR - totalFrais) * 100) / 100,
+        tauxCotisations: mainTauxCotisations,
+        tauxCFP: mainTauxCFP,
+        tauxIR: mainTauxIR,
+        revenuImposable: mainRevenuImposable,
+        partsFiscales: mainPartsFiscales,
+      }
+    : fallbackResult;
 
   const monthNames = [
     "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
