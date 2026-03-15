@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator } from "lucide-react";
+import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download } from "lucide-react";
 import { SignOutButton } from "@/components/dashboard/sign-out-button";
 
 export default function DashboardLayout({
@@ -29,6 +29,7 @@ export default function DashboardLayout({
             <SidebarLink href="/dashboard/history" icon={<BarChart3 className="h-5 w-5" />} label="Historique" />
             <SidebarLink href="/dashboard/alerts" icon={<Bell className="h-5 w-5" />} label="Alertes" />
             <SidebarLink href="/dashboard/simulation" icon={<Calculator className="h-5 w-5" />} label="Simulation" />
+            <SidebarLink href="/dashboard/export" icon={<Download className="h-5 w-5" />} label="Exporter" />
             <SidebarLink href="/dashboard/settings" icon={<Settings className="h-5 w-5" />} label="Paramètres" />
           </nav>
         </aside>
