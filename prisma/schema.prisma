@@ -99,7 +99,7 @@ model Revenue {
 
   user User @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@unique([userId, month, year])
+  @@index([userId, month, year])
   @@index([userId, year])
 }
 

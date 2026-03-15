@@ -1,7 +1,33 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+
+export async function GET(request: NextRequest) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  }
+
+  const month = Number(request.nextUrl.searchParams.get("month"));
+  const year = Number(request.nextUrl.searchParams.get("year"));
+
+  if (!month || !year) {
+    return NextResponse.json({ error: "Mois et année requis" }, { status: 400 });
+  }
+
+  const revenues = await prisma.revenue.findMany({
+    where: { userId: session.user.id, month, year },
+    orderBy: { createdAt: "desc" },
+  });
+
+  const total = revenues.reduce((sum, r) => sum + Number(r.amount), 0);
+
+  return NextResponse.json({ revenues, total });
+}
 
 export async function POST(request: Request) {
   const session = await auth.api.getSession({
@@ -22,26 +48,41 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Le montant doit être positif" }, { status: 400 });
   }
 
-  const revenue = await prisma.revenue.upsert({
-    where: {
-      userId_month_year: {
-        userId: session.user.id,
-        month,
-        year,
-      },
-    },
-    create: {
+  const revenue = await prisma.revenue.create({
+    data: {
       userId: session.user.id,
       amount,
       month,
       year,
       description,
     },
-    update: {
-      amount,
-      description,
-    },
   });
 
   return NextResponse.json(revenue);
+}
+
+export async function DELETE(request: NextRequest) {
+  const session = await auth.api.getSession({
+    headers: await headers(),
+  });
+
+  if (!session) {
+    return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+  }
+
+  const id = request.nextUrl.searchParams.get("id");
+
+  if (!id) {
+    return NextResponse.json({ error: "ID requis" }, { status: 400 });
+  }
+
+  const revenue = await prisma.revenue.findUnique({ where: { id } });
+
+  if (!revenue || revenue.userId !== session.user.id) {
+    return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+  }
+
+  await prisma.revenue.delete({ where: { id } });
+
+  return NextResponse.json({ success: true });
 }

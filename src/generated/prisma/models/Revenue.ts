@@ -265,7 +265,6 @@ export type RevenueOrderByWithRelationInput = {
 
 export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   id?: string
-  userId_month_year?: Prisma.RevenueUserIdMonthYearCompoundUniqueInput
   AND?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
   OR?: Prisma.RevenueWhereInput[]
   NOT?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
@@ -277,7 +276,7 @@ export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "userId_month_year">
+}, "id">
 
 export type RevenueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -393,12 +392,6 @@ export type RevenueListRelationFilter = {
 
 export type RevenueOrderByRelationAggregateInput = {
   _count?: Prisma.SortOrder
-}
-
-export type RevenueUserIdMonthYearCompoundUniqueInput = {
-  userId: string
-  month: number
-  year: number
 }
 
 export type RevenueCountOrderByAggregateInput = {

@@ -25,14 +25,12 @@ export default async function DashboardPage() {
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
 
-  // Get current month revenue
-  const revenue = await prisma.revenue.findUnique({
+  // Get current month revenues (multiple entries)
+  const monthRevenues = await prisma.revenue.findMany({
     where: {
-      userId_month_year: {
-        userId: session.user.id,
-        month: currentMonth,
-        year: currentYear,
-      },
+      userId: session.user.id,
+      month: currentMonth,
+      year: currentYear,
     },
   });
 
@@ -51,7 +49,7 @@ export default async function DashboardPage() {
   });
 
   const totalFrais = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
-  const ca = revenue ? Number(revenue.amount) : 0;
+  const ca = monthRevenues.reduce((sum, r) => sum + Number(r.amount), 0);
   const yearlyCA = yearlyRevenues.reduce((sum, r) => sum + Number(r.amount), 0);
   const seuilCA = SEUILS_CA[profile.activityType as keyof typeof SEUILS_CA];
   const seuilPercent = Math.min((yearlyCA / seuilCA) * 100, 100);
