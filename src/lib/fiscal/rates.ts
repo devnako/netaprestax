@@ -84,8 +84,8 @@ export const SEUILS_CA: Record<ActivityType, number> = {
 // ==========================================
 
 export const ACTIVITY_LABELS: Record<ActivityType, string> = {
-  BIC_VENTE: "Vente de marchandises (BIC)",
+  BIC_VENTE: "Vente de marchandises",
   BIC_PRESTATION: "Prestation de services (BIC)",
-  BNC_LIBERAL_URSSAF: "Activité libérale - URSSAF (BNC)",
-  BNC_LIBERAL_CIPAV: "Activité libérale - CIPAV (BNC)",
+  BNC_LIBERAL_URSSAF: "Profession libérale (URSSAF)",
+  BNC_LIBERAL_CIPAV: "Profession libérale (CIPAV)",
 };

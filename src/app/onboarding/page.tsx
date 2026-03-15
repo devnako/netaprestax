@@ -133,13 +133,13 @@ export default function OnboardingPage() {
               <RadioOption
                 selected={data.activityType === "BNC_LIBERAL_URSSAF"}
                 onClick={() => setData({ ...data, activityType: "BNC_LIBERAL_URSSAF" })}
-                label="Activité libérale (URSSAF)"
+                label="Profession libérale (URSSAF)"
                 description="Consultant, développeur, coach — Taux : 25.6%"
               />
               <RadioOption
                 selected={data.activityType === "BNC_LIBERAL_CIPAV"}
                 onClick={() => setData({ ...data, activityType: "BNC_LIBERAL_CIPAV" })}
-                label="Activité libérale (CIPAV)"
+                label="Profession libérale (CIPAV)"
                 description="Architecte, psychologue, ingénieur conseil — Taux : 23.2%"
               />
             </div>

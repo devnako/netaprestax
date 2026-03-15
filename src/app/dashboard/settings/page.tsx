@@ -22,8 +22,8 @@ interface ProfileData {
 const ACTIVITY_OPTIONS = [
   { value: "BIC_VENTE", label: "Vente de marchandises", taux: "12.3%" },
   { value: "BIC_PRESTATION", label: "Prestation de services (BIC)", taux: "21.2%" },
-  { value: "BNC_LIBERAL_URSSAF", label: "Activité libérale — URSSAF (BNC)", taux: "25.6%" },
-  { value: "BNC_LIBERAL_CIPAV", label: "Activité libérale — CIPAV (BNC)", taux: "23.2%" },
+  { value: "BNC_LIBERAL_URSSAF", label: "Profession libérale (URSSAF)", taux: "25.6%" },
+  { value: "BNC_LIBERAL_CIPAV", label: "Profession libérale (CIPAV)", taux: "23.2%" },
 ];
 
 export default function SettingsPage() {

@@ -12,10 +12,10 @@ interface RevenueEntry {
 }
 
 const ACTIVITY_OPTIONS = [
-  { value: "BIC_VENTE", label: "Vente de marchandises", short: "Vente" },
-  { value: "BIC_PRESTATION", label: "Prestation de services (BIC)", short: "Prestation BIC" },
-  { value: "BNC_LIBERAL_URSSAF", label: "Activité libérale — URSSAF", short: "Libéral URSSAF" },
-  { value: "BNC_LIBERAL_CIPAV", label: "Activité libérale — CIPAV", short: "Libéral CIPAV" },
+  { value: "BIC_VENTE", label: "Vente de marchandises" },
+  { value: "BIC_PRESTATION", label: "Prestation de services (BIC)" },
+  { value: "BNC_LIBERAL_URSSAF", label: "Profession libérale (URSSAF)" },
+  { value: "BNC_LIBERAL_CIPAV", label: "Profession libérale (CIPAV)" },
 ];
 
 function formatEuro(value: number) {
@@ -276,10 +276,10 @@ export default function RevenuePage() {
               <select
                 value={activityType || defaultActivityType}
                 onChange={(e) => setActivityType(e.target.value)}
-                className="w-44 shrink-0 rounded-lg border border-border px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-56 shrink-0 rounded-lg border border-border px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               >
                 {ACTIVITY_OPTIONS.map((opt) => (
-                  <option key={opt.value} value={opt.value}>{opt.short}</option>
+                  <option key={opt.value} value={opt.value}>{opt.label}</option>
                 ))}
               </select>
               <input
@@ -337,7 +337,7 @@ export default function RevenuePage() {
                     {entry.description || "Revenu"}
                   </p>
                   <p className="text-xs text-muted-foreground">
-                    {ACTIVITY_OPTIONS.find((a) => a.value === (entry.activityType || defaultActivityType))?.short ?? "—"}
+                    {ACTIVITY_OPTIONS.find((a) => a.value === (entry.activityType || defaultActivityType))?.label ?? "—"}
                     {" · "}
                     {new Date(entry.createdAt).toLocaleDateString("fr-FR")}
                   </p>
