@@ -169,7 +169,16 @@ export async function PATCH(
       }),
     ]);
 
-    return NextResponse.json({ success: true, revenueCreated: true });
+    const updatedInvoice = await prisma.invoice.findUnique({
+      where: { id },
+      include: {
+        client: { select: { name: true } },
+        lines: { orderBy: { sortOrder: "asc" } },
+        quote: { select: { id: true, number: true } },
+      },
+    });
+
+    return NextResponse.json(updatedInvoice);
   }
 
   const updatedInvoice = await prisma.invoice.update({
@@ -183,4 +192,35 @@ export async function PATCH(
   });
 
   return NextResponse.json(updatedInvoice);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+
+  const { id } = await params;
+
+  const invoice = await prisma.invoice.findUnique({
+    where: { id },
+  });
+
+  if (!invoice || invoice.userId !== session.user.id) {
+    return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+  }
+
+  if (invoice.status !== "DRAFT") {
+    return NextResponse.json(
+      { error: "Seules les factures DRAFT peuvent être supprimées" },
+      { status: 400 }
+    );
+  }
+
+  await prisma.invoice.delete({
+    where: { id },
+  });
+
+  return NextResponse.json({ success: true });
 }

@@ -2,7 +2,9 @@
 
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { LineItemsEditor } from "@/components/invoicing/line-items-editor";
+import { Plus } from "lucide-react";
 
 interface Client {
   id: string;
@@ -30,6 +32,13 @@ export default function NewQuotePage() {
   const [tvaAssujetti, setTvaAssujetti] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [missingProfile, setMissingProfile] = useState(false);
+  const [showNewClient, setShowNewClient] = useState(false);
+  const [newClientName, setNewClientName] = useState("");
+  const [newClientEmail, setNewClientEmail] = useState("");
+  const [newClientPhone, setNewClientPhone] = useState("");
+  const [newClientAddress, setNewClientAddress] = useState("");
+  const [creatingClient, setCreatingClient] = useState(false);
 
   useEffect(() => {
     const loadInitialData = async () => {
@@ -46,6 +55,9 @@ export default function NewQuotePage() {
         if (settingsRes.ok) {
           const settings = await settingsRes.json();
           setTvaAssujetti(settings.tvaAssujetti || false);
+          if (!settings.siret || !settings.address) {
+            setMissingProfile(true);
+          }
         }
 
         const defaultDate = new Date();
@@ -58,6 +70,39 @@ export default function NewQuotePage() {
 
     loadInitialData();
   }, []);
+
+  const handleCreateClient = async () => {
+    if (!newClientName.trim()) return;
+    setCreatingClient(true);
+
+    try {
+      const res = await fetch("/api/clients", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          name: newClientName.trim(),
+          email: newClientEmail.trim() || null,
+          phone: newClientPhone.trim() || null,
+          address: newClientAddress.trim() || null,
+        }),
+      });
+
+      if (res.ok) {
+        const client = await res.json();
+        setClients((prev) => [...prev, client]);
+        setClientId(client.id);
+        setShowNewClient(false);
+        setNewClientName("");
+        setNewClientEmail("");
+        setNewClientPhone("");
+        setNewClientAddress("");
+      }
+    } catch {
+      setError("Erreur lors de la création du client");
+    } finally {
+      setCreatingClient(false);
+    }
+  };
 
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -100,6 +145,28 @@ export default function NewQuotePage() {
     router.push(`/dashboard/quotes/${quote.id}`);
   };
 
+  if (missingProfile) {
+    return (
+      <div className="space-y-6">
+        <h1 className="text-2xl font-bold text-foreground">Créer un devis</h1>
+        <div className="rounded-2xl border border-amber-200 bg-amber-50 p-6 space-y-3">
+          <p className="text-sm font-medium text-amber-800">
+            Complétez vos informations de facturation avant de créer un devis.
+          </p>
+          <p className="text-sm text-amber-700">
+            Votre SIRET et votre adresse sont obligatoires pour générer des documents conformes.
+          </p>
+          <Link
+            href="/dashboard/settings"
+            className="inline-block rounded-lg bg-amber-600 px-4 py-2.5 text-sm font-medium text-white hover:bg-amber-700"
+          >
+            Compléter mon profil
+          </Link>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-6">
       <h1 className="text-2xl font-bold text-foreground">Créer un devis</h1>
@@ -126,6 +193,66 @@ export default function NewQuotePage() {
               </option>
             ))}
           </select>
+
+          {showNewClient ? (
+            <div className="rounded-lg border border-border bg-muted/50 p-4 space-y-3">
+              <p className="text-sm font-medium text-foreground">Nouveau client</p>
+              <input
+                type="text"
+                placeholder="Nom *"
+                value={newClientName}
+                onChange={(e) => setNewClientName(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+              <input
+                type="email"
+                placeholder="Email"
+                value={newClientEmail}
+                onChange={(e) => setNewClientEmail(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+              <input
+                type="tel"
+                placeholder="Téléphone"
+                value={newClientPhone}
+                onChange={(e) => setNewClientPhone(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+              <input
+                type="text"
+                placeholder="Adresse"
+                value={newClientAddress}
+                onChange={(e) => setNewClientAddress(e.target.value)}
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+              <div className="flex gap-2">
+                <button
+                  type="button"
+                  onClick={handleCreateClient}
+                  disabled={creatingClient || !newClientName.trim()}
+                  className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+                >
+                  {creatingClient ? "Création..." : "Ajouter"}
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setShowNewClient(false)}
+                  className="rounded-lg border border-border px-4 py-2 text-sm font-medium text-foreground hover:bg-muted"
+                >
+                  Annuler
+                </button>
+              </div>
+            </div>
+          ) : (
+            <button
+              type="button"
+              onClick={() => setShowNewClient(true)}
+              className="flex items-center gap-1.5 text-sm font-medium text-primary hover:text-primary/80"
+            >
+              <Plus className="h-4 w-4" />
+              Créer un nouveau client
+            </button>
+          )}
         </div>
 
         <div className="rounded-2xl border border-border bg-white p-4 md:p-6 space-y-4">

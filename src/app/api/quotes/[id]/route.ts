@@ -100,7 +100,37 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   const updatedQuote = await prisma.quote.update({
     where: { id },
     data: { status },
+    include: {
+      client: true,
+      lines: { orderBy: { sortOrder: "asc" } },
+      invoice: { select: { id: true, number: true } },
+    },
   });
 
   return NextResponse.json(updatedQuote);
+}
+
+export async function DELETE(
+  request: NextRequest,
+  { params }: { params: Promise<{ id: string }> }
+) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
+
+  const { id } = await params;
+
+  const quote = await prisma.quote.findUnique({ where: { id } });
+  if (!quote || quote.userId !== session.user.id) {
+    return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+  }
+
+  if (quote.status !== "DRAFT") {
+    return NextResponse.json(
+      { error: "Seuls les devis en brouillon peuvent être supprimés" },
+      { status: 400 }
+    );
+  }
+
+  await prisma.quote.delete({ where: { id } });
+  return NextResponse.json({ success: true });
 }
