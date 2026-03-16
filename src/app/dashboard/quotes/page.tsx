@@ -1,9 +1,10 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
 import { Plus } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
+import { MonthPicker } from "@/components/dashboard/month-picker";
 
 interface QuoteLine {
   quantity: number;
@@ -29,9 +30,12 @@ function formatEuro(value: number) {
 
 export default function QuotesPage() {
   const router = useRouter();
+  const now = new Date();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("TOUS");
+  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [year, setYear] = useState(now.getFullYear());
 
   const tabs = [
     { value: "TOUS", label: "Tous" },
@@ -58,7 +62,23 @@ export default function QuotesPage() {
     return lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0);
   };
 
-  const filteredQuotes = filter === "TOUS" ? quotes : quotes.filter((q) => q.status === filter);
+  const handleMonthChange = (m: number, y: number) => {
+    setMonth(m);
+    setYear(y);
+  };
+
+  const filteredQuotes = useMemo(() => {
+    return quotes.filter((q) => {
+      const d = new Date(q.createdAt);
+      if (d.getMonth() + 1 !== month || d.getFullYear() !== year) return false;
+      if (filter !== "TOUS" && q.status !== filter) return false;
+      return true;
+    });
+  }, [quotes, month, year, filter]);
+
+  const monthTotal = useMemo(() => {
+    return filteredQuotes.reduce((sum, q) => sum + computeTotalHT(q.lines), 0);
+  }, [filteredQuotes]);
 
   return (
     <div className="space-y-6">
@@ -72,6 +92,13 @@ export default function QuotesPage() {
           Nouveau devis
         </a>
       </div>
+
+      <MonthPicker
+        month={month}
+        year={year}
+        onChange={handleMonthChange}
+        subtitle={`${filteredQuotes.length} devis — ${formatEuro(monthTotal)} HT`}
+      />
 
       <div className="flex gap-2 overflow-x-auto">
         {tabs.map((tab) => (
@@ -92,7 +119,7 @@ export default function QuotesPage() {
           <p className="text-sm text-muted-foreground">Chargement...</p>
         ) : filteredQuotes.length === 0 ? (
           <div className="rounded-2xl border border-border bg-white p-6 text-center">
-            <p className="text-sm text-muted-foreground">Aucun devis trouvé</p>
+            <p className="text-sm text-muted-foreground">Aucun devis ce mois-ci</p>
           </div>
         ) : (
           filteredQuotes.map((quote) => (

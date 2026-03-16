@@ -2,8 +2,9 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, ChevronLeft, ChevronRight, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
+import { MonthPicker } from "@/components/dashboard/month-picker";
 
 interface InvoiceLine {
   quantity: number;
@@ -39,10 +40,6 @@ function formatEuro(value: number) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(value);
 }
 
-const MONTH_NAMES = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
-];
 
 export default function InvoicesPage() {
   const router = useRouter();
@@ -77,22 +74,9 @@ export default function InvoicesPage() {
     loadInvoices();
   }, [loadInvoices]);
 
-  const prevMonth = () => {
-    if (month === 1) {
-      setMonth(12);
-      setYear(year - 1);
-    } else {
-      setMonth(month - 1);
-    }
-  };
-
-  const nextMonth = () => {
-    if (month === 12) {
-      setMonth(1);
-      setYear(year + 1);
-    } else {
-      setMonth(month + 1);
-    }
+  const handleMonthChange = (m: number, y: number) => {
+    setMonth(m);
+    setYear(y);
   };
 
   const computeTotalHT = (lines: InvoiceLine[]): number => {
@@ -143,23 +127,12 @@ export default function InvoicesPage() {
         </a>
       </div>
 
-      {/* Month navigation */}
-      <div className="flex items-center justify-between rounded-2xl border border-border bg-white px-4 py-3">
-        <button onClick={prevMonth} className="p-1 text-muted-foreground hover:text-foreground">
-          <ChevronLeft className="h-5 w-5" />
-        </button>
-        <div className="text-center">
-          <p className="text-sm font-semibold text-foreground">
-            {MONTH_NAMES[month - 1]} {year}
-          </p>
-          <p className="text-xs text-muted-foreground">
-            {filteredInvoices.length} document{filteredInvoices.length !== 1 ? "s" : ""} — {formatEuro(monthTotal)} HT
-          </p>
-        </div>
-        <button onClick={nextMonth} className="p-1 text-muted-foreground hover:text-foreground">
-          <ChevronRight className="h-5 w-5" />
-        </button>
-      </div>
+      <MonthPicker
+        month={month}
+        year={year}
+        onChange={handleMonthChange}
+        subtitle={`${filteredInvoices.length} document${filteredInvoices.length !== 1 ? "s" : ""} — ${formatEuro(monthTotal)} HT`}
+      />
 
       {/* Search bar */}
       <div className="relative">

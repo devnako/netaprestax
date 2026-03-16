@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Trash2, Plus } from "lucide-react";
+import { Trash2, Plus } from "lucide-react";
+import { MonthPicker, MONTH_NAMES } from "@/components/dashboard/month-picker";
 
 const CATEGORIES = [
   { value: "LOGICIEL", label: "Logiciel / Abonnement" },
@@ -29,10 +30,6 @@ function formatEuro(value: number) {
   }).format(value);
 }
 
-const MONTH_NAMES = [
-  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
-  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
-];
 
 export default function ExpensesPage() {
   const now = new Date();
@@ -63,22 +60,9 @@ export default function ExpensesPage() {
     loadExpenses();
   }, [loadExpenses]);
 
-  const goToPrev = () => {
-    if (month === 1) {
-      setMonth(12);
-      setYear((y) => y - 1);
-    } else {
-      setMonth((m) => m - 1);
-    }
-  };
-
-  const goToNext = () => {
-    if (month === 12) {
-      setMonth(1);
-      setYear((y) => y + 1);
-    } else {
-      setMonth((m) => m + 1);
-    }
+  const handleMonthChange = (m: number, y: number) => {
+    setMonth(m);
+    setYear(y);
   };
 
   const handleAdd = async (e: React.FormEvent) => {
@@ -127,25 +111,8 @@ export default function ExpensesPage() {
 
   return (
     <div className="space-y-6">
-      {/* Month selector */}
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">Frais</h1>
-        <div className="flex items-center gap-2">
-          <button onClick={goToPrev} className="rounded-lg border border-border p-2 hover:bg-white">
-            <ChevronLeft className="h-4 w-4" />
-          </button>
-          <span className="min-w-[10rem] text-center font-semibold">
-            {MONTH_NAMES[month - 1]} {year}
-          </span>
-          <button
-            onClick={goToNext}
-            disabled={isCurrentOrFuture}
-            className="rounded-lg border border-border p-2 hover:bg-white disabled:opacity-30"
-          >
-            <ChevronRight className="h-4 w-4" />
-          </button>
-        </div>
-      </div>
+      <h1 className="text-2xl font-bold text-foreground">Frais</h1>
+      <MonthPicker month={month} year={year} onChange={handleMonthChange} />
 
       {/* Total */}
       <div className="rounded-2xl border border-orange-300 bg-orange-50 p-6 text-center">
