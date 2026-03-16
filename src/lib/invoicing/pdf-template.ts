@@ -135,7 +135,7 @@ export function generateDocumentHtml(params: DocumentParams): string {
         ${parentReferenceLine}
       </div>
       <div style="text-align:right">
-        <p style="font-weight:700;font-size:16px">${business.businessName || business.ownerName || business.name}</p>
+        <p style="font-weight:700;font-size:16px">${business.businessName || business.name}</p>
         ${business.address ? `<p style="margin-top:4px;font-size:13px;color:#6b7280;white-space:pre-wrap">${business.address}</p>` : ""}
         ${business.professionalEmail ? `<p style="margin-top:2px;font-size:13px;color:#6b7280">${business.professionalEmail}</p>` : ""}
         ${business.phone ? `<p style="margin-top:2px;font-size:13px;color:#6b7280">${business.phone}</p>` : ""}

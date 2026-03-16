@@ -242,49 +242,39 @@ export default function SettingsPage() {
 
         <div className="mt-4 space-y-4">
           <div>
-            <label htmlFor="ownerName" className="block text-sm font-medium text-foreground">Nom / Prénom *</label>
+            <label htmlFor="businessName" className="block text-sm font-medium text-foreground">Nom / Prénom ou Nom commercial *</label>
             <input
-              id="ownerName"
+              id="businessName"
               type="text"
-              value={profile.ownerName || ""}
-              onChange={(e) => setProfile({ ...profile, ownerName: e.target.value || null })}
-              placeholder="Nom et prénom"
+              value={profile.businessName || ""}
+              onChange={(e) => setProfile({ ...profile, businessName: e.target.value || null })}
+              placeholder="Ex: Jean Dupont ou Finako"
               required
               className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div>
-            <label htmlFor="businessName" className="block text-sm font-medium text-foreground">Nom commercial</label>
-            <input
-              id="businessName"
-              type="text"
-              value={profile.businessName || ""}
-              onChange={(e) => setProfile({ ...profile, businessName: e.target.value || null })}
-              placeholder="Optionnel"
-              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label htmlFor="siret" className="block text-sm font-medium text-foreground">SIRET</label>
+            <label htmlFor="siret" className="block text-sm font-medium text-foreground">SIRET *</label>
             <input
               id="siret"
               type="text"
               value={profile.siret || ""}
               onChange={(e) => setProfile({ ...profile, siret: e.target.value || null })}
               placeholder="14 chiffres"
+              required
               className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
 
           <div>
-            <label htmlFor="address" className="block text-sm font-medium text-foreground">Adresse</label>
+            <label htmlFor="address" className="block text-sm font-medium text-foreground">Adresse *</label>
             <textarea
               id="address"
               value={profile.address || ""}
               onChange={(e) => setProfile({ ...profile, address: e.target.value || null })}
               placeholder="Adresse complète"
+              required
               rows={3}
               className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
