@@ -92,7 +92,9 @@ export default function InvoicesPage() {
       // Status/type filter
       if (filter === "AVOIR") {
         if (!inv.parentInvoiceId) return false;
-      } else if (filter !== "TOUS") {
+      } else if (filter === "TOUS") {
+        if (inv.parentInvoiceId) return false;
+      } else {
         if (inv.status !== filter || inv.parentInvoiceId) return false;
       }
 
