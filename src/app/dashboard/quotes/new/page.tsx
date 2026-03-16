@@ -72,7 +72,7 @@ export default function NewQuotePage() {
   }, []);
 
   const handleCreateClient = async () => {
-    if (!newClientName.trim()) return;
+    if (!newClientName.trim() || !newClientAddress.trim()) return;
     setCreatingClient(true);
 
     try {
@@ -220,16 +220,17 @@ export default function NewQuotePage() {
               />
               <input
                 type="text"
-                placeholder="Adresse"
+                placeholder="Adresse *"
                 value={newClientAddress}
                 onChange={(e) => setNewClientAddress(e.target.value)}
+                required
                 className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
               />
               <div className="flex gap-2">
                 <button
                   type="button"
                   onClick={handleCreateClient}
-                  disabled={creatingClient || !newClientName.trim()}
+                  disabled={creatingClient || !newClientName.trim() || !newClientAddress.trim()}
                   className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
                 >
                   {creatingClient ? "Création..." : "Ajouter"}

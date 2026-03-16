@@ -184,12 +184,13 @@ export default function ClientsPage() {
           </div>
 
           <div>
-            <label className="text-sm font-medium text-foreground">Adresse</label>
+            <label className="text-sm font-medium text-foreground">Adresse *</label>
             <input
               type="text"
               placeholder="Adresse complète"
               value={address}
               onChange={(e) => setAddress(e.target.value)}
+              required
               className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>
@@ -218,7 +219,7 @@ export default function ClientsPage() {
 
           <button
             type="submit"
-            disabled={saving || !name}
+            disabled={saving || !name || !address}
             className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
           >
             <Plus className="h-4 w-4" />
