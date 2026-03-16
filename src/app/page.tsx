@@ -260,13 +260,16 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border pt-10 pb-8">
+      <footer className="border-t border-border py-5">
         <div className="mx-auto max-w-[900px] px-6">
-          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
-            <Link href="/" className="text-lg font-bold text-foreground">
-              Net<span className="text-primary">AprèsTax</span>
+          <div className="flex items-center justify-between gap-4">
+            <Link href="/" aria-label="Accueil">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7">
+                <rect width="32" height="32" rx="6" fill="#2563eb"/>
+                <text x="16" y="21.5" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="12" fill="white">NAT</text>
+              </svg>
             </Link>
-            <div className="flex flex-wrap justify-center gap-5 text-[13px] text-muted-foreground">
+            <div className="flex flex-wrap justify-end gap-5 text-[13px] text-muted-foreground">
               <Link href="/mentions-legales" className="hover:text-foreground transition-colors">
                 Mentions légales
               </Link>
@@ -281,7 +284,7 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <p className="mt-6 text-center text-xs text-muted-foreground/70">
+          <p className="mt-3 text-center text-xs text-muted-foreground/70">
             © 2026 NetAprèsTax
           </p>
         </div>
