@@ -1,8 +1,8 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Plus, ChevronLeft, ChevronRight, Search } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 
 interface InvoiceLine {
@@ -39,11 +39,20 @@ function formatEuro(value: number) {
   return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(value);
 }
 
+const MONTH_NAMES = [
+  "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
+  "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre",
+];
+
 export default function InvoicesPage() {
   const router = useRouter();
+  const now = new Date();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<string>("TOUS");
+  const [month, setMonth] = useState(now.getMonth() + 1);
+  const [year, setYear] = useState(now.getFullYear());
+  const [searchQuery, setSearchQuery] = useState("");
 
   const tabs = [
     { value: "TOUS", label: "Tous" },
@@ -68,15 +77,58 @@ export default function InvoicesPage() {
     loadInvoices();
   }, [loadInvoices]);
 
+  const prevMonth = () => {
+    if (month === 1) {
+      setMonth(12);
+      setYear(year - 1);
+    } else {
+      setMonth(month - 1);
+    }
+  };
+
+  const nextMonth = () => {
+    if (month === 12) {
+      setMonth(1);
+      setYear(year + 1);
+    } else {
+      setMonth(month + 1);
+    }
+  };
+
   const computeTotalHT = (lines: InvoiceLine[]): number => {
     return lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0);
   };
 
-  const filteredInvoices = filter === "TOUS"
-    ? invoices
-    : filter === "AVOIR"
-      ? invoices.filter((i) => i.parentInvoiceId !== null)
-      : invoices.filter((i) => i.status === filter && i.parentInvoiceId === null);
+  const filteredInvoices = useMemo(() => {
+    return invoices.filter((inv) => {
+      // Month filter
+      const d = new Date(inv.createdAt);
+      if (d.getMonth() + 1 !== month || d.getFullYear() !== year) return false;
+
+      // Status/type filter
+      if (filter === "AVOIR") {
+        if (!inv.parentInvoiceId) return false;
+      } else if (filter !== "TOUS") {
+        if (inv.status !== filter || inv.parentInvoiceId) return false;
+      }
+
+      // Search filter
+      if (searchQuery.trim()) {
+        const q = searchQuery.toLowerCase().trim();
+        const totalHT = computeTotalHT(inv.lines);
+        const matchName = inv.client.name.toLowerCase().includes(q);
+        const matchNumber = inv.number.toLowerCase().includes(q);
+        const matchAmount = formatEuro(totalHT).toLowerCase().includes(q) || totalHT.toString().includes(q);
+        if (!matchName && !matchNumber && !matchAmount) return false;
+      }
+
+      return true;
+    });
+  }, [invoices, month, year, filter, searchQuery]);
+
+  const monthTotal = useMemo(() => {
+    return filteredInvoices.reduce((sum, inv) => sum + computeTotalHT(inv.lines), 0);
+  }, [filteredInvoices]);
 
   return (
     <div className="space-y-6">
@@ -91,6 +143,37 @@ export default function InvoicesPage() {
         </a>
       </div>
 
+      {/* Month navigation */}
+      <div className="flex items-center justify-between rounded-2xl border border-border bg-white px-4 py-3">
+        <button onClick={prevMonth} className="p-1 text-muted-foreground hover:text-foreground">
+          <ChevronLeft className="h-5 w-5" />
+        </button>
+        <div className="text-center">
+          <p className="text-sm font-semibold text-foreground">
+            {MONTH_NAMES[month - 1]} {year}
+          </p>
+          <p className="text-xs text-muted-foreground">
+            {filteredInvoices.length} document{filteredInvoices.length !== 1 ? "s" : ""} — {formatEuro(monthTotal)} HT
+          </p>
+        </div>
+        <button onClick={nextMonth} className="p-1 text-muted-foreground hover:text-foreground">
+          <ChevronRight className="h-5 w-5" />
+        </button>
+      </div>
+
+      {/* Search bar */}
+      <div className="relative">
+        <Search className="absolute left-4 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+        <input
+          type="text"
+          placeholder="Rechercher par client, numéro ou montant..."
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
+          className="w-full rounded-lg border border-border px-4 py-2.5 pl-10 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none"
+        />
+      </div>
+
+      {/* Filter tabs */}
       <div className="flex gap-2 overflow-x-auto">
         {tabs.map((tab) => (
           <button
@@ -105,12 +188,15 @@ export default function InvoicesPage() {
         ))}
       </div>
 
+      {/* Invoice list */}
       <div className="space-y-3">
         {loading ? (
           <p className="text-sm text-muted-foreground">Chargement...</p>
         ) : filteredInvoices.length === 0 ? (
           <div className="rounded-2xl border border-border bg-white p-6 text-center">
-            <p className="text-sm text-muted-foreground">Aucune facture trouvée</p>
+            <p className="text-sm text-muted-foreground">
+              {searchQuery ? "Aucun résultat pour cette recherche" : "Aucune facture ce mois-ci"}
+            </p>
           </div>
         ) : (
           filteredInvoices.map((invoice) => (
