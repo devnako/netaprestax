@@ -260,29 +260,29 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-12">
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
-            <span className="text-lg font-bold text-foreground">
+      <footer className="border-t border-border pt-10 pb-8">
+        <div className="mx-auto max-w-[900px] px-6">
+          <div className="flex flex-col items-center justify-between gap-6 sm:flex-row">
+            <Link href="/" className="text-lg font-bold text-foreground">
               Net<span className="text-primary">AprèsTax</span>
-            </span>
-            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
-              <Link href="/mentions-legales" className="hover:text-foreground">
+            </Link>
+            <div className="flex flex-wrap justify-center gap-5 text-[13px] text-muted-foreground">
+              <Link href="/mentions-legales" className="hover:text-foreground transition-colors">
                 Mentions légales
               </Link>
-              <Link href="/cgu" className="hover:text-foreground">
+              <Link href="/cgu" className="hover:text-foreground transition-colors">
                 CGU
               </Link>
-              <Link href="/confidentialite" className="hover:text-foreground">
+              <Link href="/confidentialite" className="hover:text-foreground transition-colors">
                 Confidentialité
               </Link>
-              <a href="mailto:contact@netaprestax.fr" className="hover:text-foreground">
+              <a href="mailto:contact@netaprestax.fr" className="hover:text-foreground transition-colors">
                 contact@netaprestax.fr
               </a>
             </div>
           </div>
-          <p className="mt-8 text-center text-xs text-muted-foreground">
-            © 2026 NetAprèsTax — Finako
+          <p className="mt-6 text-center text-xs text-muted-foreground/70">
+            © 2026 NetAprèsTax
           </p>
         </div>
       </footer>
