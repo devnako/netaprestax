@@ -102,7 +102,7 @@ export default function HistoryPage() {
       ) : (
         <>
           {/* Summary cards */}
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             <SummaryCard label="CA total" value={formatEuro(totalCA)} />
             <SummaryCard label="Net total" value={formatEuro(totalNet)} accent />
             <SummaryCard label="Prélèvements" value={formatEuro(totalCotisations + totalImpot)} />
@@ -110,7 +110,7 @@ export default function HistoryPage() {
           </div>
 
           {/* Bar chart: CA vs Net mensuel */}
-          <div className="rounded-2xl border border-border bg-white p-6">
+          <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">CA vs Net mensuel</h2>
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -128,7 +128,7 @@ export default function HistoryPage() {
           </div>
 
           {/* Line chart: Cumul */}
-          <div className="rounded-2xl border border-border bg-white p-6">
+          <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">Cumul annuel</h2>
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
@@ -160,10 +160,10 @@ export default function HistoryPage() {
           </div>
 
           {/* Monthly table */}
-          <div className="rounded-2xl border border-border bg-white p-6">
+          <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">Détail mensuel</h2>
             <div className="mt-4 overflow-x-auto">
-              <table className="w-full text-sm">
+              <table className="w-full whitespace-nowrap text-sm">
                 <thead>
                   <tr className="border-b border-border text-left text-muted-foreground">
                     <th className="pb-3 pr-4">Mois</th>

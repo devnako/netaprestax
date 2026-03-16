@@ -6,29 +6,29 @@ export default function Home() {
     <div className="min-h-screen bg-white">
       {/* Nav */}
       <nav className="sticky top-0 z-50 border-b border-border bg-white/80 backdrop-blur-sm">
-        <div className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-4 py-3 md:px-6 md:py-4">
           <span className="text-xl font-bold text-foreground">
             Net<span className="text-primary">AprèsTax</span>
           </span>
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <Link
               href="/login"
               className="text-sm font-medium text-muted-foreground hover:text-foreground"
             >
-              Se connecter
+              Connexion
             </Link>
             <Link
               href="/register"
-              className="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+              className="rounded-lg bg-primary px-3 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90 sm:px-4"
             >
-              Commencer gratuitement
+              Commencer
             </Link>
           </div>
         </div>
       </nav>
 
       {/* Hero */}
-      <section className="mx-auto max-w-6xl px-6 py-20 text-center md:py-32">
+      <section className="mx-auto max-w-6xl px-4 py-16 text-center sm:px-6 md:py-32">
         <div className="mx-auto max-w-3xl">
           <h1 className="text-4xl font-bold leading-tight tracking-tight text-foreground md:text-6xl">
             Ton CA, c&apos;est pas ton salaire.{" "}
@@ -55,7 +55,7 @@ export default function Home() {
 
       {/* Problem */}
       <section className="bg-muted py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
             Tu factures. Mais tu sais vraiment combien tu gardes ?
           </h2>
@@ -84,7 +84,7 @@ export default function Home() {
 
       {/* Solution */}
       <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
             Le seul chiffre qui compte :{" "}
             <span className="text-primary">ce qui reste dans ta poche</span>
@@ -116,7 +116,7 @@ export default function Home() {
 
       {/* How it works */}
       <section className="bg-muted py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
             3 étapes. 30 secondes. Ton vrai revenu.
           </h2>
@@ -142,7 +142,7 @@ export default function Home() {
 
       {/* Pricing */}
       <section className="py-20">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
             Un prix qui te laisse de l&apos;argent dans la poche
           </h2>
@@ -203,7 +203,7 @@ export default function Home() {
 
       {/* FAQ */}
       <section className="bg-muted py-20">
-        <div className="mx-auto max-w-3xl px-6">
+        <div className="mx-auto max-w-3xl px-4 sm:px-6">
           <h2 className="text-center text-3xl font-bold text-foreground md:text-4xl">
             Questions fréquentes
           </h2>
@@ -261,7 +261,7 @@ export default function Home() {
 
       {/* Footer */}
       <footer className="border-t border-border py-12">
-        <div className="mx-auto max-w-6xl px-6">
+        <div className="mx-auto max-w-6xl px-4 sm:px-6">
           <div className="flex flex-col items-center justify-between gap-6 md:flex-row">
             <span className="text-lg font-bold text-foreground">
               Net<span className="text-primary">AprèsTax</span>

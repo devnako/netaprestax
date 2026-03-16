@@ -160,7 +160,7 @@ export default function ExpensesPage() {
 
       {/* Category breakdown */}
       {Object.keys(byCategory).length > 1 && (
-        <div className="grid gap-3 md:grid-cols-4">
+        <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
           {Object.entries(byCategory)
             .sort((a, b) => b[1] - a[1])
             .map(([cat, catTotal]) => (
@@ -186,11 +186,11 @@ export default function ExpensesPage() {
           )}
 
           <form onSubmit={handleAdd} className="mt-4 space-y-3">
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <select
                 value={category}
                 onChange={(e) => setCategory(e.target.value)}
-                className="w-48 shrink-0 rounded-lg border border-border px-3 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-lg border border-border px-3 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:w-48 sm:shrink-0"
               >
                 {CATEGORIES.map((c) => (
                   <option key={c.value} value={c.value}>{c.label}</option>
@@ -204,7 +204,7 @@ export default function ExpensesPage() {
                 required
                 className="flex-1 rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
-              <div className="relative w-32 shrink-0">
+              <div className="relative w-full sm:w-32 sm:shrink-0">
                 <input
                   type="number"
                   step="0.01"

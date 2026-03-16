@@ -200,7 +200,7 @@ export default async function DashboardPage() {
       ) : (
         <>
           {/* Main cards */}
-          <div className="grid gap-4 md:grid-cols-4">
+          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             <StatCard
               label="Chiffre d'affaires"
               value={formatCurrency(result.ca)}
@@ -227,7 +227,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Breakdown */}
-          <div className="rounded-2xl border border-border bg-white p-6">
+          <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">Détail du calcul</h2>
             <div className="mt-4 space-y-3">
               <BreakdownLine label="Chiffre d'affaires" value={formatCurrency(ca)} />
@@ -268,7 +268,7 @@ export default async function DashboardPage() {
           </div>
 
           {/* Yearly CA progress */}
-          <div className="rounded-2xl border border-border bg-white p-6">
+          <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-foreground">CA annuel {currentYear}</h2>
               <span className="text-sm text-muted-foreground">
@@ -311,17 +311,17 @@ function StatCard({
 }) {
   return (
     <div
-      className={`rounded-xl border p-5 ${
+      className={`rounded-xl border p-3 md:p-5 ${
         highlight
           ? "border-accent bg-accent/5"
           : "border-border bg-white"
       }`}
     >
-      <div className="flex items-center gap-2">
+      <div className="flex items-center gap-1.5 md:gap-2">
         {icon}
-        <span className="text-sm text-muted-foreground">{label}</span>
+        <span className="text-xs text-muted-foreground md:text-sm">{label}</span>
       </div>
-      <p className={`mt-2 text-2xl font-bold ${highlight ? "text-accent" : "text-foreground"}`}>
+      <p className={`mt-1.5 text-lg font-bold md:mt-2 md:text-2xl ${highlight ? "text-accent" : "text-foreground"}`}>
         {value}
       </p>
       {sublabel && (

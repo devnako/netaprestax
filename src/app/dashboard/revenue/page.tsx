@@ -272,11 +272,11 @@ export default function RevenuePage() {
           )}
 
           <form onSubmit={handleAdd} className="mt-4 space-y-3">
-            <div className="flex gap-3">
+            <div className="flex flex-col gap-3 sm:flex-row">
               <select
                 value={activityType || defaultActivityType}
                 onChange={(e) => setActivityType(e.target.value)}
-                className="w-56 shrink-0 rounded-lg border border-border px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                className="w-full rounded-lg border border-border px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:w-56 sm:shrink-0"
               >
                 {ACTIVITY_OPTIONS.map((opt) => (
                   <option key={opt.value} value={opt.value}>{opt.label}</option>
@@ -289,7 +289,7 @@ export default function RevenuePage() {
                 onChange={(e) => setDescription(e.target.value)}
                 className="flex-1 rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
               />
-              <div className="relative w-32 shrink-0">
+              <div className="relative w-full sm:w-32 sm:shrink-0">
                 <input
                   type="number"
                   step="0.01"
