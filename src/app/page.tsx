@@ -270,7 +270,7 @@ export default function Home() {
               </svg>
             </Link>
           </div>
-          <span className="text-xs text-muted-foreground">© 2026 NetAprèsTax</span>
+          <div className="flex-1 text-center text-xs text-muted-foreground">© 2026 NetAprèsTax</div>
           <div className="flex flex-1 items-center justify-end gap-4 whitespace-nowrap text-xs text-muted-foreground">
             <Link href="/mentions-legales" className="hover:text-foreground transition-colors">Mentions légales</Link>
             <span className="text-muted-foreground/40">·</span>
