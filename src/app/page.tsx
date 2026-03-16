@@ -266,22 +266,23 @@ export default function Home() {
             <span className="text-lg font-bold text-foreground">
               Net<span className="text-primary">AprèsTax</span>
             </span>
-            <div className="flex gap-6 text-sm text-muted-foreground">
+            <div className="flex flex-wrap justify-center gap-6 text-sm text-muted-foreground">
               <Link href="/mentions-legales" className="hover:text-foreground">
                 Mentions légales
+              </Link>
+              <Link href="/cgu" className="hover:text-foreground">
+                CGU
               </Link>
               <Link href="/confidentialite" className="hover:text-foreground">
                 Confidentialité
               </Link>
-              <Link href="/contact" className="hover:text-foreground">
-                Contact
-              </Link>
+              <a href="mailto:contact@netaprestax.fr" className="hover:text-foreground">
+                contact@netaprestax.fr
+              </a>
             </div>
           </div>
           <p className="mt-8 text-center text-xs text-muted-foreground">
-            NetAprèsTax est un outil d&apos;estimation. Les calculs sont basés sur
-            les taux officiels en vigueur mais ne constituent pas un conseil
-            fiscal. Pour toute question spécifique, consultez un expert-comptable.
+            © 2026 NetAprèsTax — Finako
           </p>
         </div>
       </footer>

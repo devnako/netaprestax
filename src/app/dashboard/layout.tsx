@@ -48,6 +48,19 @@ export default function DashboardLayout({
         <main className="min-w-0 flex-1">{children}</main>
       </div>
 
+      {/* Footer — desktop only */}
+      <footer className="hidden md:block border-t border-border bg-white">
+        <div className="mx-auto max-w-6xl px-6 py-4 flex flex-wrap items-center justify-between gap-4 text-xs text-muted-foreground">
+          <span>© 2026 NetAprèsTax — Finako</span>
+          <div className="flex flex-wrap gap-4">
+            <Link href="/mentions-legales" className="hover:text-foreground">Mentions légales</Link>
+            <Link href="/cgu" className="hover:text-foreground">CGU</Link>
+            <Link href="/confidentialite" className="hover:text-foreground">Confidentialité</Link>
+            <a href="mailto:contact@netaprestax.fr" className="hover:text-foreground">contact@netaprestax.fr</a>
+          </div>
+        </div>
+      </footer>
+
       {/* Bottom tab bar — mobile only */}
       <MobileNav />
     </div>
