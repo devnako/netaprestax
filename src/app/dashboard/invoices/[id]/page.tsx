@@ -8,6 +8,7 @@ import { LineItemsEditor } from "@/components/invoicing/line-items-editor";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
 
 interface InvoiceLine {
+  description: string;
   quantity: number;
   unitPrice: number;
   vatRate: number | null;
