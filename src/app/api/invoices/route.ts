@@ -14,6 +14,8 @@ export async function GET(request: NextRequest) {
       client: { select: { name: true } },
       lines: { orderBy: { sortOrder: "asc" } },
       quote: { select: { id: true, number: true } },
+      parentInvoice: { select: { id: true, number: true } },
+      creditNotes: { select: { id: true, number: true } },
     },
     orderBy: { createdAt: "desc" },
   });

@@ -185,23 +185,26 @@ model Quote {
 }
 
 model Invoice {
-  id           String        @id @default(cuid())
-  userId       String
-  clientId     String
-  quoteId      String?       @unique
-  number       String
-  status       InvoiceStatus @default(DRAFT)
-  notes        String?
-  paymentTerms String?
-  issuedAt     DateTime      @default(now())
-  paidAt       DateTime?
-  createdAt    DateTime      @default(now())
-  updatedAt    DateTime      @updatedAt
+  id              String        @id @default(cuid())
+  userId          String
+  clientId        String
+  quoteId         String?       @unique
+  parentInvoiceId String?
+  number          String
+  status          InvoiceStatus @default(DRAFT)
+  notes           String?
+  paymentTerms    String?
+  issuedAt        DateTime      @default(now())
+  paidAt          DateTime?
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
 
-  user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  client  Client         @relation(fields: [clientId], references: [id])
-  quote   Quote?         @relation(fields: [quoteId], references: [id])
-  lines   DocumentLine[]
+  user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  client        Client         @relation(fields: [clientId], references: [id])
+  quote         Quote?         @relation(fields: [quoteId], references: [id])
+  parentInvoice Invoice?       @relation("CreditNotes", fields: [parentInvoiceId], references: [id])
+  creditNotes   Invoice[]      @relation("CreditNotes")
+  lines         DocumentLine[]
 
   @@unique([userId, number])
   @@index([userId])
@@ -273,4 +276,5 @@ enum InvoiceStatus {
   PENDING
   PAID
   OVERDUE
+  CANCELLED
 }

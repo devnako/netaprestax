@@ -15,3 +15,11 @@ export async function getNextInvoiceNumber(userId: string, year: number): Promis
   });
   return `${prefix}${String(count + 1).padStart(3, "0")}`;
 }
+
+export async function getNextCreditNoteNumber(userId: string, year: number): Promise<string> {
+  const prefix = `AV-${year}-`;
+  const count = await prisma.invoice.count({
+    where: { userId, number: { startsWith: prefix } },
+  });
+  return `${prefix}${String(count + 1).padStart(3, "0")}`;
+}

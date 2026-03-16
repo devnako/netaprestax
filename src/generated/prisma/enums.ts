@@ -74,7 +74,8 @@ export const InvoiceStatus = {
   DRAFT: 'DRAFT',
   PENDING: 'PENDING',
   PAID: 'PAID',
-  OVERDUE: 'OVERDUE'
+  OVERDUE: 'OVERDUE',
+  CANCELLED: 'CANCELLED'
 } as const
 
 export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]

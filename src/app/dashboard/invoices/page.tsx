@@ -24,6 +24,15 @@ interface Invoice {
   quote: {
     number: string;
   } | null;
+  parentInvoiceId: string | null;
+  parentInvoice: {
+    id: string;
+    number: string;
+  } | null;
+  creditNotes: {
+    id: string;
+    number: string;
+  }[];
 }
 
 function formatEuro(value: number) {
@@ -42,6 +51,8 @@ export default function InvoicesPage() {
     { value: "PENDING", label: "En attente" },
     { value: "PAID", label: "Payée" },
     { value: "OVERDUE", label: "En retard" },
+    { value: "CANCELLED", label: "Annulée" },
+    { value: "AVOIR", label: "Avoirs" },
   ];
 
   const loadInvoices = useCallback(async () => {
@@ -61,7 +72,11 @@ export default function InvoicesPage() {
     return lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0);
   };
 
-  const filteredInvoices = filter === "TOUS" ? invoices : invoices.filter((i) => i.status === filter);
+  const filteredInvoices = filter === "TOUS"
+    ? invoices
+    : filter === "AVOIR"
+      ? invoices.filter((i) => i.parentInvoiceId !== null)
+      : invoices.filter((i) => i.status === filter && i.parentInvoiceId === null);
 
   return (
     <div className="space-y-6">
@@ -106,12 +121,30 @@ export default function InvoicesPage() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1">
-                  <div className="flex items-baseline gap-3">
-                    <h3 className="text-sm font-medium text-foreground">Facture {invoice.number}</h3>
-                    <StatusBadge status={invoice.status} type="invoice" />
+                  <div className="flex items-baseline gap-3 flex-wrap">
+                    <h3 className="text-sm font-medium text-foreground">
+                      {invoice.parentInvoiceId ? "Avoir" : "Facture"} {invoice.number}
+                    </h3>
+                    {invoice.parentInvoiceId ? (
+                      <span className="inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-700">
+                        Avoir
+                      </span>
+                    ) : (
+                      <StatusBadge status={invoice.status} type="invoice" />
+                    )}
                     {invoice.quoteId && invoice.quote && (
                       <span className="inline-block text-xs text-muted-foreground">
                         Devis {invoice.quote.number}
+                      </span>
+                    )}
+                    {invoice.parentInvoice && (
+                      <span className="inline-block text-xs text-muted-foreground">
+                        Facture {invoice.parentInvoice.number}
+                      </span>
+                    )}
+                    {invoice.creditNotes.length > 0 && (
+                      <span className="inline-block text-xs text-orange-600">
+                        Avoir {invoice.creditNotes[0].number}
                       </span>
                     )}
                   </div>

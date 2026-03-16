@@ -39,6 +39,15 @@ interface Invoice {
   quote: {
     number: string;
   } | null;
+  parentInvoiceId: string | null;
+  parentInvoice: {
+    id: string;
+    number: string;
+  } | null;
+  creditNotes: {
+    id: string;
+    number: string;
+  }[];
 }
 
 function formatEuro(value: number) {
@@ -63,6 +72,8 @@ export default function InvoiceDetailPage() {
   const [editPaymentTerms, setEditPaymentTerms] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirmPay, setConfirmPay] = useState(false);
+  const [confirmCreditNote, setConfirmCreditNote] = useState(false);
+  const [removeRevenue, setRemoveRevenue] = useState(true);
   const [tvaAssujetti, setTvaAssujetti] = useState(true);
 
   useEffect(() => {
@@ -196,6 +207,33 @@ export default function InvoiceDetailPage() {
     window.open(`/api/invoices/pdf?id=${id}`, "_blank");
   };
 
+  const handleCreateCreditNote = async () => {
+    if (!invoice) return;
+    setSaving(true);
+    setError("");
+
+    try {
+      const response = await fetch(`/api/invoices/${id}/credit-note`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ removeRevenue: invoice.status === "PAID" && removeRevenue }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Erreur lors de la création de l'avoir");
+        return;
+      }
+
+      const creditNote = await response.json();
+      router.push(`/dashboard/invoices/${creditNote.id}`);
+    } catch {
+      setError("Erreur lors de la création de l'avoir");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="space-y-6">
@@ -217,8 +255,34 @@ export default function InvoiceDetailPage() {
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">Facture {invoice.number}</h1>
-        <StatusBadge status={invoice.status} type="invoice" />
+        <div>
+          <h1 className="text-2xl font-bold text-foreground">
+            {invoice.parentInvoiceId ? "Avoir" : "Facture"} {invoice.number}
+          </h1>
+          {invoice.parentInvoice && (
+            <p className="mt-1 text-sm text-muted-foreground">
+              Avoir sur{" "}
+              <a href={`/dashboard/invoices/${invoice.parentInvoice.id}`} className="text-primary hover:underline">
+                facture {invoice.parentInvoice.number}
+              </a>
+            </p>
+          )}
+          {invoice.creditNotes.length > 0 && (
+            <p className="mt-1 text-sm text-orange-600">
+              Annulée par{" "}
+              <a href={`/dashboard/invoices/${invoice.creditNotes[0].id}`} className="text-primary hover:underline">
+                avoir {invoice.creditNotes[0].number}
+              </a>
+            </p>
+          )}
+        </div>
+        {invoice.parentInvoiceId ? (
+          <span className="inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-700">
+            Avoir
+          </span>
+        ) : (
+          <StatusBadge status={invoice.status} type="invoice" />
+        )}
       </div>
 
       {error && (
@@ -463,7 +527,7 @@ export default function InvoiceDetailPage() {
               </>
             ) : (
               <>
-                {invoice.status === "DRAFT" && (
+                {invoice.status === "DRAFT" && !invoice.parentInvoiceId && (
                   <>
                     <button
                       onClick={() => setIsEditing(true)}
@@ -490,7 +554,7 @@ export default function InvoiceDetailPage() {
                   </>
                 )}
 
-                {(invoice.status === "PENDING" || invoice.status === "OVERDUE") && (
+                {(invoice.status === "PENDING" || invoice.status === "OVERDUE") && !invoice.parentInvoiceId && (
                   <>
                     {confirmPay ? (
                       <div className="rounded-lg bg-yellow-50 border border-yellow-200 p-4 space-y-3">
@@ -523,6 +587,56 @@ export default function InvoiceDetailPage() {
                         className="w-full rounded-lg bg-primary px-4 py-2.5 text-center font-medium text-primary-foreground hover:bg-primary/90"
                       >
                         Marquer payée
+                      </button>
+                    )}
+                  </>
+                )}
+
+                {/* Créer un avoir — for PENDING/PAID invoices without existing credit note */}
+                {(invoice.status === "PENDING" || invoice.status === "PAID") &&
+                  !invoice.parentInvoiceId &&
+                  invoice.creditNotes.length === 0 && (
+                  <>
+                    {confirmCreditNote ? (
+                      <div className="rounded-lg bg-orange-50 border border-orange-200 p-4 space-y-3">
+                        <p className="text-sm text-orange-800">
+                          Un avoir de{" "}
+                          <span className="font-bold">{formatEuro(totals.totalHT)}</span>{" "}
+                          sera créé et cette facture sera marquée comme annulée.
+                        </p>
+                        {invoice.status === "PAID" && (
+                          <label className="flex items-center gap-2 text-sm text-orange-800">
+                            <input
+                              type="checkbox"
+                              checked={removeRevenue}
+                              onChange={(e) => setRemoveRevenue(e.target.checked)}
+                              className="rounded border-orange-300"
+                            />
+                            Retirer le revenu correspondant
+                          </label>
+                        )}
+                        <div className="flex gap-2">
+                          <button
+                            onClick={handleCreateCreditNote}
+                            disabled={saving}
+                            className="flex-1 rounded-lg bg-orange-600 px-3 py-2 text-center font-medium text-white hover:bg-orange-700 disabled:opacity-50 text-sm"
+                          >
+                            {saving ? "..." : "Confirmer"}
+                          </button>
+                          <button
+                            onClick={() => setConfirmCreditNote(false)}
+                            className="flex-1 rounded-lg border border-orange-300 px-3 py-2 text-center font-medium text-orange-700 hover:bg-orange-100 text-sm"
+                          >
+                            Annuler
+                          </button>
+                        </div>
+                      </div>
+                    ) : (
+                      <button
+                        onClick={() => setConfirmCreditNote(true)}
+                        className="w-full rounded-lg border border-orange-300 px-4 py-2.5 text-center font-medium text-orange-700 hover:bg-orange-50"
+                      >
+                        Créer un avoir
                       </button>
                     )}
                   </>

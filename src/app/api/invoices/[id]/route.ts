@@ -18,6 +18,8 @@ export async function GET(
       client: true,
       lines: { orderBy: { sortOrder: "asc" } },
       quote: { select: { id: true, number: true } },
+      parentInvoice: { select: { id: true, number: true } },
+      creditNotes: { select: { id: true, number: true } },
     },
   });
 
@@ -175,6 +177,8 @@ export async function PATCH(
         client: { select: { name: true } },
         lines: { orderBy: { sortOrder: "asc" } },
         quote: { select: { id: true, number: true } },
+        parentInvoice: { select: { id: true, number: true } },
+        creditNotes: { select: { id: true, number: true } },
       },
     });
 
@@ -188,6 +192,8 @@ export async function PATCH(
       client: { select: { name: true } },
       lines: { orderBy: { sortOrder: "asc" } },
       quote: { select: { id: true, number: true } },
+      parentInvoice: { select: { id: true, number: true } },
+      creditNotes: { select: { id: true, number: true } },
     },
   });
 

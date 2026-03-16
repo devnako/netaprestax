@@ -24,7 +24,7 @@ interface Line {
 }
 
 interface DocumentParams {
-  type: "devis" | "facture";
+  type: "devis" | "facture" | "avoir";
   number: string;
   issuedAt: string;
   validUntil?: string | null;
@@ -35,6 +35,7 @@ interface DocumentParams {
   lines: Line[];
   notes: string | null;
   paymentTerms: string | null;
+  parentInvoiceNumber?: string | null;
 }
 
 function formatDate(dateStr: string): string {
@@ -54,8 +55,8 @@ function formatPercent(rate: number): string {
 }
 
 export function generateDocumentHtml(params: DocumentParams): string {
-  const { type, number, issuedAt, validUntil, business, client, lines, notes, paymentTerms } = params;
-  const label = type === "devis" ? "Devis" : "Facture";
+  const { type, number, issuedAt, validUntil, business, client, lines, notes, paymentTerms, parentInvoiceNumber } = params;
+  const label = type === "devis" ? "Devis" : type === "avoir" ? "Avoir" : "Facture";
   const totals = computeDocumentTotals(lines, business.tvaAssujetti);
 
   const linesHtml = lines
@@ -98,6 +99,10 @@ export function generateDocumentHtml(params: DocumentParams): string {
     ? `<p style="margin:4px 0;font-size:13px;color:#6b7280">Valable jusqu'au ${formatDate(validUntil)}</p>`
     : "";
 
+  const parentReferenceLine = type === "avoir" && parentInvoiceNumber
+    ? `<p style="margin:4px 0;font-size:13px;color:#6b7280">Avoir sur facture ${parentInvoiceNumber}</p>`
+    : "";
+
   const notesHtml = notes
     ? `<div style="margin-top:24px"><p style="font-weight:600;font-size:14px;margin-bottom:4px">Notes</p><p style="font-size:13px;color:#6b7280;white-space:pre-wrap">${notes}</p></div>`
     : "";
@@ -127,6 +132,7 @@ export function generateDocumentHtml(params: DocumentParams): string {
         <p style="margin-top:4px;font-size:14px;color:#6b7280">N° ${number}</p>
         <p style="margin:2px 0;font-size:13px;color:#6b7280">Date : ${formatDate(issuedAt)}</p>
         ${validityLine}
+        ${parentReferenceLine}
       </div>
       <div style="text-align:right">
         <p style="font-weight:700;font-size:16px">${business.businessName || business.name}</p>

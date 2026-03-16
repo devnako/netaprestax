@@ -13,14 +13,19 @@ export async function GET(request: NextRequest) {
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
-    include: { client: true, lines: { orderBy: { sortOrder: "asc" } } },
+    include: {
+      client: true,
+      lines: { orderBy: { sortOrder: "asc" } },
+      parentInvoice: { select: { number: true } },
+    },
   });
   if (!invoice || invoice.userId !== session.user.id) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
 
+  const isCreditNote = !!invoice.parentInvoiceId;
   const profile = await prisma.fiscalProfile.findUnique({ where: { userId: session.user.id } });
 
   const html = generateDocumentHtml({
-    type: "facture",
+    type: isCreditNote ? "avoir" : "facture",
     number: invoice.number,
     issuedAt: invoice.issuedAt.toISOString(),
     paidAt: invoice.paidAt?.toISOString() || null,
@@ -47,6 +52,7 @@ export async function GET(request: NextRequest) {
     })),
     notes: invoice.notes,
     paymentTerms: invoice.paymentTerms,
+    parentInvoiceNumber: invoice.parentInvoice?.number || null,
   });
 
   return new NextResponse(html, {
