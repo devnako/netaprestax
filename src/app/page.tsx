@@ -264,11 +264,14 @@ export default function Home() {
         <div className="mx-auto max-w-[900px] px-6">
           <div className="flex items-center justify-between gap-4">
             <Link href="/" aria-label="Accueil">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7 shrink-0">
                 <rect width="32" height="32" rx="6" fill="#2563eb"/>
                 <text x="16" y="21.5" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="12" fill="white">NAT</text>
               </svg>
             </Link>
+            <span className="text-sm font-bold text-foreground">
+              Net<span className="text-primary">AprèsTax</span>
+            </span>
             <div className="flex flex-wrap justify-end gap-5 text-[13px] text-muted-foreground">
               <Link href="/mentions-legales" className="hover:text-foreground transition-colors">
                 Mentions légales
