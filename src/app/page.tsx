@@ -260,34 +260,25 @@ export default function Home() {
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-border py-5">
-        <div className="mx-auto max-w-[900px] px-6">
-          <div className="flex items-center">
-            <div className="flex-1">
-              <Link href="/" aria-label="Accueil">
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7">
-                  <rect width="32" height="32" rx="6" fill="#2563eb"/>
-                  <text x="16" y="21.5" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="12" fill="white">NAT</text>
-                </svg>
-              </Link>
-            </div>
-            <div className="flex-1 text-center text-xs text-muted-foreground">
-              © 2026 NetAprèsTax
-            </div>
-            <div className="flex flex-1 flex-wrap justify-end gap-5 text-[13px] text-muted-foreground">
-              <Link href="/mentions-legales" className="hover:text-foreground transition-colors">
-                Mentions légales
-              </Link>
-              <Link href="/cgu" className="hover:text-foreground transition-colors">
-                CGU
-              </Link>
-              <Link href="/confidentialite" className="hover:text-foreground transition-colors">
-                Confidentialité
-              </Link>
-              <a href="mailto:contact@netaprestax.fr" className="hover:text-foreground transition-colors">
-                contact@netaprestax.fr
-              </a>
-            </div>
+      <footer className="border-t border-border py-4">
+        <div className="mx-auto flex max-w-[900px] items-center px-6">
+          <div className="flex-1">
+            <Link href="/" aria-label="Accueil">
+              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-6 w-6">
+                <rect width="32" height="32" rx="6" fill="#2563eb"/>
+                <text x="16" y="21.5" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="12" fill="white">NAT</text>
+              </svg>
+            </Link>
+          </div>
+          <span className="text-xs text-muted-foreground">© 2026 NetAprèsTax</span>
+          <div className="flex flex-1 items-center justify-end gap-4 whitespace-nowrap text-xs text-muted-foreground">
+            <Link href="/mentions-legales" className="hover:text-foreground transition-colors">Mentions légales</Link>
+            <span className="text-muted-foreground/40">·</span>
+            <Link href="/cgu" className="hover:text-foreground transition-colors">CGU</Link>
+            <span className="text-muted-foreground/40">·</span>
+            <Link href="/confidentialite" className="hover:text-foreground transition-colors">Confidentialité</Link>
+            <span className="text-muted-foreground/40">·</span>
+            <a href="mailto:contact@netaprestax.fr" className="hover:text-foreground transition-colors">contact@netaprestax.fr</a>
           </div>
         </div>
       </footer>
