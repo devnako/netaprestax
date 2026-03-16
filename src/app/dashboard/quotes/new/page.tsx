@@ -55,7 +55,7 @@ export default function NewQuotePage() {
         if (settingsRes.ok) {
           const settings = await settingsRes.json();
           setTvaAssujetti(settings.tvaAssujetti || false);
-          if (!settings.siret || !settings.address) {
+          if (!settings.siret || !settings.address || (settings.tvaAssujetti && !settings.tvaNumber)) {
             setMissingProfile(true);
           }
         }
@@ -154,7 +154,7 @@ export default function NewQuotePage() {
             Complétez vos informations de facturation avant de créer un devis.
           </p>
           <p className="text-sm text-amber-700">
-            Votre SIRET et votre adresse sont obligatoires pour générer des documents conformes.
+            Votre SIRET, votre adresse et votre numéro de TVA intracommunautaire (si assujetti) sont obligatoires pour générer des documents conformes.
           </p>
           <Link
             href="/dashboard/settings"

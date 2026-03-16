@@ -54,7 +54,7 @@ export default function NewInvoicePage() {
         if (settingsRes.ok) {
           const settings = await settingsRes.json();
           setTvaAssujetti(settings.tvaAssujetti ?? true);
-          if (!settings.siret || !settings.address) {
+          if (!settings.siret || !settings.address || (settings.tvaAssujetti && !settings.tvaNumber)) {
             setMissingProfile(true);
           }
         }
@@ -153,7 +153,7 @@ export default function NewInvoicePage() {
             Complétez vos informations de facturation avant de créer une facture.
           </p>
           <p className="text-sm text-amber-700">
-            Votre SIRET et votre adresse sont obligatoires pour générer des factures conformes.
+            Votre SIRET, votre adresse et votre numéro de TVA intracommunautaire (si assujetti) sont obligatoires pour générer des factures conformes.
           </p>
           <Link
             href="/dashboard/settings"
