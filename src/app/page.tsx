@@ -262,17 +262,19 @@ export default function Home() {
       {/* Footer */}
       <footer className="border-t border-border py-5">
         <div className="mx-auto max-w-[900px] px-6">
-          <div className="flex items-center justify-between gap-4">
-            <Link href="/" aria-label="Accueil">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7 shrink-0">
-                <rect width="32" height="32" rx="6" fill="#2563eb"/>
-                <text x="16" y="21.5" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="12" fill="white">NAT</text>
-              </svg>
-            </Link>
-            <span className="text-sm font-bold text-foreground">
-              Net<span className="text-primary">AprèsTax</span>
-            </span>
-            <div className="flex flex-wrap justify-end gap-5 text-[13px] text-muted-foreground">
+          <div className="flex items-center">
+            <div className="flex-1">
+              <Link href="/" aria-label="Accueil">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" className="h-7 w-7">
+                  <rect width="32" height="32" rx="6" fill="#2563eb"/>
+                  <text x="16" y="21.5" textAnchor="middle" fontFamily="system-ui, sans-serif" fontWeight="700" fontSize="12" fill="white">NAT</text>
+                </svg>
+              </Link>
+            </div>
+            <div className="flex-1 text-center text-xs text-muted-foreground">
+              © 2026 NetAprèsTax
+            </div>
+            <div className="flex flex-1 flex-wrap justify-end gap-5 text-[13px] text-muted-foreground">
               <Link href="/mentions-legales" className="hover:text-foreground transition-colors">
                 Mentions légales
               </Link>
@@ -287,9 +289,6 @@ export default function Home() {
               </a>
             </div>
           </div>
-          <p className="mt-3 text-center text-xs text-muted-foreground/70">
-            © 2026 NetAprèsTax
-          </p>
         </div>
       </footer>
     </div>
