@@ -25,7 +25,10 @@ export async function POST(request: Request) {
     acreDateDebut,
     siret,
     address,
+    ownerName,
     businessName,
+    professionalEmail,
+    phone,
     tvaNumber,
   } = body;
 
@@ -49,7 +52,10 @@ export async function POST(request: Request) {
       enfantsACharge: versementLiberatoire ? 0 : enfantsACharge,
       siret,
       address,
-      businessName,
+      ownerName: ownerName || null,
+      businessName: businessName || null,
+      professionalEmail: professionalEmail || null,
+      phone: phone || null,
       tvaNumber,
     },
     update: {
@@ -63,7 +69,10 @@ export async function POST(request: Request) {
       enfantsACharge: versementLiberatoire ? 0 : enfantsACharge,
       siret,
       address,
-      businessName,
+      ownerName: ownerName || null,
+      businessName: businessName || null,
+      professionalEmail: professionalEmail || null,
+      phone: phone || null,
       tvaNumber,
     },
   });

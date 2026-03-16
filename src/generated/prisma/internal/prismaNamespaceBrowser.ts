@@ -152,7 +152,10 @@ export const FiscalProfileScalarFieldEnum = {
   enfantsACharge: 'enfantsACharge',
   siret: 'siret',
   address: 'address',
+  ownerName: 'ownerName',
   businessName: 'businessName',
+  professionalEmail: 'professionalEmail',
+  phone: 'phone',
   tvaNumber: 'tvaNumber',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
@@ -207,6 +210,7 @@ export const ClientScalarFieldEnum = {
   userId: 'userId',
   name: 'name',
   email: 'email',
+  phone: 'phone',
   address: 'address',
   siret: 'siret',
   notes: 'notes',

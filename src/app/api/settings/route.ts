@@ -31,7 +31,10 @@ export async function GET() {
     enfantsACharge: profile.enfantsACharge,
     siret: profile.siret,
     address: profile.address,
+    ownerName: profile.ownerName,
     businessName: profile.businessName,
+    professionalEmail: profile.professionalEmail,
+    phone: profile.phone,
     tvaNumber: profile.tvaNumber,
   });
 }

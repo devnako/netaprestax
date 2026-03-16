@@ -2,9 +2,12 @@ import { computeDocumentTotals, computeLineTotal } from "./calculations";
 
 interface BusinessInfo {
   name: string;
+  ownerName: string | null;
   siret: string | null;
   address: string | null;
   businessName: string | null;
+  professionalEmail: string | null;
+  phone: string | null;
   tvaNumber: string | null;
   tvaAssujetti: boolean;
 }
@@ -12,6 +15,7 @@ interface BusinessInfo {
 interface ClientInfo {
   name: string;
   email: string | null;
+  phone: string | null;
   address: string | null;
   siret: string | null;
 }
@@ -115,16 +119,12 @@ export function generateDocumentHtml(params: DocumentParams): string {
   <style>
     * { margin:0; padding:0; box-sizing:border-box; }
     body { font-family:system-ui,-apple-system,sans-serif; color:#1f2937; line-height:1.5; }
-    @media print { .no-print { display:none !important; } body { padding:0; } }
+    @page { margin: 10mm 15mm; }
+    @media print { body { padding:0; } }
   </style>
 </head>
 <body>
-  <div class="no-print" style="position:fixed;top:0;left:0;right:0;background:#2563eb;color:white;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;z-index:50">
-    <span style="font-weight:600">${label} ${number}</span>
-    <button onclick="window.print()" style="background:white;color:#2563eb;border:none;padding:8px 20px;border-radius:8px;font-weight:600;cursor:pointer">Imprimer / Sauvegarder PDF</button>
-  </div>
-
-  <div style="max-width:800px;margin:60px auto 40px;padding:40px">
+  <div style="max-width:800px;margin:0 auto;padding:40px">
     <!-- Header -->
     <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:40px">
       <div>
@@ -135,10 +135,11 @@ export function generateDocumentHtml(params: DocumentParams): string {
         ${parentReferenceLine}
       </div>
       <div style="text-align:right">
-        <p style="font-weight:700;font-size:16px">${business.businessName || business.name}</p>
-        <p style="font-size:13px;color:#1f2937">Micro-entreprise</p>
+        <p style="font-weight:700;font-size:16px">${business.businessName || business.ownerName || business.name}</p>
         ${business.address ? `<p style="margin-top:4px;font-size:13px;color:#6b7280;white-space:pre-wrap">${business.address}</p>` : ""}
-        ${business.siret ? `<p style="margin-top:4px;font-size:13px;color:#6b7280">SIRET : ${business.siret}</p>` : ""}
+        ${business.professionalEmail ? `<p style="margin-top:2px;font-size:13px;color:#6b7280">${business.professionalEmail}</p>` : ""}
+        ${business.phone ? `<p style="margin-top:2px;font-size:13px;color:#6b7280">${business.phone}</p>` : ""}
+        ${business.siret ? `<p style="margin-top:4px;font-size:13px;color:#6b7280">${business.siret}</p>` : ""}
         ${tvaNumberLine}
       </div>
     </div>
@@ -149,7 +150,8 @@ export function generateDocumentHtml(params: DocumentParams): string {
       <p style="font-weight:600;font-size:15px">${client.name}</p>
       ${client.address ? `<p style="font-size:13px;color:#6b7280;white-space:pre-wrap;margin-top:4px">${client.address}</p>` : ""}
       ${client.email ? `<p style="font-size:13px;color:#6b7280;margin-top:2px">${client.email}</p>` : ""}
-      ${client.siret ? `<p style="font-size:13px;color:#6b7280;margin-top:2px">SIRET : ${client.siret}</p>` : ""}
+      ${client.phone ? `<p style="font-size:13px;color:#6b7280;margin-top:2px">${client.phone}</p>` : ""}
+      ${client.siret ? `<p style="font-size:13px;color:#6b7280;margin-top:2px">${client.siret}</p>` : ""}
     </div>
 
     <!-- Lines -->

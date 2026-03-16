@@ -147,6 +147,27 @@ export default function QuoteDetailPage() {
     router.push(`/dashboard/quotes/${newQuote.id}`);
   };
 
+  const handlePDF = async () => {
+    const res = await fetch(`/api/quotes/pdf?id=${id}`);
+    const html = await res.text();
+    const html2pdf = (await import("html2pdf.js")).default;
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    const el = container.querySelector("body") || container;
+    await html2pdf()
+      .set({
+        margin: 0,
+        filename: `devis-${quote?.number || "document"}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .from(el)
+      .save();
+    document.body.removeChild(container);
+  };
+
   if (loading) {
     return <div className="text-sm text-muted-foreground">Chargement...</div>;
   }
@@ -185,7 +206,7 @@ export default function QuoteDetailPage() {
               Marquer envoyé
             </button>
             <button
-              onClick={() => window.open(`/api/quotes/pdf?id=${id}`, "_blank")}
+              onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
               <Download className="inline h-4 w-4 mr-2" />
@@ -218,7 +239,7 @@ export default function QuoteDetailPage() {
               Refuser
             </button>
             <button
-              onClick={() => window.open(`/api/quotes/pdf?id=${id}`, "_blank")}
+              onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
               <Download className="inline h-4 w-4 mr-2" />
@@ -237,7 +258,7 @@ export default function QuoteDetailPage() {
               Convertir en facture
             </button>
             <button
-              onClick={() => window.open(`/api/quotes/pdf?id=${id}`, "_blank")}
+              onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
               <Download className="inline h-4 w-4 mr-2" />
@@ -249,7 +270,7 @@ export default function QuoteDetailPage() {
         return (
           <div className="space-y-2">
             <button
-              onClick={() => window.open(`/api/quotes/pdf?id=${id}`, "_blank")}
+              onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
               <Download className="inline h-4 w-4 mr-2" />

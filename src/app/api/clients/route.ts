@@ -30,7 +30,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
   }
 
-  const { name, email, address, siret, notes } = await request.json();
+  const { name, email, phone, address, siret, notes } = await request.json();
 
   if (!name) {
     return NextResponse.json({ error: "Le nom est requis" }, { status: 400 });
@@ -41,6 +41,7 @@ export async function POST(request: Request) {
       userId: session.user.id,
       name,
       email: email || null,
+      phone: phone || null,
       address: address || null,
       siret: siret || null,
       notes: notes || null,
@@ -60,7 +61,7 @@ export async function PUT(request: Request) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
   }
 
-  const { id, name, email, address, siret, notes } = await request.json();
+  const { id, name, email, phone, address, siret, notes } = await request.json();
 
   if (!id) {
     return NextResponse.json({ error: "ID requis" }, { status: 400 });
@@ -82,6 +83,7 @@ export async function PUT(request: Request) {
     data: {
       name,
       email: email || null,
+      phone: phone || null,
       address: address || null,
       siret: siret || null,
       notes: notes || null,

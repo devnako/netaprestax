@@ -21,7 +21,10 @@ interface ProfileData {
   enfantsACharge: number;
   siret: string | null;
   address: string | null;
+  ownerName: string | null;
   businessName: string | null;
+  professionalEmail: string | null;
+  phone: string | null;
   tvaNumber: string | null;
 }
 
@@ -239,6 +242,19 @@ export default function SettingsPage() {
 
         <div className="mt-4 space-y-4">
           <div>
+            <label htmlFor="ownerName" className="block text-sm font-medium text-foreground">Nom / Prénom *</label>
+            <input
+              id="ownerName"
+              type="text"
+              value={profile.ownerName || ""}
+              onChange={(e) => setProfile({ ...profile, ownerName: e.target.value || null })}
+              placeholder="Nom et prénom"
+              required
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
             <label htmlFor="businessName" className="block text-sm font-medium text-foreground">Nom commercial</label>
             <input
               id="businessName"
@@ -270,6 +286,30 @@ export default function SettingsPage() {
               onChange={(e) => setProfile({ ...profile, address: e.target.value || null })}
               placeholder="Adresse complète"
               rows={3}
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="professionalEmail" className="block text-sm font-medium text-foreground">Email professionnel</label>
+            <input
+              id="professionalEmail"
+              type="email"
+              value={profile.professionalEmail || ""}
+              onChange={(e) => setProfile({ ...profile, professionalEmail: e.target.value || null })}
+              placeholder="Optionnel"
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="phone" className="block text-sm font-medium text-foreground">Téléphone</label>
+            <input
+              id="phone"
+              type="tel"
+              value={profile.phone || ""}
+              onChange={(e) => setProfile({ ...profile, phone: e.target.value || null })}
+              placeholder="Optionnel"
               className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
           </div>

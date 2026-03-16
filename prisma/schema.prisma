@@ -86,7 +86,10 @@ model FiscalProfile {
   enfantsACharge       Int                  @default(0)
   siret                String?
   address              String?
+  ownerName            String?
   businessName         String?
+  professionalEmail    String?
+  phone                String?
   tvaNumber            String?
   createdAt            DateTime             @default(now())
   updatedAt            DateTime             @updatedAt
@@ -149,6 +152,7 @@ model Client {
   userId    String
   name      String
   email     String?
+  phone     String?
   address   String?
   siret     String?
   notes     String?

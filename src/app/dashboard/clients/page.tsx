@@ -7,6 +7,7 @@ interface Client {
   id: string;
   name: string;
   email: string | null;
+  phone: string | null;
   address: string | null;
   siret: string | null;
   notes: string | null;
@@ -21,6 +22,7 @@ export default function ClientsPage() {
   const [loading, setLoading] = useState(true);
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [address, setAddress] = useState("");
   const [siret, setSiret] = useState("");
   const [notes, setNotes] = useState("");
@@ -49,6 +51,7 @@ export default function ClientsPage() {
   const resetForm = () => {
     setName("");
     setEmail("");
+    setPhone("");
     setAddress("");
     setSiret("");
     setNotes("");
@@ -59,6 +62,7 @@ export default function ClientsPage() {
   const handleEdit = (client: Client) => {
     setName(client.name);
     setEmail(client.email || "");
+    setPhone(client.phone || "");
     setAddress(client.address || "");
     setSiret(client.siret || "");
     setNotes(client.notes || "");
@@ -80,6 +84,7 @@ export default function ClientsPage() {
           ...(editingId && { id: editingId }),
           name,
           email: email || undefined,
+          phone: phone || undefined,
           address: address || undefined,
           siret: siret || undefined,
           notes: notes || undefined,
@@ -184,6 +189,17 @@ export default function ClientsPage() {
           </div>
 
           <div>
+            <label className="text-sm font-medium text-foreground">Téléphone</label>
+            <input
+              type="tel"
+              placeholder="Téléphone"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
             <label className="text-sm font-medium text-foreground">Adresse *</label>
             <input
               type="text"
@@ -251,11 +267,14 @@ export default function ClientsPage() {
                   {client.email && (
                     <p className="text-xs text-muted-foreground">{client.email}</p>
                   )}
+                  {client.phone && (
+                    <p className="text-xs text-muted-foreground">{client.phone}</p>
+                  )}
                   {client.address && (
                     <p className="text-xs text-muted-foreground">{client.address}</p>
                   )}
                   {client.siret && (
-                    <p className="text-xs text-muted-foreground">SIRET: {client.siret}</p>
+                    <p className="text-xs text-muted-foreground">{client.siret}</p>
                   )}
                   <div className="mt-2 flex gap-4">
                     <span className="text-xs text-muted-foreground">
