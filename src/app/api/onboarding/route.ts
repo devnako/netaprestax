@@ -23,6 +23,10 @@ export async function POST(request: Request) {
     tvaAssujetti,
     acre,
     acreDateDebut,
+    siret,
+    address,
+    businessName,
+    tvaNumber,
   } = body;
 
   if (!activityType || versementLiberatoire === null || !declarationFrequency || tvaAssujetti === null || acre === null) {
@@ -43,6 +47,10 @@ export async function POST(request: Request) {
       acreDateDebut: acreDate,
       situationFamiliale: versementLiberatoire ? null : situationFamiliale || null,
       enfantsACharge: versementLiberatoire ? 0 : enfantsACharge,
+      siret,
+      address,
+      businessName,
+      tvaNumber,
     },
     update: {
       activityType,
@@ -53,6 +61,10 @@ export async function POST(request: Request) {
       acreDateDebut: acreDate,
       situationFamiliale: versementLiberatoire ? null : situationFamiliale || null,
       enfantsACharge: versementLiberatoire ? 0 : enfantsACharge,
+      siret,
+      address,
+      businessName,
+      tvaNumber,
     },
   });
 

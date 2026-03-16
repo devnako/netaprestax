@@ -45,6 +45,10 @@ export type FiscalProfileMinAggregateOutputType = {
   acreDateDebut: Date | null
   situationFamiliale: $Enums.SituationFamiliale | null
   enfantsACharge: number | null
+  siret: string | null
+  address: string | null
+  businessName: string | null
+  tvaNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -60,6 +64,10 @@ export type FiscalProfileMaxAggregateOutputType = {
   acreDateDebut: Date | null
   situationFamiliale: $Enums.SituationFamiliale | null
   enfantsACharge: number | null
+  siret: string | null
+  address: string | null
+  businessName: string | null
+  tvaNumber: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -75,6 +83,10 @@ export type FiscalProfileCountAggregateOutputType = {
   acreDateDebut: number
   situationFamiliale: number
   enfantsACharge: number
+  siret: number
+  address: number
+  businessName: number
+  tvaNumber: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -100,6 +112,10 @@ export type FiscalProfileMinAggregateInputType = {
   acreDateDebut?: true
   situationFamiliale?: true
   enfantsACharge?: true
+  siret?: true
+  address?: true
+  businessName?: true
+  tvaNumber?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -115,6 +131,10 @@ export type FiscalProfileMaxAggregateInputType = {
   acreDateDebut?: true
   situationFamiliale?: true
   enfantsACharge?: true
+  siret?: true
+  address?: true
+  businessName?: true
+  tvaNumber?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -130,6 +150,10 @@ export type FiscalProfileCountAggregateInputType = {
   acreDateDebut?: true
   situationFamiliale?: true
   enfantsACharge?: true
+  siret?: true
+  address?: true
+  businessName?: true
+  tvaNumber?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -232,6 +256,10 @@ export type FiscalProfileGroupByOutputType = {
   acreDateDebut: Date | null
   situationFamiliale: $Enums.SituationFamiliale | null
   enfantsACharge: number
+  siret: string | null
+  address: string | null
+  businessName: string | null
+  tvaNumber: string | null
   createdAt: Date
   updatedAt: Date
   _count: FiscalProfileCountAggregateOutputType | null
@@ -270,6 +298,10 @@ export type FiscalProfileWhereInput = {
   acreDateDebut?: Prisma.DateTimeNullableFilter<"FiscalProfile"> | Date | string | null
   situationFamiliale?: Prisma.EnumSituationFamilialeNullableFilter<"FiscalProfile"> | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFilter<"FiscalProfile"> | number
+  siret?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
+  address?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
+  businessName?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
+  tvaNumber?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FiscalProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FiscalProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -286,6 +318,10 @@ export type FiscalProfileOrderByWithRelationInput = {
   acreDateDebut?: Prisma.SortOrderInput | Prisma.SortOrder
   situationFamiliale?: Prisma.SortOrderInput | Prisma.SortOrder
   enfantsACharge?: Prisma.SortOrder
+  siret?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessName?: Prisma.SortOrderInput | Prisma.SortOrder
+  tvaNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -305,6 +341,10 @@ export type FiscalProfileWhereUniqueInput = Prisma.AtLeast<{
   acreDateDebut?: Prisma.DateTimeNullableFilter<"FiscalProfile"> | Date | string | null
   situationFamiliale?: Prisma.EnumSituationFamilialeNullableFilter<"FiscalProfile"> | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFilter<"FiscalProfile"> | number
+  siret?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
+  address?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
+  businessName?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
+  tvaNumber?: Prisma.StringNullableFilter<"FiscalProfile"> | string | null
   createdAt?: Prisma.DateTimeFilter<"FiscalProfile"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FiscalProfile"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -321,6 +361,10 @@ export type FiscalProfileOrderByWithAggregationInput = {
   acreDateDebut?: Prisma.SortOrderInput | Prisma.SortOrder
   situationFamiliale?: Prisma.SortOrderInput | Prisma.SortOrder
   enfantsACharge?: Prisma.SortOrder
+  siret?: Prisma.SortOrderInput | Prisma.SortOrder
+  address?: Prisma.SortOrderInput | Prisma.SortOrder
+  businessName?: Prisma.SortOrderInput | Prisma.SortOrder
+  tvaNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.FiscalProfileCountOrderByAggregateInput
@@ -344,6 +388,10 @@ export type FiscalProfileScalarWhereWithAggregatesInput = {
   acreDateDebut?: Prisma.DateTimeNullableWithAggregatesFilter<"FiscalProfile"> | Date | string | null
   situationFamiliale?: Prisma.EnumSituationFamilialeNullableWithAggregatesFilter<"FiscalProfile"> | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntWithAggregatesFilter<"FiscalProfile"> | number
+  siret?: Prisma.StringNullableWithAggregatesFilter<"FiscalProfile"> | string | null
+  address?: Prisma.StringNullableWithAggregatesFilter<"FiscalProfile"> | string | null
+  businessName?: Prisma.StringNullableWithAggregatesFilter<"FiscalProfile"> | string | null
+  tvaNumber?: Prisma.StringNullableWithAggregatesFilter<"FiscalProfile"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FiscalProfile"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FiscalProfile"> | Date | string
 }
@@ -358,6 +406,10 @@ export type FiscalProfileCreateInput = {
   acreDateDebut?: Date | string | null
   situationFamiliale?: $Enums.SituationFamiliale | null
   enfantsACharge?: number
+  siret?: string | null
+  address?: string | null
+  businessName?: string | null
+  tvaNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutProfileInput
@@ -374,6 +426,10 @@ export type FiscalProfileUncheckedCreateInput = {
   acreDateDebut?: Date | string | null
   situationFamiliale?: $Enums.SituationFamiliale | null
   enfantsACharge?: number
+  siret?: string | null
+  address?: string | null
+  businessName?: string | null
+  tvaNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -388,6 +444,10 @@ export type FiscalProfileUpdateInput = {
   acreDateDebut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   situationFamiliale?: Prisma.NullableEnumSituationFamilialeFieldUpdateOperationsInput | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFieldUpdateOperationsInput | number
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tvaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutProfileNestedInput
@@ -404,6 +464,10 @@ export type FiscalProfileUncheckedUpdateInput = {
   acreDateDebut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   situationFamiliale?: Prisma.NullableEnumSituationFamilialeFieldUpdateOperationsInput | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFieldUpdateOperationsInput | number
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tvaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -419,6 +483,10 @@ export type FiscalProfileCreateManyInput = {
   acreDateDebut?: Date | string | null
   situationFamiliale?: $Enums.SituationFamiliale | null
   enfantsACharge?: number
+  siret?: string | null
+  address?: string | null
+  businessName?: string | null
+  tvaNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -433,6 +501,10 @@ export type FiscalProfileUpdateManyMutationInput = {
   acreDateDebut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   situationFamiliale?: Prisma.NullableEnumSituationFamilialeFieldUpdateOperationsInput | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFieldUpdateOperationsInput | number
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tvaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -448,6 +520,10 @@ export type FiscalProfileUncheckedUpdateManyInput = {
   acreDateDebut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   situationFamiliale?: Prisma.NullableEnumSituationFamilialeFieldUpdateOperationsInput | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFieldUpdateOperationsInput | number
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tvaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -468,6 +544,10 @@ export type FiscalProfileCountOrderByAggregateInput = {
   acreDateDebut?: Prisma.SortOrder
   situationFamiliale?: Prisma.SortOrder
   enfantsACharge?: Prisma.SortOrder
+  siret?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  businessName?: Prisma.SortOrder
+  tvaNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -487,6 +567,10 @@ export type FiscalProfileMaxOrderByAggregateInput = {
   acreDateDebut?: Prisma.SortOrder
   situationFamiliale?: Prisma.SortOrder
   enfantsACharge?: Prisma.SortOrder
+  siret?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  businessName?: Prisma.SortOrder
+  tvaNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -502,6 +586,10 @@ export type FiscalProfileMinOrderByAggregateInput = {
   acreDateDebut?: Prisma.SortOrder
   situationFamiliale?: Prisma.SortOrder
   enfantsACharge?: Prisma.SortOrder
+  siret?: Prisma.SortOrder
+  address?: Prisma.SortOrder
+  businessName?: Prisma.SortOrder
+  tvaNumber?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -572,6 +660,10 @@ export type FiscalProfileCreateWithoutUserInput = {
   acreDateDebut?: Date | string | null
   situationFamiliale?: $Enums.SituationFamiliale | null
   enfantsACharge?: number
+  siret?: string | null
+  address?: string | null
+  businessName?: string | null
+  tvaNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -586,6 +678,10 @@ export type FiscalProfileUncheckedCreateWithoutUserInput = {
   acreDateDebut?: Date | string | null
   situationFamiliale?: $Enums.SituationFamiliale | null
   enfantsACharge?: number
+  siret?: string | null
+  address?: string | null
+  businessName?: string | null
+  tvaNumber?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -616,6 +712,10 @@ export type FiscalProfileUpdateWithoutUserInput = {
   acreDateDebut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   situationFamiliale?: Prisma.NullableEnumSituationFamilialeFieldUpdateOperationsInput | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFieldUpdateOperationsInput | number
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tvaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -630,6 +730,10 @@ export type FiscalProfileUncheckedUpdateWithoutUserInput = {
   acreDateDebut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   situationFamiliale?: Prisma.NullableEnumSituationFamilialeFieldUpdateOperationsInput | $Enums.SituationFamiliale | null
   enfantsACharge?: Prisma.IntFieldUpdateOperationsInput | number
+  siret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  address?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  businessName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tvaNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -647,6 +751,10 @@ export type FiscalProfileSelect<ExtArgs extends runtime.Types.Extensions.Interna
   acreDateDebut?: boolean
   situationFamiliale?: boolean
   enfantsACharge?: boolean
+  siret?: boolean
+  address?: boolean
+  businessName?: boolean
+  tvaNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -663,6 +771,10 @@ export type FiscalProfileSelectCreateManyAndReturn<ExtArgs extends runtime.Types
   acreDateDebut?: boolean
   situationFamiliale?: boolean
   enfantsACharge?: boolean
+  siret?: boolean
+  address?: boolean
+  businessName?: boolean
+  tvaNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -679,6 +791,10 @@ export type FiscalProfileSelectUpdateManyAndReturn<ExtArgs extends runtime.Types
   acreDateDebut?: boolean
   situationFamiliale?: boolean
   enfantsACharge?: boolean
+  siret?: boolean
+  address?: boolean
+  businessName?: boolean
+  tvaNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -695,11 +811,15 @@ export type FiscalProfileSelectScalar = {
   acreDateDebut?: boolean
   situationFamiliale?: boolean
   enfantsACharge?: boolean
+  siret?: boolean
+  address?: boolean
+  businessName?: boolean
+  tvaNumber?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type FiscalProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "activityType" | "versementLiberatoire" | "declarationFrequency" | "tvaAssujetti" | "acre" | "acreDateDebut" | "situationFamiliale" | "enfantsACharge" | "createdAt" | "updatedAt", ExtArgs["result"]["fiscalProfile"]>
+export type FiscalProfileOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "activityType" | "versementLiberatoire" | "declarationFrequency" | "tvaAssujetti" | "acre" | "acreDateDebut" | "situationFamiliale" | "enfantsACharge" | "siret" | "address" | "businessName" | "tvaNumber" | "createdAt" | "updatedAt", ExtArgs["result"]["fiscalProfile"]>
 export type FiscalProfileInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -726,6 +846,10 @@ export type $FiscalProfilePayload<ExtArgs extends runtime.Types.Extensions.Inter
     acreDateDebut: Date | null
     situationFamiliale: $Enums.SituationFamiliale | null
     enfantsACharge: number
+    siret: string | null
+    address: string | null
+    businessName: string | null
+    tvaNumber: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["fiscalProfile"]>
@@ -1162,6 +1286,10 @@ export interface FiscalProfileFieldRefs {
   readonly acreDateDebut: Prisma.FieldRef<"FiscalProfile", 'DateTime'>
   readonly situationFamiliale: Prisma.FieldRef<"FiscalProfile", 'SituationFamiliale'>
   readonly enfantsACharge: Prisma.FieldRef<"FiscalProfile", 'Int'>
+  readonly siret: Prisma.FieldRef<"FiscalProfile", 'String'>
+  readonly address: Prisma.FieldRef<"FiscalProfile", 'String'>
+  readonly businessName: Prisma.FieldRef<"FiscalProfile", 'String'>
+  readonly tvaNumber: Prisma.FieldRef<"FiscalProfile", 'String'>
   readonly createdAt: Prisma.FieldRef<"FiscalProfile", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FiscalProfile", 'DateTime'>
 }

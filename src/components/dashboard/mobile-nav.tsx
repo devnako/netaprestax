@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Wallet, Receipt, BarChart3,
-  Bell, Calculator, Download, Settings, MoreHorizontal, X,
+  Bell, Calculator, Download, Settings, MoreHorizontal, X, Users, FileText, FileCheck,
 } from "lucide-react";
 
 const PRIMARY = [
@@ -16,6 +16,9 @@ const PRIMARY = [
 ];
 
 const SECONDARY = [
+  { href: "/dashboard/clients", icon: Users, label: "Clients" },
+  { href: "/dashboard/quotes", icon: FileText, label: "Devis" },
+  { href: "/dashboard/invoices", icon: FileCheck, label: "Factures" },
   { href: "/dashboard/alerts", icon: Bell, label: "Alertes" },
   { href: "/dashboard/simulation", icon: Calculator, label: "Simulation" },
   { href: "/dashboard/export", icon: Download, label: "Export" },

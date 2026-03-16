@@ -29,5 +29,9 @@ export async function GET() {
     acreDateDebut: profile.acreDateDebut,
     situationFamiliale: profile.situationFamiliale,
     enfantsACharge: profile.enfantsACharge,
+    siret: profile.siret,
+    address: profile.address,
+    businessName: profile.businessName,
+    tvaNumber: profile.tvaNumber,
   });
 }

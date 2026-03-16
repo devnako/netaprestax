@@ -19,6 +19,10 @@ interface ProfileData {
   acreDateDebut: string | null;
   situationFamiliale: SituationFamiliale | null;
   enfantsACharge: number;
+  siret: string | null;
+  address: string | null;
+  businessName: string | null;
+  tvaNumber: string | null;
 }
 
 const ACTIVITY_OPTIONS = [
@@ -226,6 +230,63 @@ export default function SettingsPage() {
           >
             {savingPassword ? "Modification..." : "Changer le mot de passe"}
           </button>
+        </div>
+      </section>
+
+      {/* Business Information Section */}
+      <section className="mt-10 max-w-lg border-t border-border pt-6">
+        <h2 className="text-lg font-semibold text-foreground">Informations entreprise</h2>
+
+        <div className="mt-4 space-y-4">
+          <div>
+            <label htmlFor="businessName" className="block text-sm font-medium text-foreground">Nom commercial</label>
+            <input
+              id="businessName"
+              type="text"
+              value={profile.businessName || ""}
+              onChange={(e) => setProfile({ ...profile, businessName: e.target.value || null })}
+              placeholder="Optionnel"
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="siret" className="block text-sm font-medium text-foreground">SIRET</label>
+            <input
+              id="siret"
+              type="text"
+              value={profile.siret || ""}
+              onChange={(e) => setProfile({ ...profile, siret: e.target.value || null })}
+              placeholder="14 chiffres"
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          <div>
+            <label htmlFor="address" className="block text-sm font-medium text-foreground">Adresse</label>
+            <textarea
+              id="address"
+              value={profile.address || ""}
+              onChange={(e) => setProfile({ ...profile, address: e.target.value || null })}
+              placeholder="Adresse complète"
+              rows={3}
+              className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+          </div>
+
+          {profile.tvaAssujetti === true && (
+            <div>
+              <label htmlFor="tvaNumber" className="block text-sm font-medium text-foreground">N° TVA intracommunautaire</label>
+              <input
+                id="tvaNumber"
+                type="text"
+                value={profile.tvaNumber || ""}
+                onChange={(e) => setProfile({ ...profile, tvaNumber: e.target.value || null })}
+                placeholder="FRXX XXXXXXXXX"
+                className="mt-1 block w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+          )}
         </div>
       </section>
 

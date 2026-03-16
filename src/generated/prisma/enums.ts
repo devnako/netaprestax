@@ -58,3 +58,23 @@ export const ExpenseCategory = {
 } as const
 
 export type ExpenseCategory = (typeof ExpenseCategory)[keyof typeof ExpenseCategory]
+
+
+export const QuoteStatus = {
+  DRAFT: 'DRAFT',
+  SENT: 'SENT',
+  ACCEPTED: 'ACCEPTED',
+  REFUSED: 'REFUSED'
+} as const
+
+export type QuoteStatus = (typeof QuoteStatus)[keyof typeof QuoteStatus]
+
+
+export const InvoiceStatus = {
+  DRAFT: 'DRAFT',
+  PENDING: 'PENDING',
+  PAID: 'PAID',
+  OVERDUE: 'OVERDUE'
+} as const
+
+export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]

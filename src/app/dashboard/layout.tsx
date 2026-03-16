@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download } from "lucide-react";
+import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download, Users, FileText, FileCheck } from "lucide-react";
 import { SignOutButton } from "@/components/dashboard/sign-out-button";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 
@@ -7,6 +7,9 @@ const NAV_ITEMS = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
   { href: "/dashboard/revenue", icon: Wallet, label: "Revenus" },
   { href: "/dashboard/expenses", icon: Receipt, label: "Frais" },
+  { href: "/dashboard/clients", icon: Users, label: "Clients" },
+  { href: "/dashboard/quotes", icon: FileText, label: "Devis" },
+  { href: "/dashboard/invoices", icon: FileCheck, label: "Factures" },
   { href: "/dashboard/history", icon: BarChart3, label: "Historique" },
   { href: "/dashboard/alerts", icon: Bell, label: "Alertes" },
   { href: "/dashboard/simulation", icon: Calculator, label: "Simulation" },

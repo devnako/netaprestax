@@ -81,3 +81,23 @@ export type Expense = Prisma.ExpenseModel
  * 
  */
 export type AlertLog = Prisma.AlertLogModel
+/**
+ * Model Client
+ * 
+ */
+export type Client = Prisma.ClientModel
+/**
+ * Model Quote
+ * 
+ */
+export type Quote = Prisma.QuoteModel
+/**
+ * Model Invoice
+ * 
+ */
+export type Invoice = Prisma.InvoiceModel
+/**
+ * Model DocumentLine
+ * 
+ */
+export type DocumentLine = Prisma.DocumentLineModel
