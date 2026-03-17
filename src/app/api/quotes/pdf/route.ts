@@ -51,6 +51,10 @@ export async function GET(request: NextRequest) {
     })),
     notes: quote.notes,
     paymentTerms: quote.paymentTerms,
+    paymentMethod: quote.paymentMethod,
+    bankAccountHolder: quote.bankAccountHolder,
+    bankIban: quote.bankIban,
+    bankBic: quote.bankBic,
   });
 
   return new NextResponse(html, {

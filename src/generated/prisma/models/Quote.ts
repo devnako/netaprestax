@@ -32,6 +32,10 @@ export type QuoteMinAggregateOutputType = {
   status: $Enums.QuoteStatus | null
   notes: string | null
   paymentTerms: string | null
+  paymentMethod: string | null
+  bankAccountHolder: string | null
+  bankIban: string | null
+  bankBic: string | null
   issuedAt: Date | null
   validUntil: Date | null
   createdAt: Date | null
@@ -46,6 +50,10 @@ export type QuoteMaxAggregateOutputType = {
   status: $Enums.QuoteStatus | null
   notes: string | null
   paymentTerms: string | null
+  paymentMethod: string | null
+  bankAccountHolder: string | null
+  bankIban: string | null
+  bankBic: string | null
   issuedAt: Date | null
   validUntil: Date | null
   createdAt: Date | null
@@ -60,6 +68,10 @@ export type QuoteCountAggregateOutputType = {
   status: number
   notes: number
   paymentTerms: number
+  paymentMethod: number
+  bankAccountHolder: number
+  bankIban: number
+  bankBic: number
   issuedAt: number
   validUntil: number
   createdAt: number
@@ -76,6 +88,10 @@ export type QuoteMinAggregateInputType = {
   status?: true
   notes?: true
   paymentTerms?: true
+  paymentMethod?: true
+  bankAccountHolder?: true
+  bankIban?: true
+  bankBic?: true
   issuedAt?: true
   validUntil?: true
   createdAt?: true
@@ -90,6 +106,10 @@ export type QuoteMaxAggregateInputType = {
   status?: true
   notes?: true
   paymentTerms?: true
+  paymentMethod?: true
+  bankAccountHolder?: true
+  bankIban?: true
+  bankBic?: true
   issuedAt?: true
   validUntil?: true
   createdAt?: true
@@ -104,6 +124,10 @@ export type QuoteCountAggregateInputType = {
   status?: true
   notes?: true
   paymentTerms?: true
+  paymentMethod?: true
+  bankAccountHolder?: true
+  bankIban?: true
+  bankBic?: true
   issuedAt?: true
   validUntil?: true
   createdAt?: true
@@ -191,6 +215,10 @@ export type QuoteGroupByOutputType = {
   status: $Enums.QuoteStatus
   notes: string | null
   paymentTerms: string | null
+  paymentMethod: string | null
+  bankAccountHolder: string | null
+  bankIban: string | null
+  bankBic: string | null
   issuedAt: Date
   validUntil: Date | null
   createdAt: Date
@@ -226,6 +254,10 @@ export type QuoteWhereInput = {
   status?: Prisma.EnumQuoteStatusFilter<"Quote"> | $Enums.QuoteStatus
   notes?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Quote"> | string | null
+  paymentMethod?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankAccountHolder?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankIban?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankBic?: Prisma.StringNullableFilter<"Quote"> | string | null
   issuedAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   validUntil?: Prisma.DateTimeNullableFilter<"Quote"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
@@ -244,6 +276,10 @@ export type QuoteOrderByWithRelationInput = {
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankAccountHolder?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankIban?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankBic?: Prisma.SortOrderInput | Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -266,6 +302,10 @@ export type QuoteWhereUniqueInput = Prisma.AtLeast<{
   status?: Prisma.EnumQuoteStatusFilter<"Quote"> | $Enums.QuoteStatus
   notes?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Quote"> | string | null
+  paymentMethod?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankAccountHolder?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankIban?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankBic?: Prisma.StringNullableFilter<"Quote"> | string | null
   issuedAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   validUntil?: Prisma.DateTimeNullableFilter<"Quote"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
@@ -284,6 +324,10 @@ export type QuoteOrderByWithAggregationInput = {
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankAccountHolder?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankIban?: Prisma.SortOrderInput | Prisma.SortOrder
+  bankBic?: Prisma.SortOrderInput | Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   validUntil?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -304,6 +348,10 @@ export type QuoteScalarWhereWithAggregatesInput = {
   status?: Prisma.EnumQuoteStatusWithAggregatesFilter<"Quote"> | $Enums.QuoteStatus
   notes?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  paymentMethod?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  bankAccountHolder?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  bankIban?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  bankBic?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
   issuedAt?: Prisma.DateTimeWithAggregatesFilter<"Quote"> | Date | string
   validUntil?: Prisma.DateTimeNullableWithAggregatesFilter<"Quote"> | Date | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Quote"> | Date | string
@@ -316,6 +364,10 @@ export type QuoteCreateInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -334,6 +386,10 @@ export type QuoteUncheckedCreateInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -348,6 +404,10 @@ export type QuoteUpdateInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -366,6 +426,10 @@ export type QuoteUncheckedUpdateInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -382,6 +446,10 @@ export type QuoteCreateManyInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -394,6 +462,10 @@ export type QuoteUpdateManyMutationInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -408,6 +480,10 @@ export type QuoteUncheckedUpdateManyInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -437,6 +513,10 @@ export type QuoteCountOrderByAggregateInput = {
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankAccountHolder?: Prisma.SortOrder
+  bankIban?: Prisma.SortOrder
+  bankBic?: Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -451,6 +531,10 @@ export type QuoteMaxOrderByAggregateInput = {
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankAccountHolder?: Prisma.SortOrder
+  bankIban?: Prisma.SortOrder
+  bankBic?: Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -465,6 +549,10 @@ export type QuoteMinOrderByAggregateInput = {
   status?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
+  paymentMethod?: Prisma.SortOrder
+  bankAccountHolder?: Prisma.SortOrder
+  bankIban?: Prisma.SortOrder
+  bankBic?: Prisma.SortOrder
   issuedAt?: Prisma.SortOrder
   validUntil?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
@@ -602,6 +690,10 @@ export type QuoteCreateWithoutUserInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -618,6 +710,10 @@ export type QuoteUncheckedCreateWithoutUserInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -663,6 +759,10 @@ export type QuoteScalarWhereInput = {
   status?: Prisma.EnumQuoteStatusFilter<"Quote"> | $Enums.QuoteStatus
   notes?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Quote"> | string | null
+  paymentMethod?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankAccountHolder?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankIban?: Prisma.StringNullableFilter<"Quote"> | string | null
+  bankBic?: Prisma.StringNullableFilter<"Quote"> | string | null
   issuedAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   validUntil?: Prisma.DateTimeNullableFilter<"Quote"> | Date | string | null
   createdAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
@@ -675,6 +775,10 @@ export type QuoteCreateWithoutClientInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -691,6 +795,10 @@ export type QuoteUncheckedCreateWithoutClientInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -731,6 +839,10 @@ export type QuoteCreateWithoutInvoiceInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -748,6 +860,10 @@ export type QuoteUncheckedCreateWithoutInvoiceInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -777,6 +893,10 @@ export type QuoteUpdateWithoutInvoiceInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -794,6 +914,10 @@ export type QuoteUncheckedUpdateWithoutInvoiceInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -807,6 +931,10 @@ export type QuoteCreateWithoutLinesInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -824,6 +952,10 @@ export type QuoteUncheckedCreateWithoutLinesInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -853,6 +985,10 @@ export type QuoteUpdateWithoutLinesInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -870,6 +1006,10 @@ export type QuoteUncheckedUpdateWithoutLinesInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -884,6 +1024,10 @@ export type QuoteCreateManyUserInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -896,6 +1040,10 @@ export type QuoteUpdateWithoutUserInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -912,6 +1060,10 @@ export type QuoteUncheckedUpdateWithoutUserInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -927,6 +1079,10 @@ export type QuoteUncheckedUpdateManyWithoutUserInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -940,6 +1096,10 @@ export type QuoteCreateManyClientInput = {
   status?: $Enums.QuoteStatus
   notes?: string | null
   paymentTerms?: string | null
+  paymentMethod?: string | null
+  bankAccountHolder?: string | null
+  bankIban?: string | null
+  bankBic?: string | null
   issuedAt?: Date | string
   validUntil?: Date | string | null
   createdAt?: Date | string
@@ -952,6 +1112,10 @@ export type QuoteUpdateWithoutClientInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -968,6 +1132,10 @@ export type QuoteUncheckedUpdateWithoutClientInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -983,6 +1151,10 @@ export type QuoteUncheckedUpdateManyWithoutClientInput = {
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankAccountHolder?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankIban?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  bankBic?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -1028,6 +1200,10 @@ export type QuoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   status?: boolean
   notes?: boolean
   paymentTerms?: boolean
+  paymentMethod?: boolean
+  bankAccountHolder?: boolean
+  bankIban?: boolean
+  bankBic?: boolean
   issuedAt?: boolean
   validUntil?: boolean
   createdAt?: boolean
@@ -1047,6 +1223,10 @@ export type QuoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   notes?: boolean
   paymentTerms?: boolean
+  paymentMethod?: boolean
+  bankAccountHolder?: boolean
+  bankIban?: boolean
+  bankBic?: boolean
   issuedAt?: boolean
   validUntil?: boolean
   createdAt?: boolean
@@ -1063,6 +1243,10 @@ export type QuoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   status?: boolean
   notes?: boolean
   paymentTerms?: boolean
+  paymentMethod?: boolean
+  bankAccountHolder?: boolean
+  bankIban?: boolean
+  bankBic?: boolean
   issuedAt?: boolean
   validUntil?: boolean
   createdAt?: boolean
@@ -1079,13 +1263,17 @@ export type QuoteSelectScalar = {
   status?: boolean
   notes?: boolean
   paymentTerms?: boolean
+  paymentMethod?: boolean
+  bankAccountHolder?: boolean
+  bankIban?: boolean
+  bankBic?: boolean
   issuedAt?: boolean
   validUntil?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type QuoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "number" | "status" | "notes" | "paymentTerms" | "issuedAt" | "validUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["quote"]>
+export type QuoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "number" | "status" | "notes" | "paymentTerms" | "paymentMethod" | "bankAccountHolder" | "bankIban" | "bankBic" | "issuedAt" | "validUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["quote"]>
 export type QuoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -1118,6 +1306,10 @@ export type $QuotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     status: $Enums.QuoteStatus
     notes: string | null
     paymentTerms: string | null
+    paymentMethod: string | null
+    bankAccountHolder: string | null
+    bankIban: string | null
+    bankBic: string | null
     issuedAt: Date
     validUntil: Date | null
     createdAt: Date
@@ -1556,6 +1748,10 @@ export interface QuoteFieldRefs {
   readonly status: Prisma.FieldRef<"Quote", 'QuoteStatus'>
   readonly notes: Prisma.FieldRef<"Quote", 'String'>
   readonly paymentTerms: Prisma.FieldRef<"Quote", 'String'>
+  readonly paymentMethod: Prisma.FieldRef<"Quote", 'String'>
+  readonly bankAccountHolder: Prisma.FieldRef<"Quote", 'String'>
+  readonly bankIban: Prisma.FieldRef<"Quote", 'String'>
+  readonly bankBic: Prisma.FieldRef<"Quote", 'String'>
   readonly issuedAt: Prisma.FieldRef<"Quote", 'DateTime'>
   readonly validUntil: Prisma.FieldRef<"Quote", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Quote", 'DateTime'>

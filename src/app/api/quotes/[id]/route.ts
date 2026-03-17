@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
   const { id } = await params;
   const body = await request.json();
-  const { clientId, notes, paymentTerms, validUntil, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, validUntil, lines } = body;
 
   const quote = await prisma.quote.findUnique({ where: { id } });
   if (!quote || quote.userId !== session.user.id) {
@@ -50,6 +50,10 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
         clientId,
         notes,
         paymentTerms,
+        paymentMethod: paymentMethod || null,
+        bankAccountHolder: paymentMethod === "Virement bancaire" ? (bankAccountHolder || null) : null,
+        bankIban: paymentMethod === "Virement bancaire" ? (bankIban || null) : null,
+        bankBic: paymentMethod === "Virement bancaire" ? (bankBic || null) : null,
         validUntil: validUntil ? new Date(validUntil) : null,
         lines: {
           create: lines.map((l: any, i: number) => ({

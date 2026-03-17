@@ -174,17 +174,21 @@ model Client {
 }
 
 model Quote {
-  id           String      @id @default(cuid())
-  userId       String
-  clientId     String
-  number       String
-  status       QuoteStatus @default(DRAFT)
-  notes        String?
-  paymentTerms String?
-  issuedAt     DateTime    @default(now())
-  validUntil   DateTime?
-  createdAt    DateTime    @default(now())
-  updatedAt    DateTime    @updatedAt
+  id                String      @id @default(cuid())
+  userId            String
+  clientId          String
+  number            String
+  status            QuoteStatus @default(DRAFT)
+  notes             String?
+  paymentTerms      String?
+  paymentMethod     String?
+  bankAccountHolder String?
+  bankIban          String?
+  bankBic           String?
+  issuedAt          DateTime    @default(now())
+  validUntil        DateTime?
+  createdAt         DateTime    @default(now())
+  updatedAt         DateTime    @updatedAt
 
   user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   client  Client         @relation(fields: [clientId], references: [id])
@@ -196,19 +200,23 @@ model Quote {
 }
 
 model Invoice {
-  id              String        @id @default(cuid())
-  userId          String
-  clientId        String
-  quoteId         String?       @unique
-  parentInvoiceId String?
-  number          String
-  status          InvoiceStatus @default(DRAFT)
-  notes           String?
-  paymentTerms    String?
-  issuedAt        DateTime      @default(now())
-  paidAt          DateTime?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id                String        @id @default(cuid())
+  userId            String
+  clientId          String
+  quoteId           String?       @unique
+  parentInvoiceId   String?
+  number            String
+  status            InvoiceStatus @default(DRAFT)
+  notes             String?
+  paymentTerms      String?
+  paymentMethod     String?
+  bankAccountHolder String?
+  bankIban          String?
+  bankBic           String?
+  issuedAt          DateTime      @default(now())
+  paidAt            DateTime?
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
   client        Client         @relation(fields: [clientId], references: [id])

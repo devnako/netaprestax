@@ -56,6 +56,10 @@ export async function GET(request: NextRequest) {
     })),
     notes: invoice.notes,
     paymentTerms: invoice.paymentTerms,
+    paymentMethod: invoice.paymentMethod,
+    bankAccountHolder: invoice.bankAccountHolder,
+    bankIban: invoice.bankIban,
+    bankBic: invoice.bankBic,
     parentInvoiceNumber: invoice.parentInvoice?.number || null,
   });
 

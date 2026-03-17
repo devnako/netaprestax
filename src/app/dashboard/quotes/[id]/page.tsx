@@ -26,6 +26,10 @@ interface Quote {
   lines: QuoteLine[];
   notes: string | null;
   paymentTerms: string;
+  paymentMethod: string | null;
+  bankAccountHolder: string | null;
+  bankIban: string | null;
+  bankBic: string | null;
   validUntil: string | null;
   invoiceId: string | null;
 }
@@ -133,6 +137,10 @@ export default function QuoteDetailPage() {
         })),
         notes: quote?.notes,
         paymentTerms: quote?.paymentTerms,
+        paymentMethod: quote?.paymentMethod,
+        bankAccountHolder: quote?.bankAccountHolder,
+        bankIban: quote?.bankIban,
+        bankBic: quote?.bankBic,
       }),
     });
 
@@ -348,6 +356,28 @@ export default function QuoteDetailPage() {
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">Conditions de paiement</h3>
                 <p className="mt-1 text-foreground">{quote.paymentTerms}</p>
+              </div>
+            )}
+
+            {quote.paymentMethod && (
+              <div>
+                <h3 className="text-sm font-medium text-muted-foreground">Moyen de paiement</h3>
+                <p className="mt-1 text-foreground">{quote.paymentMethod}</p>
+              </div>
+            )}
+
+            {quote.paymentMethod === "Virement bancaire" && (quote.bankAccountHolder || quote.bankIban || quote.bankBic) && (
+              <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 space-y-1">
+                <p className="text-xs font-medium text-blue-800 mb-2">Coordonnées bancaires</p>
+                {quote.bankAccountHolder && (
+                  <p className="text-sm text-blue-900"><span className="font-medium">Titulaire :</span> {quote.bankAccountHolder}</p>
+                )}
+                {quote.bankIban && (
+                  <p className="text-sm text-blue-900"><span className="font-medium">IBAN :</span> {quote.bankIban}</p>
+                )}
+                {quote.bankBic && (
+                  <p className="text-sm text-blue-900"><span className="font-medium">BIC :</span> {quote.bankBic}</p>
+                )}
               </div>
             )}
 

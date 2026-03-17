@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
   const body = await request.json();
-  const { clientId, notes, paymentTerms, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, lines } = body;
 
   if (!clientId || !lines || !Array.isArray(lines) || lines.length === 0) {
     return NextResponse.json(
@@ -55,6 +55,10 @@ export async function POST(request: NextRequest) {
       number,
       notes: notes || null,
       paymentTerms: paymentTerms || null,
+      paymentMethod: paymentMethod || null,
+      bankAccountHolder: paymentMethod === "Virement bancaire" ? (bankAccountHolder || null) : null,
+      bankIban: paymentMethod === "Virement bancaire" ? (bankIban || null) : null,
+      bankBic: paymentMethod === "Virement bancaire" ? (bankBic || null) : null,
       status: "DRAFT",
       lines: {
         create: lines.map((line: any, index: number) => ({

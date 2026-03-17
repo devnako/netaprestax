@@ -35,6 +35,10 @@ interface Invoice {
   lines: InvoiceLine[];
   notes: string;
   paymentTerms: string;
+  paymentMethod: string | null;
+  bankAccountHolder: string | null;
+  bankIban: string | null;
+  bankBic: string | null;
   quoteId: string | null;
   quote: {
     number: string;
@@ -70,6 +74,10 @@ export default function InvoiceDetailPage() {
   const [editLines, setEditLines] = useState<LineItemInput[]>([]);
   const [editNotes, setEditNotes] = useState("");
   const [editPaymentTerms, setEditPaymentTerms] = useState("");
+  const [editPaymentMethod, setEditPaymentMethod] = useState("");
+  const [editBankAccountHolder, setEditBankAccountHolder] = useState("");
+  const [editBankIban, setEditBankIban] = useState("");
+  const [editBankBic, setEditBankBic] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirmPay, setConfirmPay] = useState(false);
   const [confirmCreditNote, setConfirmCreditNote] = useState(false);
@@ -97,6 +105,10 @@ export default function InvoiceDetailPage() {
           );
           setEditNotes(data.notes || "");
           setEditPaymentTerms(data.paymentTerms || "À réception");
+          setEditPaymentMethod(data.paymentMethod || "");
+          setEditBankAccountHolder(data.bankAccountHolder || "");
+          setEditBankIban(data.bankIban || "");
+          setEditBankBic(data.bankBic || "");
         }
 
         if (settingsRes.ok) {
@@ -131,6 +143,10 @@ export default function InvoiceDetailPage() {
           })),
           notes: editNotes,
           paymentTerms: editPaymentTerms,
+          paymentMethod: editPaymentMethod || null,
+          bankAccountHolder: editBankAccountHolder,
+          bankIban: editBankIban,
+          bankBic: editBankBic,
         }),
       });
 
@@ -346,7 +362,29 @@ export default function InvoiceDetailPage() {
                 </p>
                 <p className="text-foreground">{invoice.paymentTerms}</p>
               </div>
+              {invoice.paymentMethod && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">
+                    Moyen de paiement
+                  </p>
+                  <p className="text-foreground">{invoice.paymentMethod}</p>
+                </div>
+              )}
             </div>
+            {invoice.paymentMethod === "Virement bancaire" && (invoice.bankAccountHolder || invoice.bankIban || invoice.bankBic) && (
+              <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3 space-y-1">
+                <p className="text-xs font-medium text-blue-800 mb-2">Coordonnées bancaires</p>
+                {invoice.bankAccountHolder && (
+                  <p className="text-sm text-blue-900"><span className="font-medium">Titulaire :</span> {invoice.bankAccountHolder}</p>
+                )}
+                {invoice.bankIban && (
+                  <p className="text-sm text-blue-900"><span className="font-medium">IBAN :</span> {invoice.bankIban}</p>
+                )}
+                {invoice.bankBic && (
+                  <p className="text-sm text-blue-900"><span className="font-medium">BIC :</span> {invoice.bankBic}</p>
+                )}
+              </div>
+            )}
           </div>
 
           {/* Line Items */}
@@ -506,6 +544,51 @@ export default function InvoiceDetailPage() {
                   className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
                 />
               </div>
+
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Moyen de paiement (optionnel)
+                </label>
+                <select
+                  value={editPaymentMethod}
+                  onChange={(e) => setEditPaymentMethod(e.target.value)}
+                  className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+                >
+                  <option value="">Non précisé</option>
+                  <option value="Virement bancaire">Virement bancaire</option>
+                  <option value="Chèque">Chèque</option>
+                  <option value="Espèces">Espèces</option>
+                  <option value="Carte bancaire">Carte bancaire</option>
+                  <option value="Autre">Autre</option>
+                </select>
+              </div>
+
+              {editPaymentMethod === "Virement bancaire" && (
+                <div className="space-y-3 rounded-lg border border-border bg-muted/50 p-4">
+                  <p className="text-sm font-medium text-foreground">Coordonnées bancaires (optionnel)</p>
+                  <input
+                    type="text"
+                    value={editBankAccountHolder}
+                    onChange={(e) => setEditBankAccountHolder(e.target.value)}
+                    placeholder="Titulaire du compte"
+                    className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={editBankIban}
+                    onChange={(e) => setEditBankIban(e.target.value)}
+                    placeholder="IBAN"
+                    className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+                  />
+                  <input
+                    type="text"
+                    value={editBankBic}
+                    onChange={(e) => setEditBankBic(e.target.value)}
+                    placeholder="BIC"
+                    className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+                  />
+                </div>
+              )}
 
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">

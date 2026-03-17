@@ -40,6 +40,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       number,
       notes: quote.notes,
       paymentTerms: quote.paymentTerms,
+      paymentMethod: quote.paymentMethod,
+      bankAccountHolder: quote.bankAccountHolder,
+      bankIban: quote.bankIban,
+      bankBic: quote.bankBic,
       lines: {
         create: quote.lines.map((l, i) => ({
           description: l.description,

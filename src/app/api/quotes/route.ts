@@ -26,7 +26,7 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
   const body = await request.json();
-  const { clientId, notes, paymentTerms, validUntil, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, validUntil, lines } = body;
 
   if (!clientId || !lines || lines.length === 0) {
     return NextResponse.json({ error: "clientId et lines sont requis" }, { status: 400 });
@@ -41,6 +41,10 @@ export async function POST(request: NextRequest) {
       number,
       notes: notes || null,
       paymentTerms: paymentTerms || null,
+      paymentMethod: paymentMethod || null,
+      bankAccountHolder: paymentMethod === "Virement bancaire" ? (bankAccountHolder || null) : null,
+      bankIban: paymentMethod === "Virement bancaire" ? (bankIban || null) : null,
+      bankBic: paymentMethod === "Virement bancaire" ? (bankBic || null) : null,
       validUntil: validUntil ? new Date(validUntil) : null,
       lines: {
         create: lines.map((l: any, i: number) => ({

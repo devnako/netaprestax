@@ -39,7 +39,7 @@ export async function PUT(
 
   const { id } = await params;
   const body = await request.json();
-  const { clientId, notes, paymentTerms, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, lines } = body;
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
@@ -72,6 +72,10 @@ export async function PUT(
       clientId: clientId || undefined,
       notes: notes !== undefined ? notes : undefined,
       paymentTerms: paymentTerms !== undefined ? paymentTerms : undefined,
+      paymentMethod: paymentMethod !== undefined ? (paymentMethod || null) : undefined,
+      bankAccountHolder: paymentMethod === "Virement bancaire" ? (bankAccountHolder || null) : paymentMethod !== undefined ? null : undefined,
+      bankIban: paymentMethod === "Virement bancaire" ? (bankIban || null) : paymentMethod !== undefined ? null : undefined,
+      bankBic: paymentMethod === "Virement bancaire" ? (bankBic || null) : paymentMethod !== undefined ? null : undefined,
       lines: {
         deleteMany: {},
         create: lines
@@ -104,7 +108,51 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const { status } = body;
+  const { status, lines, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic } = body;
+
+  // Content edit mode (no status change)
+  if (!status && (lines || notes !== undefined || paymentTerms !== undefined || paymentMethod !== undefined)) {
+    const invoice = await prisma.invoice.findUnique({ where: { id } });
+    if (!invoice || invoice.userId !== session.user.id) {
+      return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+    }
+    if (invoice.status !== "DRAFT") {
+      return NextResponse.json({ error: "Seules les factures DRAFT peuvent être modifiées" }, { status: 400 });
+    }
+
+    const updatedInvoice = await prisma.invoice.update({
+      where: { id },
+      data: {
+        notes: notes !== undefined ? notes : undefined,
+        paymentTerms: paymentTerms !== undefined ? paymentTerms : undefined,
+        paymentMethod: paymentMethod !== undefined ? (paymentMethod || null) : undefined,
+        bankAccountHolder: paymentMethod === "Virement bancaire" ? (bankAccountHolder || null) : paymentMethod !== undefined ? null : undefined,
+        bankIban: paymentMethod === "Virement bancaire" ? (bankIban || null) : paymentMethod !== undefined ? null : undefined,
+        bankBic: paymentMethod === "Virement bancaire" ? (bankBic || null) : paymentMethod !== undefined ? null : undefined,
+        ...(lines ? {
+          lines: {
+            deleteMany: {},
+            create: lines.map((line: any, index: number) => ({
+              description: line.description,
+              quantity: line.quantity,
+              unitPrice: line.unitPrice,
+              vatRate: line.vatRate ?? 20,
+              sortOrder: index,
+            })),
+          },
+        } : {}),
+      },
+      include: {
+        client: { select: { name: true } },
+        lines: { orderBy: { sortOrder: "asc" } },
+        quote: { select: { id: true, number: true } },
+        parentInvoice: { select: { id: true, number: true } },
+        creditNotes: { select: { id: true, number: true } },
+      },
+    });
+
+    return NextResponse.json(updatedInvoice);
+  }
 
   const validStatuses = ["PENDING", "PAID", "OVERDUE"];
   if (!status || !validStatuses.includes(status)) {

@@ -28,6 +28,10 @@ export default function NewQuotePage() {
   const [notes, setNotes] = useState("");
   const [paymentTerms, setPaymentTerms] = useState("À réception");
   const [customPaymentTerms, setCustomPaymentTerms] = useState("");
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [bankAccountHolder, setBankAccountHolder] = useState("");
+  const [bankIban, setBankIban] = useState("");
+  const [bankBic, setBankBic] = useState("");
   const [validUntil, setValidUntil] = useState("");
   const [tvaAssujetti, setTvaAssujetti] = useState(false);
   const [saving, setSaving] = useState(false);
@@ -130,6 +134,10 @@ export default function NewQuotePage() {
         })),
         notes: notes || null,
         paymentTerms: finalPaymentTerms,
+        paymentMethod: paymentMethod || null,
+        bankAccountHolder,
+        bankIban,
+        bankBic,
         validUntil: validUntil ? new Date(validUntil).toISOString() : null,
       }),
     });
@@ -295,6 +303,51 @@ export default function NewQuotePage() {
               onChange={(e) => setCustomPaymentTerms(e.target.value)}
               className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
             />
+          )}
+
+          <div>
+            <label className="block text-sm font-medium text-foreground mb-2">
+              Moyen de paiement (optionnel)
+            </label>
+            <select
+              value={paymentMethod}
+              onChange={(e) => setPaymentMethod(e.target.value)}
+              className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            >
+              <option value="">Non précisé</option>
+              <option value="Virement bancaire">Virement bancaire</option>
+              <option value="Chèque">Chèque</option>
+              <option value="Espèces">Espèces</option>
+              <option value="Carte bancaire">Carte bancaire</option>
+              <option value="Autre">Autre</option>
+            </select>
+          </div>
+
+          {paymentMethod === "Virement bancaire" && (
+            <div className="space-y-3 rounded-lg border border-border bg-muted/50 p-4">
+              <p className="text-sm font-medium text-foreground">Coordonnées bancaires (optionnel)</p>
+              <input
+                type="text"
+                value={bankAccountHolder}
+                onChange={(e) => setBankAccountHolder(e.target.value)}
+                placeholder="Titulaire du compte"
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+              <input
+                type="text"
+                value={bankIban}
+                onChange={(e) => setBankIban(e.target.value)}
+                placeholder="IBAN"
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+              <input
+                type="text"
+                value={bankBic}
+                onChange={(e) => setBankBic(e.target.value)}
+                placeholder="BIC"
+                className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+              />
+            </div>
           )}
         </div>
 

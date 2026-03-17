@@ -39,6 +39,10 @@ interface DocumentParams {
   lines: Line[];
   notes: string | null;
   paymentTerms: string | null;
+  paymentMethod?: string | null;
+  bankAccountHolder?: string | null;
+  bankIban?: string | null;
+  bankBic?: string | null;
   parentInvoiceNumber?: string | null;
 }
 
@@ -59,7 +63,7 @@ function formatPercent(rate: number): string {
 }
 
 export function generateDocumentHtml(params: DocumentParams): string {
-  const { type, number, issuedAt, validUntil, business, client, lines, notes, paymentTerms, parentInvoiceNumber } = params;
+  const { type, number, issuedAt, validUntil, business, client, lines, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, parentInvoiceNumber } = params;
   const label = type === "devis" ? "Devis" : type === "avoir" ? "Avoir" : "Facture";
   const totals = computeDocumentTotals(lines, business.tvaAssujetti);
 
@@ -176,8 +180,21 @@ export function generateDocumentHtml(params: DocumentParams): string {
     ${tvaMention}
     ${notesHtml}
 
+    <!-- Payment info -->
+    ${paymentMethod ? `
+    <div style="margin-top:24px;padding:16px;background:#f0f9ff;border-radius:8px;border:1px solid #bae6fd">
+      <p style="font-weight:700;font-size:14px;margin-bottom:8px;color:#0369a1">Règlement</p>
+      <p style="font-size:13px;color:#1f2937"><strong>Moyen de paiement :</strong> ${paymentMethod}</p>
+      ${paymentMethod === "Virement bancaire" && (bankAccountHolder || bankIban || bankBic) ? `
+      <div style="margin-top:8px;font-size:13px;color:#1f2937">
+        ${bankAccountHolder ? `<p><strong>Titulaire :</strong> ${bankAccountHolder}</p>` : ""}
+        ${bankIban ? `<p><strong>IBAN :</strong> ${bankIban}</p>` : ""}
+        ${bankBic ? `<p><strong>BIC :</strong> ${bankBic}</p>` : ""}
+      </div>` : ""}
+    </div>` : ""}
+
     <!-- Payment terms -->
-    <div style="margin-top:32px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:13px;color:#6b7280">
+    <div style="margin-top:${paymentMethod ? "16" : "32"}px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:13px;color:#6b7280">
       ${paymentTerms ? `<p><strong>Conditions de règlement :</strong> ${paymentTerms}</p>` : ""}
       <p style="margin-top:8px"><strong>Pénalités de retard :</strong> En cas de retard de paiement, des pénalités seront exigées au taux de 3 fois le taux d'intérêt légal (art. L.441-10 du Code de commerce).</p>
       <p style="margin-top:4px"><strong>Indemnité forfaitaire de recouvrement :</strong> 40 € (art. D.441-5 du Code de commerce).</p>
