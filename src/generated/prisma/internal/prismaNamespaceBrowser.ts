@@ -172,6 +172,8 @@ export const RevenueScalarFieldEnum = {
   year: 'year',
   description: 'description',
   activityType: 'activityType',
+  attachmentUrl: 'attachmentUrl',
+  attachmentName: 'attachmentName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
@@ -187,6 +189,8 @@ export const ExpenseScalarFieldEnum = {
   label: 'label',
   month: 'month',
   year: 'year',
+  attachmentUrl: 'attachmentUrl',
+  attachmentName: 'attachmentName',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

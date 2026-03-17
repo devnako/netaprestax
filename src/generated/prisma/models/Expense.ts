@@ -46,6 +46,8 @@ export type ExpenseMinAggregateOutputType = {
   label: string | null
   month: number | null
   year: number | null
+  attachmentUrl: string | null
+  attachmentName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +60,8 @@ export type ExpenseMaxAggregateOutputType = {
   label: string | null
   month: number | null
   year: number | null
+  attachmentUrl: string | null
+  attachmentName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +74,8 @@ export type ExpenseCountAggregateOutputType = {
   label: number
   month: number
   year: number
+  attachmentUrl: number
+  attachmentName: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,6 +102,8 @@ export type ExpenseMinAggregateInputType = {
   label?: true
   month?: true
   year?: true
+  attachmentUrl?: true
+  attachmentName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -108,6 +116,8 @@ export type ExpenseMaxAggregateInputType = {
   label?: true
   month?: true
   year?: true
+  attachmentUrl?: true
+  attachmentName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,6 +130,8 @@ export type ExpenseCountAggregateInputType = {
   label?: true
   month?: true
   year?: true
+  attachmentUrl?: true
+  attachmentName?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -219,6 +231,8 @@ export type ExpenseGroupByOutputType = {
   label: string
   month: number
   year: number
+  attachmentUrl: string | null
+  attachmentName: string | null
   createdAt: Date
   updatedAt: Date
   _count: ExpenseCountAggregateOutputType | null
@@ -254,6 +268,8 @@ export type ExpenseWhereInput = {
   label?: Prisma.StringFilter<"Expense"> | string
   month?: Prisma.IntFilter<"Expense"> | number
   year?: Prisma.IntFilter<"Expense"> | number
+  attachmentUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
+  attachmentName?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -267,6 +283,8 @@ export type ExpenseOrderByWithRelationInput = {
   label?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -283,6 +301,8 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   label?: Prisma.StringFilter<"Expense"> | string
   month?: Prisma.IntFilter<"Expense"> | number
   year?: Prisma.IntFilter<"Expense"> | number
+  attachmentUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
+  attachmentName?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -296,6 +316,8 @@ export type ExpenseOrderByWithAggregationInput = {
   label?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.ExpenseCountOrderByAggregateInput
@@ -316,6 +338,8 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   label?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   month?: Prisma.IntWithAggregatesFilter<"Expense"> | number
   year?: Prisma.IntWithAggregatesFilter<"Expense"> | number
+  attachmentUrl?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
+  attachmentName?: Prisma.StringNullableWithAggregatesFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
 }
@@ -327,6 +351,8 @@ export type ExpenseCreateInput = {
   label: string
   month: number
   year: number
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutExpensesInput
@@ -340,6 +366,8 @@ export type ExpenseUncheckedCreateInput = {
   label: string
   month: number
   year: number
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -351,6 +379,8 @@ export type ExpenseUpdateInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutExpensesNestedInput
@@ -364,6 +394,8 @@ export type ExpenseUncheckedUpdateInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -376,6 +408,8 @@ export type ExpenseCreateManyInput = {
   label: string
   month: number
   year: number
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -387,6 +421,8 @@ export type ExpenseUpdateManyMutationInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,6 +435,8 @@ export type ExpenseUncheckedUpdateManyInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -421,6 +459,8 @@ export type ExpenseCountOrderByAggregateInput = {
   label?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  attachmentName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -439,6 +479,8 @@ export type ExpenseMaxOrderByAggregateInput = {
   label?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  attachmentName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -451,6 +493,8 @@ export type ExpenseMinOrderByAggregateInput = {
   label?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  attachmentName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -514,6 +558,8 @@ export type ExpenseCreateWithoutUserInput = {
   label: string
   month: number
   year: number
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -525,6 +571,8 @@ export type ExpenseUncheckedCreateWithoutUserInput = {
   label: string
   month: number
   year: number
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -566,6 +614,8 @@ export type ExpenseScalarWhereInput = {
   label?: Prisma.StringFilter<"Expense"> | string
   month?: Prisma.IntFilter<"Expense"> | number
   year?: Prisma.IntFilter<"Expense"> | number
+  attachmentUrl?: Prisma.StringNullableFilter<"Expense"> | string | null
+  attachmentName?: Prisma.StringNullableFilter<"Expense"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
 }
@@ -577,6 +627,8 @@ export type ExpenseCreateManyUserInput = {
   label: string
   month: number
   year: number
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -588,6 +640,8 @@ export type ExpenseUpdateWithoutUserInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -599,6 +653,8 @@ export type ExpenseUncheckedUpdateWithoutUserInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -610,6 +666,8 @@ export type ExpenseUncheckedUpdateManyWithoutUserInput = {
   label?: Prisma.StringFieldUpdateOperationsInput | string
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -624,6 +682,8 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   label?: boolean
   month?: boolean
   year?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -637,6 +697,8 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   label?: boolean
   month?: boolean
   year?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -650,6 +712,8 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   label?: boolean
   month?: boolean
   year?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -663,11 +727,13 @@ export type ExpenseSelectScalar = {
   label?: boolean
   month?: boolean
   year?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "category" | "label" | "month" | "year" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
+export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "category" | "label" | "month" | "year" | "attachmentUrl" | "attachmentName" | "createdAt" | "updatedAt", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -691,6 +757,8 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     label: string
     month: number
     year: number
+    attachmentUrl: string | null
+    attachmentName: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["expense"]>
@@ -1124,6 +1192,8 @@ export interface ExpenseFieldRefs {
   readonly label: Prisma.FieldRef<"Expense", 'String'>
   readonly month: Prisma.FieldRef<"Expense", 'Int'>
   readonly year: Prisma.FieldRef<"Expense", 'Int'>
+  readonly attachmentUrl: Prisma.FieldRef<"Expense", 'String'>
+  readonly attachmentName: Prisma.FieldRef<"Expense", 'String'>
   readonly createdAt: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Expense", 'DateTime'>
 }

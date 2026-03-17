@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { del } from "@vercel/blob";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -34,6 +35,8 @@ export async function GET(request: NextRequest) {
       amount: Number(e.amount),
       category: e.category,
       label: e.label,
+      attachmentUrl: e.attachmentUrl,
+      attachmentName: e.attachmentName,
     }))
   );
 }
@@ -87,6 +90,10 @@ export async function DELETE(request: NextRequest) {
 
   if (!expense || expense.userId !== session.user.id) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
+  }
+
+  if (expense.attachmentUrl) {
+    try { await del(expense.attachmentUrl); } catch {}
   }
 
   await prisma.expense.delete({ where: { id } });

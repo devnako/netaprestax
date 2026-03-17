@@ -46,6 +46,8 @@ export type RevenueMinAggregateOutputType = {
   year: number | null
   description: string | null
   activityType: $Enums.ActivityType | null
+  attachmentUrl: string | null
+  attachmentName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -58,6 +60,8 @@ export type RevenueMaxAggregateOutputType = {
   year: number | null
   description: string | null
   activityType: $Enums.ActivityType | null
+  attachmentUrl: string | null
+  attachmentName: string | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -70,6 +74,8 @@ export type RevenueCountAggregateOutputType = {
   year: number
   description: number
   activityType: number
+  attachmentUrl: number
+  attachmentName: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -96,6 +102,8 @@ export type RevenueMinAggregateInputType = {
   year?: true
   description?: true
   activityType?: true
+  attachmentUrl?: true
+  attachmentName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -108,6 +116,8 @@ export type RevenueMaxAggregateInputType = {
   year?: true
   description?: true
   activityType?: true
+  attachmentUrl?: true
+  attachmentName?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -120,6 +130,8 @@ export type RevenueCountAggregateInputType = {
   year?: true
   description?: true
   activityType?: true
+  attachmentUrl?: true
+  attachmentName?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -219,6 +231,8 @@ export type RevenueGroupByOutputType = {
   year: number
   description: string | null
   activityType: $Enums.ActivityType | null
+  attachmentUrl: string | null
+  attachmentName: string | null
   createdAt: Date
   updatedAt: Date
   _count: RevenueCountAggregateOutputType | null
@@ -254,6 +268,8 @@ export type RevenueWhereInput = {
   year?: Prisma.IntFilter<"Revenue"> | number
   description?: Prisma.StringNullableFilter<"Revenue"> | string | null
   activityType?: Prisma.EnumActivityTypeNullableFilter<"Revenue"> | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  attachmentName?: Prisma.StringNullableFilter<"Revenue"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -267,6 +283,8 @@ export type RevenueOrderByWithRelationInput = {
   year?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   activityType?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
@@ -283,6 +301,8 @@ export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   year?: Prisma.IntFilter<"Revenue"> | number
   description?: Prisma.StringNullableFilter<"Revenue"> | string | null
   activityType?: Prisma.EnumActivityTypeNullableFilter<"Revenue"> | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  attachmentName?: Prisma.StringNullableFilter<"Revenue"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
@@ -296,6 +316,8 @@ export type RevenueOrderByWithAggregationInput = {
   year?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
   activityType?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
+  attachmentName?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RevenueCountOrderByAggregateInput
@@ -316,6 +338,8 @@ export type RevenueScalarWhereWithAggregatesInput = {
   year?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
   activityType?: Prisma.EnumActivityTypeNullableWithAggregatesFilter<"Revenue"> | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
+  attachmentName?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
 }
@@ -327,6 +351,8 @@ export type RevenueCreateInput = {
   year: number
   description?: string | null
   activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutRevenuesInput
@@ -340,6 +366,8 @@ export type RevenueUncheckedCreateInput = {
   year: number
   description?: string | null
   activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -351,6 +379,8 @@ export type RevenueUpdateInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutRevenuesNestedInput
@@ -364,6 +394,8 @@ export type RevenueUncheckedUpdateInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -376,6 +408,8 @@ export type RevenueCreateManyInput = {
   year: number
   description?: string | null
   activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -387,6 +421,8 @@ export type RevenueUpdateManyMutationInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -399,6 +435,8 @@ export type RevenueUncheckedUpdateManyInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -421,6 +459,8 @@ export type RevenueCountOrderByAggregateInput = {
   year?: Prisma.SortOrder
   description?: Prisma.SortOrder
   activityType?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  attachmentName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -439,6 +479,8 @@ export type RevenueMaxOrderByAggregateInput = {
   year?: Prisma.SortOrder
   description?: Prisma.SortOrder
   activityType?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  attachmentName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -451,6 +493,8 @@ export type RevenueMinOrderByAggregateInput = {
   year?: Prisma.SortOrder
   description?: Prisma.SortOrder
   activityType?: Prisma.SortOrder
+  attachmentUrl?: Prisma.SortOrder
+  attachmentName?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -522,6 +566,8 @@ export type RevenueCreateWithoutUserInput = {
   year: number
   description?: string | null
   activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -533,6 +579,8 @@ export type RevenueUncheckedCreateWithoutUserInput = {
   year: number
   description?: string | null
   activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -574,6 +622,8 @@ export type RevenueScalarWhereInput = {
   year?: Prisma.IntFilter<"Revenue"> | number
   description?: Prisma.StringNullableFilter<"Revenue"> | string | null
   activityType?: Prisma.EnumActivityTypeNullableFilter<"Revenue"> | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  attachmentName?: Prisma.StringNullableFilter<"Revenue"> | string | null
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
 }
@@ -585,6 +635,8 @@ export type RevenueCreateManyUserInput = {
   year: number
   description?: string | null
   activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -596,6 +648,8 @@ export type RevenueUpdateWithoutUserInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -607,6 +661,8 @@ export type RevenueUncheckedUpdateWithoutUserInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -618,6 +674,8 @@ export type RevenueUncheckedUpdateManyWithoutUserInput = {
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -632,6 +690,8 @@ export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   year?: boolean
   description?: boolean
   activityType?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -645,6 +705,8 @@ export type RevenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   year?: boolean
   description?: boolean
   activityType?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -658,6 +720,8 @@ export type RevenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   year?: boolean
   description?: boolean
   activityType?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
@@ -671,11 +735,13 @@ export type RevenueSelectScalar = {
   year?: boolean
   description?: boolean
   activityType?: boolean
+  attachmentUrl?: boolean
+  attachmentName?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "month" | "year" | "description" | "activityType" | "createdAt" | "updatedAt", ExtArgs["result"]["revenue"]>
+export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "month" | "year" | "description" | "activityType" | "attachmentUrl" | "attachmentName" | "createdAt" | "updatedAt", ExtArgs["result"]["revenue"]>
 export type RevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
 }
@@ -699,6 +765,8 @@ export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     year: number
     description: string | null
     activityType: $Enums.ActivityType | null
+    attachmentUrl: string | null
+    attachmentName: string | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["revenue"]>
@@ -1132,6 +1200,8 @@ export interface RevenueFieldRefs {
   readonly year: Prisma.FieldRef<"Revenue", 'Int'>
   readonly description: Prisma.FieldRef<"Revenue", 'String'>
   readonly activityType: Prisma.FieldRef<"Revenue", 'ActivityType'>
+  readonly attachmentUrl: Prisma.FieldRef<"Revenue", 'String'>
+  readonly attachmentName: Prisma.FieldRef<"Revenue", 'String'>
   readonly createdAt: Prisma.FieldRef<"Revenue", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Revenue", 'DateTime'>
 }

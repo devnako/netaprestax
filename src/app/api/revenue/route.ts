@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { del } from "@vercel/blob";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -91,6 +92,10 @@ export async function DELETE(request: NextRequest) {
 
   if (!revenue || revenue.userId !== session.user.id) {
     return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+  }
+
+  if (revenue.attachmentUrl) {
+    try { await del(revenue.attachmentUrl); } catch {}
   }
 
   await prisma.revenue.delete({ where: { id } });

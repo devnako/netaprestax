@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, Plus } from "lucide-react";
+import { Trash2, Plus, Paperclip, X, FileText, Image } from "lucide-react";
 import { MonthPicker, MONTH_NAMES } from "@/components/dashboard/month-picker";
 
 const CATEGORIES = [
@@ -20,6 +20,8 @@ interface Expense {
   amount: number;
   category: string;
   label: string;
+  attachmentUrl: string | null;
+  attachmentName: string | null;
 }
 
 function formatEuro(value: number) {
@@ -99,6 +101,31 @@ export default function ExpensesPage() {
   const handleDelete = async (id: string) => {
     await fetch(`/api/expenses?id=${id}`, { method: "DELETE" });
     loadExpenses();
+  };
+
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
+  const handleAttachmentUpload = async (entryId: string, file: File) => {
+    setUploadingId(entryId);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", "expense");
+    formData.append("id", entryId);
+    const res = await fetch("/api/attachments", { method: "POST", body: formData });
+    if (res.ok) {
+      const data = await res.json();
+      setExpenses((prev) =>
+        prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: data.url, attachmentName: data.name } : e))
+      );
+    }
+    setUploadingId(null);
+  };
+
+  const handleAttachmentDelete = async (entryId: string) => {
+    await fetch(`/api/attachments?type=expense&id=${entryId}`, { method: "DELETE" });
+    setExpenses((prev) =>
+      prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: null, attachmentName: null } : e))
+    );
   };
 
   const total = expenses.reduce((sum, e) => sum + e.amount, 0);
@@ -220,8 +247,48 @@ export default function ExpensesPage() {
                     {CATEGORIES.find((c) => c.value === expense.category)?.label}
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <span className="font-semibold text-foreground">{formatEuro(expense.amount)}</span>
+                  {expense.attachmentUrl ? (
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={expense.attachmentUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={expense.attachmentName || "Pièce jointe"}
+                        className="p-1 text-primary hover:text-primary/70"
+                      >
+                        {expense.attachmentName?.match(/\.(jpg|jpeg|png|webp)$/i) ? (
+                          <Image className="h-4 w-4" />
+                        ) : (
+                          <FileText className="h-4 w-4" />
+                        )}
+                      </a>
+                      {!isCurrentOrFuture && (
+                        <button
+                          onClick={() => handleAttachmentDelete(expense.id)}
+                          className="p-0.5 text-muted-foreground hover:text-destructive"
+                          title="Supprimer la pièce jointe"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  ) : !isCurrentOrFuture ? (
+                    <label className={`cursor-pointer p-1 text-muted-foreground hover:text-primary ${uploadingId === expense.id ? "animate-pulse" : ""}`} title="Ajouter une pièce jointe">
+                      <Paperclip className="h-4 w-4" />
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.webp"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleAttachmentUpload(expense.id, file);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                  ) : null}
                   {!isCurrentOrFuture && (
                     <button
                       onClick={() => handleDelete(expense.id)}

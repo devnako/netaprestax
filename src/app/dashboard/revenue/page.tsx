@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, Plus, Calculator } from "lucide-react";
+import { Trash2, Plus, Calculator, Paperclip, X, FileText, Image } from "lucide-react";
 import { MonthPicker, MONTH_NAMES } from "@/components/dashboard/month-picker";
 
 interface RevenueEntry {
@@ -9,6 +9,8 @@ interface RevenueEntry {
   amount: string;
   description: string | null;
   activityType: string | null;
+  attachmentUrl: string | null;
+  attachmentName: string | null;
   createdAt: string;
 }
 
@@ -110,6 +112,31 @@ export default function RevenuePage() {
   const handleDelete = async (id: string) => {
     await fetch(`/api/revenue?id=${id}`, { method: "DELETE" });
     loadRevenues();
+  };
+
+  const [uploadingId, setUploadingId] = useState<string | null>(null);
+
+  const handleAttachmentUpload = async (entryId: string, file: File) => {
+    setUploadingId(entryId);
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", "revenue");
+    formData.append("id", entryId);
+    const res = await fetch("/api/attachments", { method: "POST", body: formData });
+    if (res.ok) {
+      const data = await res.json();
+      setEntries((prev) =>
+        prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: data.url, attachmentName: data.name } : e))
+      );
+    }
+    setUploadingId(null);
+  };
+
+  const handleAttachmentDelete = async (entryId: string) => {
+    await fetch(`/api/attachments?type=revenue&id=${entryId}`, { method: "DELETE" });
+    setEntries((prev) =>
+      prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: null, attachmentName: null } : e))
+    );
   };
 
   // Calculator logic
@@ -309,10 +336,50 @@ export default function RevenuePage() {
                     {new Date(entry.createdAt).toLocaleDateString("fr-FR")}
                   </p>
                 </div>
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <span className="font-semibold text-foreground">
                     {formatEuro(Number(entry.amount))}
                   </span>
+                  {entry.attachmentUrl ? (
+                    <div className="flex items-center gap-1">
+                      <a
+                        href={entry.attachmentUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        title={entry.attachmentName || "Pièce jointe"}
+                        className="p-1 text-primary hover:text-primary/70"
+                      >
+                        {entry.attachmentName?.match(/\.(jpg|jpeg|png|webp)$/i) ? (
+                          <Image className="h-4 w-4" />
+                        ) : (
+                          <FileText className="h-4 w-4" />
+                        )}
+                      </a>
+                      {!isCurrentOrFuture && (
+                        <button
+                          onClick={() => handleAttachmentDelete(entry.id)}
+                          className="p-0.5 text-muted-foreground hover:text-destructive"
+                          title="Supprimer la pièce jointe"
+                        >
+                          <X className="h-3 w-3" />
+                        </button>
+                      )}
+                    </div>
+                  ) : !isCurrentOrFuture ? (
+                    <label className={`cursor-pointer p-1 text-muted-foreground hover:text-primary ${uploadingId === entry.id ? "animate-pulse" : ""}`} title="Ajouter une pièce jointe">
+                      <Paperclip className="h-4 w-4" />
+                      <input
+                        type="file"
+                        accept=".pdf,.jpg,.jpeg,.png,.webp"
+                        className="hidden"
+                        onChange={(e) => {
+                          const file = e.target.files?.[0];
+                          if (file) handleAttachmentUpload(entry.id, file);
+                          e.target.value = "";
+                        }}
+                      />
+                    </label>
+                  ) : null}
                   {!isCurrentOrFuture && (
                     <button
                       onClick={() => handleDelete(entry.id)}
