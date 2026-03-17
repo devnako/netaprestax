@@ -113,11 +113,25 @@ export default function ExpensesPage() {
     setUploadingId(entryId);
     setError(null);
     try {
-      const { upload } = await import("@vercel/blob/client");
-      const blob = await upload(file.name, file, {
-        access: "public",
-        handleUploadUrl: "/api/attachments/upload",
+      // 1. Get client token
+      const tokenRes = await fetch("/api/attachments/upload", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ filename: file.name }),
       });
+      if (!tokenRes.ok) {
+        const body = await tokenRes.json();
+        setError(body.error ?? "Erreur lors de l'upload");
+        setUploadingId(null);
+        return;
+      }
+      const { clientToken } = await tokenRes.json();
+
+      // 2. Upload directly to Vercel Blob
+      const { put } = await import("@vercel/blob/client");
+      const blob = await put(file.name, file, { access: "public", token: clientToken });
+
+      // 3. Save URL to database
       const res = await fetch("/api/attachments", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
