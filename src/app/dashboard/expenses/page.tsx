@@ -133,6 +133,10 @@ export default function ExpensesPage() {
     setUploadingId(null);
   };
 
+  const handleAttachmentView = (entryId: string) => {
+    window.open(`/api/attachments?type=expense&id=${entryId}`, "_blank");
+  };
+
   const handleAttachmentDelete = async (entryId: string) => {
     await fetch(`/api/attachments?type=expense&id=${entryId}`, { method: "DELETE" });
     setExpenses((prev) =>
@@ -267,10 +271,8 @@ export default function ExpensesPage() {
                   <span className="font-semibold text-foreground">{formatEuro(expense.amount)}</span>
                   {expense.attachmentUrl ? (
                     <div className="flex items-center gap-1">
-                      <a
-                        href={expense.attachmentUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => handleAttachmentView(expense.id)}
                         title={expense.attachmentName || "Pièce jointe"}
                         className="p-1 text-primary hover:text-primary/70"
                       >
@@ -279,7 +281,7 @@ export default function ExpensesPage() {
                         ) : (
                           <FileText className="h-4 w-4" />
                         )}
-                      </a>
+                      </button>
                       {!isCurrentOrFuture && (
                         <button
                           onClick={() => handleAttachmentDelete(expense.id)}

@@ -144,6 +144,10 @@ export default function RevenuePage() {
     setUploadingId(null);
   };
 
+  const handleAttachmentView = (entryId: string) => {
+    window.open(`/api/attachments?type=revenue&id=${entryId}`, "_blank");
+  };
+
   const handleAttachmentDelete = async (entryId: string) => {
     await fetch(`/api/attachments?type=revenue&id=${entryId}`, { method: "DELETE" });
     setEntries((prev) =>
@@ -358,10 +362,8 @@ export default function RevenuePage() {
                   </span>
                   {entry.attachmentUrl ? (
                     <div className="flex items-center gap-1">
-                      <a
-                        href={entry.attachmentUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
+                      <button
+                        onClick={() => handleAttachmentView(entry.id)}
                         title={entry.attachmentName || "Pièce jointe"}
                         className="p-1 text-primary hover:text-primary/70"
                       >
@@ -370,7 +372,7 @@ export default function RevenuePage() {
                         ) : (
                           <FileText className="h-4 w-4" />
                         )}
-                      </a>
+                      </button>
                       {!isCurrentOrFuture && (
                         <button
                           onClick={() => handleAttachmentDelete(entry.id)}

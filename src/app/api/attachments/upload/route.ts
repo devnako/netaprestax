@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     const blob = await put(
       `attachments/${session.user.id}/${type}/${id}/${file.name}`,
       file,
-      { access: "public", addRandomSuffix: true, token }
+      { access: "private", addRandomSuffix: true, token }
     );
 
     // Save URL to database
