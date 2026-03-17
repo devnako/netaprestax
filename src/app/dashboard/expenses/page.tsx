@@ -106,17 +106,29 @@ export default function ExpensesPage() {
   const [uploadingId, setUploadingId] = useState<string | null>(null);
 
   const handleAttachmentUpload = async (entryId: string, file: File) => {
+    if (file.size > 5 * 1024 * 1024) {
+      setError("Fichier trop volumineux (max 5 MB)");
+      return;
+    }
     setUploadingId(entryId);
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", "expense");
-    formData.append("id", entryId);
-    const res = await fetch("/api/attachments", { method: "POST", body: formData });
-    if (res.ok) {
-      const data = await res.json();
-      setExpenses((prev) =>
-        prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: data.url, attachmentName: data.name } : e))
-      );
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "expense");
+      formData.append("id", entryId);
+      const res = await fetch("/api/attachments", { method: "POST", body: formData });
+      if (res.ok) {
+        const data = await res.json();
+        setExpenses((prev) =>
+          prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: data.url, attachmentName: data.name } : e))
+        );
+      } else {
+        const body = await res.json();
+        setError(body.error ?? "Erreur lors de l'upload");
+      }
+    } catch {
+      setError("Erreur réseau lors de l'upload");
     }
     setUploadingId(null);
   };
@@ -229,6 +241,10 @@ export default function ExpensesPage() {
         <h2 className="font-semibold text-foreground">
           Frais — {MONTH_NAMES[month - 1]} {year}
         </h2>
+
+        {error && (
+          <div className="mt-3 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">{error}</div>
+        )}
 
         {loading ? (
           <p className="mt-4 text-sm text-muted-foreground">Chargement...</p>
