@@ -4,14 +4,24 @@ import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-// Increase body size limit for file uploads
 export const maxDuration = 30;
 
 export async function POST(request: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
-  const formData = await request.formData();
+  const token = process.env.BLOB_READ_WRITE_TOKEN;
+  if (!token) {
+    return NextResponse.json({ error: "BLOB_READ_WRITE_TOKEN non configuré" }, { status: 500 });
+  }
+
+  let formData: FormData;
+  try {
+    formData = await request.formData();
+  } catch {
+    return NextResponse.json({ error: "Impossible de lire le fichier" }, { status: 400 });
+  }
+
   const file = formData.get("file") as File | null;
   const type = formData.get("type") as string;
   const id = formData.get("id") as string;
@@ -41,17 +51,23 @@ export async function POST(request: NextRequest) {
   }
 
   // Upload to Vercel Blob
-  const blob = await put(`attachments/${session.user.id}/${type}/${id}/${file.name}`, file, {
-    access: "public",
-    addRandomSuffix: true,
-  });
+  try {
+    const blob = await put(
+      `attachments/${session.user.id}/${type}/${id}/${file.name}`,
+      file,
+      { access: "public", addRandomSuffix: true, token }
+    );
 
-  // Save URL to database
-  if (type === "revenue") {
-    await prisma.revenue.update({ where: { id }, data: { attachmentUrl: blob.url, attachmentName: file.name } });
-  } else {
-    await prisma.expense.update({ where: { id }, data: { attachmentUrl: blob.url, attachmentName: file.name } });
+    // Save URL to database
+    if (type === "revenue") {
+      await prisma.revenue.update({ where: { id }, data: { attachmentUrl: blob.url, attachmentName: file.name } });
+    } else {
+      await prisma.expense.update({ where: { id }, data: { attachmentUrl: blob.url, attachmentName: file.name } });
+    }
+
+    return NextResponse.json({ url: blob.url, name: file.name });
+  } catch (err) {
+    const message = err instanceof Error ? err.message : "Erreur Vercel Blob";
+    return NextResponse.json({ error: message }, { status: 500 });
   }
-
-  return NextResponse.json({ url: blob.url, name: file.name });
 }
