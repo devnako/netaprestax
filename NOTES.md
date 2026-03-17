@@ -1,5 +1,17 @@
 # NetAprèsTax — Notes de développement
 
+## Fait — 17 mars 2026 (session 3)
+
+- Vercel Blob passé en mode **privé** (`access: "private"`)
+  - Route GET `/api/attachments` proxy : vérifie ownership, fetch le blob privé côté serveur, stream au client
+  - Aucune URL blob exposée côté client
+- Revenus liés aux factures :
+  - Champs `invoiceId` (unique) et `locked` ajoutés au modèle Revenue
+  - Quand une facture est marquée payée, le revenu créé est lié via `invoiceId` + `locked: true`
+  - Page Revenus : icône cadenas, lien "Voir la facture", icône fichier vers la facture
+  - Revenus verrouillés : pas de suppression, pas d'upload/suppression de pièce jointe
+  - Suppression du revenu via avoir utilise `invoiceId` au lieu du match fragile description+montant
+
 ## Fait — 17 mars 2026 (session 2)
 
 - Pièces jointes Revenus/Frais : UI complète (upload, affichage, suppression)
@@ -55,7 +67,7 @@
 
 ## À faire — Priorité
 
-- **BUG Vercel Blob** : erreur "Cannot use public access on a private store" — le store Blob est en mode privé, il faut soit le passer en public depuis le dashboard Vercel, soit utiliser `access: "private"` dans le code (avec URLs signées)
+- **Tester upload pièces jointes** : le store Blob est maintenant en mode privé avec proxy server-side, à vérifier en prod
 
 ## À faire — Roadmap
 
