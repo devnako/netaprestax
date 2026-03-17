@@ -1,6 +1,18 @@
 # NetAprèsTax — Notes de développement
 
-## Fait — 17 mars 2026
+## Fait — 17 mars 2026 (session 2)
+
+- Pièces jointes Revenus/Frais : UI complète (upload, affichage, suppression)
+  - Champs `attachmentUrl` / `attachmentName` ajoutés sur Revenue et Expense (Prisma)
+  - Route API `/api/attachments/upload` (POST) — upload server-side vers Vercel Blob
+  - Route API `/api/attachments` (DELETE) — suppression blob + reset DB
+  - Icône trombone pour uploader, icône fichier/image pour voir, X pour supprimer
+  - Validation : PDF/JPG/PNG/WebP, max 5 MB
+  - Nettoyage blob automatique à la suppression d'un revenu ou frais
+  - `next.config.ts` : `bodySizeLimit: "6mb"` pour les uploads
+- Debug upload Vercel Blob : token explicite passé à `put()`, try/catch avec message d'erreur clair
+
+## Fait — 17 mars 2026 (session 1)
 
 - Barre de recherche + navigation par mois dans les factures
 - Sélecteur de mois avec calendrier popup sur toutes les pages (Revenus, Frais, Factures, Devis)
@@ -41,7 +53,11 @@
 - Export CSV
 - Paramètres (profil, fiscal, entreprise, mot de passe)
 
-## À faire
+## À faire — Priorité
+
+- **BUG Vercel Blob** : erreur "Cannot use public access on a private store" — le store Blob est en mode privé, il faut soit le passer en public depuis le dashboard Vercel, soit utiliser `access: "private"` dans le code (avec URLs signées)
+
+## À faire — Roadmap
 
 - Accès comptable (lecture seule)
 - Stripe + plan Pro
