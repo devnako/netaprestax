@@ -252,6 +252,7 @@ export type InvoiceWhereInput = {
   parentInvoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
   creditNotes?: Prisma.InvoiceListRelationFilter
   lines?: Prisma.DocumentLineListRelationFilter
+  revenue?: Prisma.XOR<Prisma.RevenueNullableScalarRelationFilter, Prisma.RevenueWhereInput> | null
 }
 
 export type InvoiceOrderByWithRelationInput = {
@@ -274,6 +275,7 @@ export type InvoiceOrderByWithRelationInput = {
   parentInvoice?: Prisma.InvoiceOrderByWithRelationInput
   creditNotes?: Prisma.InvoiceOrderByRelationAggregateInput
   lines?: Prisma.DocumentLineOrderByRelationAggregateInput
+  revenue?: Prisma.RevenueOrderByWithRelationInput
 }
 
 export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
@@ -300,6 +302,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   parentInvoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
   creditNotes?: Prisma.InvoiceListRelationFilter
   lines?: Prisma.DocumentLineListRelationFilter
+  revenue?: Prisma.XOR<Prisma.RevenueNullableScalarRelationFilter, Prisma.RevenueWhereInput> | null
 }, "id" | "quoteId" | "userId_number">
 
 export type InvoiceOrderByWithAggregationInput = {
@@ -356,6 +359,7 @@ export type InvoiceCreateInput = {
   parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
   creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateInput = {
@@ -374,6 +378,7 @@ export type InvoiceUncheckedCreateInput = {
   updatedAt?: Date | string
   creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUpdateInput = {
@@ -392,6 +397,7 @@ export type InvoiceUpdateInput = {
   parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
   creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateInput = {
@@ -410,6 +416,7 @@ export type InvoiceUncheckedUpdateInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceCreateManyInput = {
@@ -564,6 +571,22 @@ export type InvoiceUncheckedUpdateManyWithoutUserNestedInput = {
   update?: Prisma.InvoiceUpdateWithWhereUniqueWithoutUserInput | Prisma.InvoiceUpdateWithWhereUniqueWithoutUserInput[]
   updateMany?: Prisma.InvoiceUpdateManyWithWhereWithoutUserInput | Prisma.InvoiceUpdateManyWithWhereWithoutUserInput[]
   deleteMany?: Prisma.InvoiceScalarWhereInput | Prisma.InvoiceScalarWhereInput[]
+}
+
+export type InvoiceCreateNestedOneWithoutRevenueInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutRevenueInput, Prisma.InvoiceUncheckedCreateWithoutRevenueInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutRevenueInput
+  connect?: Prisma.InvoiceWhereUniqueInput
+}
+
+export type InvoiceUpdateOneWithoutRevenueNestedInput = {
+  create?: Prisma.XOR<Prisma.InvoiceCreateWithoutRevenueInput, Prisma.InvoiceUncheckedCreateWithoutRevenueInput>
+  connectOrCreate?: Prisma.InvoiceCreateOrConnectWithoutRevenueInput
+  upsert?: Prisma.InvoiceUpsertWithoutRevenueInput
+  disconnect?: Prisma.InvoiceWhereInput | boolean
+  delete?: Prisma.InvoiceWhereInput | boolean
+  connect?: Prisma.InvoiceWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.InvoiceUpdateToOneWithWhereWithoutRevenueInput, Prisma.InvoiceUpdateWithoutRevenueInput>, Prisma.InvoiceUncheckedUpdateWithoutRevenueInput>
 }
 
 export type InvoiceCreateNestedManyWithoutClientInput = {
@@ -733,6 +756,7 @@ export type InvoiceCreateWithoutUserInput = {
   parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
   creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutUserInput = {
@@ -750,6 +774,7 @@ export type InvoiceUncheckedCreateWithoutUserInput = {
   updatedAt?: Date | string
   creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutUserInput = {
@@ -797,6 +822,94 @@ export type InvoiceScalarWhereInput = {
   updatedAt?: Prisma.DateTimeFilter<"Invoice"> | Date | string
 }
 
+export type InvoiceCreateWithoutRevenueInput = {
+  id?: string
+  number: string
+  status?: $Enums.InvoiceStatus
+  notes?: string | null
+  paymentTerms?: string | null
+  issuedAt?: Date | string
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutInvoicesInput
+  client: Prisma.ClientCreateNestedOneWithoutInvoicesInput
+  quote?: Prisma.QuoteCreateNestedOneWithoutInvoiceInput
+  parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
+  creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
+  lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceUncheckedCreateWithoutRevenueInput = {
+  id?: string
+  userId: string
+  clientId: string
+  quoteId?: string | null
+  parentInvoiceId?: string | null
+  number: string
+  status?: $Enums.InvoiceStatus
+  notes?: string | null
+  paymentTerms?: string | null
+  issuedAt?: Date | string
+  paidAt?: Date | string | null
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
+  lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+}
+
+export type InvoiceCreateOrConnectWithoutRevenueInput = {
+  where: Prisma.InvoiceWhereUniqueInput
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutRevenueInput, Prisma.InvoiceUncheckedCreateWithoutRevenueInput>
+}
+
+export type InvoiceUpsertWithoutRevenueInput = {
+  update: Prisma.XOR<Prisma.InvoiceUpdateWithoutRevenueInput, Prisma.InvoiceUncheckedUpdateWithoutRevenueInput>
+  create: Prisma.XOR<Prisma.InvoiceCreateWithoutRevenueInput, Prisma.InvoiceUncheckedCreateWithoutRevenueInput>
+  where?: Prisma.InvoiceWhereInput
+}
+
+export type InvoiceUpdateToOneWithWhereWithoutRevenueInput = {
+  where?: Prisma.InvoiceWhereInput
+  data: Prisma.XOR<Prisma.InvoiceUpdateWithoutRevenueInput, Prisma.InvoiceUncheckedUpdateWithoutRevenueInput>
+}
+
+export type InvoiceUpdateWithoutRevenueInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutInvoicesNestedInput
+  client?: Prisma.ClientUpdateOneRequiredWithoutInvoicesNestedInput
+  quote?: Prisma.QuoteUpdateOneWithoutInvoiceNestedInput
+  parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
+  creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
+  lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+}
+
+export type InvoiceUncheckedUpdateWithoutRevenueInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  quoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  number?: Prisma.StringFieldUpdateOperationsInput | string
+  status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  issuedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paidAt?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
+  lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+}
+
 export type InvoiceCreateWithoutClientInput = {
   id?: string
   number: string
@@ -812,6 +925,7 @@ export type InvoiceCreateWithoutClientInput = {
   parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
   creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutClientInput = {
@@ -829,6 +943,7 @@ export type InvoiceUncheckedCreateWithoutClientInput = {
   updatedAt?: Date | string
   creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutClientInput = {
@@ -872,6 +987,7 @@ export type InvoiceCreateWithoutQuoteInput = {
   parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
   creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutQuoteInput = {
@@ -889,6 +1005,7 @@ export type InvoiceUncheckedCreateWithoutQuoteInput = {
   updatedAt?: Date | string
   creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutQuoteInput = {
@@ -922,6 +1039,7 @@ export type InvoiceUpdateWithoutQuoteInput = {
   parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
   creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutQuoteInput = {
@@ -939,6 +1057,7 @@ export type InvoiceUncheckedUpdateWithoutQuoteInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceCreateWithoutCreditNotesInput = {
@@ -956,6 +1075,7 @@ export type InvoiceCreateWithoutCreditNotesInput = {
   quote?: Prisma.QuoteCreateNestedOneWithoutInvoiceInput
   parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutCreditNotesInput = {
@@ -973,6 +1093,7 @@ export type InvoiceUncheckedCreateWithoutCreditNotesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutCreditNotesInput = {
@@ -995,6 +1116,7 @@ export type InvoiceCreateWithoutParentInvoiceInput = {
   quote?: Prisma.QuoteCreateNestedOneWithoutInvoiceInput
   creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutParentInvoiceInput = {
@@ -1012,6 +1134,7 @@ export type InvoiceUncheckedCreateWithoutParentInvoiceInput = {
   updatedAt?: Date | string
   creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
   lines?: Prisma.DocumentLineUncheckedCreateNestedManyWithoutInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutParentInvoiceInput = {
@@ -1050,6 +1173,7 @@ export type InvoiceUpdateWithoutCreditNotesInput = {
   quote?: Prisma.QuoteUpdateOneWithoutInvoiceNestedInput
   parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutCreditNotesInput = {
@@ -1067,6 +1191,7 @@ export type InvoiceUncheckedUpdateWithoutCreditNotesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUpsertWithWhereUniqueWithoutParentInvoiceInput = {
@@ -1100,6 +1225,7 @@ export type InvoiceCreateWithoutLinesInput = {
   quote?: Prisma.QuoteCreateNestedOneWithoutInvoiceInput
   parentInvoice?: Prisma.InvoiceCreateNestedOneWithoutCreditNotesInput
   creditNotes?: Prisma.InvoiceCreateNestedManyWithoutParentInvoiceInput
+  revenue?: Prisma.RevenueCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceUncheckedCreateWithoutLinesInput = {
@@ -1117,6 +1243,7 @@ export type InvoiceUncheckedCreateWithoutLinesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   creditNotes?: Prisma.InvoiceUncheckedCreateNestedManyWithoutParentInvoiceInput
+  revenue?: Prisma.RevenueUncheckedCreateNestedOneWithoutInvoiceInput
 }
 
 export type InvoiceCreateOrConnectWithoutLinesInput = {
@@ -1150,6 +1277,7 @@ export type InvoiceUpdateWithoutLinesInput = {
   quote?: Prisma.QuoteUpdateOneWithoutInvoiceNestedInput
   parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
   creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutLinesInput = {
@@ -1167,6 +1295,7 @@ export type InvoiceUncheckedUpdateWithoutLinesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceCreateManyUserInput = {
@@ -1199,6 +1328,7 @@ export type InvoiceUpdateWithoutUserInput = {
   parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
   creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutUserInput = {
@@ -1216,6 +1346,7 @@ export type InvoiceUncheckedUpdateWithoutUserInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateManyWithoutUserInput = {
@@ -1263,6 +1394,7 @@ export type InvoiceUpdateWithoutClientInput = {
   parentInvoice?: Prisma.InvoiceUpdateOneWithoutCreditNotesNestedInput
   creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutClientInput = {
@@ -1280,6 +1412,7 @@ export type InvoiceUncheckedUpdateWithoutClientInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateManyWithoutClientInput = {
@@ -1327,6 +1460,7 @@ export type InvoiceUpdateWithoutParentInvoiceInput = {
   quote?: Prisma.QuoteUpdateOneWithoutInvoiceNestedInput
   creditNotes?: Prisma.InvoiceUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateWithoutParentInvoiceInput = {
@@ -1344,6 +1478,7 @@ export type InvoiceUncheckedUpdateWithoutParentInvoiceInput = {
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   creditNotes?: Prisma.InvoiceUncheckedUpdateManyWithoutParentInvoiceNestedInput
   lines?: Prisma.DocumentLineUncheckedUpdateManyWithoutInvoiceNestedInput
+  revenue?: Prisma.RevenueUncheckedUpdateOneWithoutInvoiceNestedInput
 }
 
 export type InvoiceUncheckedUpdateManyWithoutParentInvoiceInput = {
@@ -1421,6 +1556,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   parentInvoice?: boolean | Prisma.Invoice$parentInvoiceArgs<ExtArgs>
   creditNotes?: boolean | Prisma.Invoice$creditNotesArgs<ExtArgs>
   lines?: boolean | Prisma.Invoice$linesArgs<ExtArgs>
+  revenue?: boolean | Prisma.Invoice$revenueArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["invoice"]>
 
@@ -1488,6 +1624,7 @@ export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs
   parentInvoice?: boolean | Prisma.Invoice$parentInvoiceArgs<ExtArgs>
   creditNotes?: boolean | Prisma.Invoice$creditNotesArgs<ExtArgs>
   lines?: boolean | Prisma.Invoice$linesArgs<ExtArgs>
+  revenue?: boolean | Prisma.Invoice$revenueArgs<ExtArgs>
   _count?: boolean | Prisma.InvoiceCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type InvoiceIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1512,6 +1649,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     parentInvoice: Prisma.$InvoicePayload<ExtArgs> | null
     creditNotes: Prisma.$InvoicePayload<ExtArgs>[]
     lines: Prisma.$DocumentLinePayload<ExtArgs>[]
+    revenue: Prisma.$RevenuePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1927,6 +2065,7 @@ export interface Prisma__InvoiceClient<T, Null = never, ExtArgs extends runtime.
   parentInvoice<T extends Prisma.Invoice$parentInvoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$parentInvoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   creditNotes<T extends Prisma.Invoice$creditNotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$creditNotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   lines<T extends Prisma.Invoice$linesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$linesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  revenue<T extends Prisma.Invoice$revenueArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Invoice$revenueArgs<ExtArgs>>): Prisma.Prisma__RevenueClient<runtime.Types.Result.GetResult<Prisma.$RevenuePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2453,6 +2592,25 @@ export type Invoice$linesArgs<ExtArgs extends runtime.Types.Extensions.InternalA
   take?: number
   skip?: number
   distinct?: Prisma.DocumentLineScalarFieldEnum | Prisma.DocumentLineScalarFieldEnum[]
+}
+
+/**
+ * Invoice.revenue
+ */
+export type Invoice$revenueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Revenue
+   */
+  select?: Prisma.RevenueSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Revenue
+   */
+  omit?: Prisma.RevenueOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RevenueInclude<ExtArgs> | null
+  where?: Prisma.RevenueWhereInput
 }
 
 /**

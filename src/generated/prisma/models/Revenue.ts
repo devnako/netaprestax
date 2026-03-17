@@ -48,6 +48,8 @@ export type RevenueMinAggregateOutputType = {
   activityType: $Enums.ActivityType | null
   attachmentUrl: string | null
   attachmentName: string | null
+  invoiceId: string | null
+  locked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -62,6 +64,8 @@ export type RevenueMaxAggregateOutputType = {
   activityType: $Enums.ActivityType | null
   attachmentUrl: string | null
   attachmentName: string | null
+  invoiceId: string | null
+  locked: boolean | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -76,6 +80,8 @@ export type RevenueCountAggregateOutputType = {
   activityType: number
   attachmentUrl: number
   attachmentName: number
+  invoiceId: number
+  locked: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -104,6 +110,8 @@ export type RevenueMinAggregateInputType = {
   activityType?: true
   attachmentUrl?: true
   attachmentName?: true
+  invoiceId?: true
+  locked?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -118,6 +126,8 @@ export type RevenueMaxAggregateInputType = {
   activityType?: true
   attachmentUrl?: true
   attachmentName?: true
+  invoiceId?: true
+  locked?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -132,6 +142,8 @@ export type RevenueCountAggregateInputType = {
   activityType?: true
   attachmentUrl?: true
   attachmentName?: true
+  invoiceId?: true
+  locked?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -233,6 +245,8 @@ export type RevenueGroupByOutputType = {
   activityType: $Enums.ActivityType | null
   attachmentUrl: string | null
   attachmentName: string | null
+  invoiceId: string | null
+  locked: boolean
   createdAt: Date
   updatedAt: Date
   _count: RevenueCountAggregateOutputType | null
@@ -270,9 +284,12 @@ export type RevenueWhereInput = {
   activityType?: Prisma.EnumActivityTypeNullableFilter<"Revenue"> | $Enums.ActivityType | null
   attachmentUrl?: Prisma.StringNullableFilter<"Revenue"> | string | null
   attachmentName?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  invoiceId?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  locked?: Prisma.BoolFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
+  invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
 }
 
 export type RevenueOrderByWithRelationInput = {
@@ -285,13 +302,17 @@ export type RevenueOrderByWithRelationInput = {
   activityType?: Prisma.SortOrderInput | Prisma.SortOrder
   attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   attachmentName?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  locked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
+  invoice?: Prisma.InvoiceOrderByWithRelationInput
 }
 
 export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  invoiceId?: string
   AND?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
   OR?: Prisma.RevenueWhereInput[]
   NOT?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
@@ -303,10 +324,12 @@ export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   activityType?: Prisma.EnumActivityTypeNullableFilter<"Revenue"> | $Enums.ActivityType | null
   attachmentUrl?: Prisma.StringNullableFilter<"Revenue"> | string | null
   attachmentName?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  locked?: Prisma.BoolFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id">
+  invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
+}, "id" | "invoiceId">
 
 export type RevenueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -318,6 +341,8 @@ export type RevenueOrderByWithAggregationInput = {
   activityType?: Prisma.SortOrderInput | Prisma.SortOrder
   attachmentUrl?: Prisma.SortOrderInput | Prisma.SortOrder
   attachmentName?: Prisma.SortOrderInput | Prisma.SortOrder
+  invoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
+  locked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.RevenueCountOrderByAggregateInput
@@ -340,6 +365,8 @@ export type RevenueScalarWhereWithAggregatesInput = {
   activityType?: Prisma.EnumActivityTypeNullableWithAggregatesFilter<"Revenue"> | $Enums.ActivityType | null
   attachmentUrl?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
   attachmentName?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
+  invoiceId?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
+  locked?: Prisma.BoolWithAggregatesFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Revenue"> | Date | string
 }
@@ -353,9 +380,11 @@ export type RevenueCreateInput = {
   activityType?: $Enums.ActivityType | null
   attachmentUrl?: string | null
   attachmentName?: string | null
+  locked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutRevenuesInput
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateInput = {
@@ -368,6 +397,8 @@ export type RevenueUncheckedCreateInput = {
   activityType?: $Enums.ActivityType | null
   attachmentUrl?: string | null
   attachmentName?: string | null
+  invoiceId?: string | null
+  locked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -381,9 +412,11 @@ export type RevenueUpdateInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutRevenuesNestedInput
+  invoice?: Prisma.InvoiceUpdateOneWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateInput = {
@@ -396,6 +429,8 @@ export type RevenueUncheckedUpdateInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -410,6 +445,8 @@ export type RevenueCreateManyInput = {
   activityType?: $Enums.ActivityType | null
   attachmentUrl?: string | null
   attachmentName?: string | null
+  invoiceId?: string | null
+  locked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -423,6 +460,7 @@ export type RevenueUpdateManyMutationInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -437,6 +475,8 @@ export type RevenueUncheckedUpdateManyInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -461,6 +501,8 @@ export type RevenueCountOrderByAggregateInput = {
   activityType?: Prisma.SortOrder
   attachmentUrl?: Prisma.SortOrder
   attachmentName?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -481,6 +523,8 @@ export type RevenueMaxOrderByAggregateInput = {
   activityType?: Prisma.SortOrder
   attachmentUrl?: Prisma.SortOrder
   attachmentName?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -495,6 +539,8 @@ export type RevenueMinOrderByAggregateInput = {
   activityType?: Prisma.SortOrder
   attachmentUrl?: Prisma.SortOrder
   attachmentName?: Prisma.SortOrder
+  invoiceId?: Prisma.SortOrder
+  locked?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -503,6 +549,11 @@ export type RevenueSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
+}
+
+export type RevenueNullableScalarRelationFilter = {
+  is?: Prisma.RevenueWhereInput | null
+  isNot?: Prisma.RevenueWhereInput | null
 }
 
 export type RevenueCreateNestedManyWithoutUserInput = {
@@ -559,6 +610,38 @@ export type NullableEnumActivityTypeFieldUpdateOperationsInput = {
   set?: $Enums.ActivityType | null
 }
 
+export type RevenueCreateNestedOneWithoutInvoiceInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutInvoiceInput, Prisma.RevenueUncheckedCreateWithoutInvoiceInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutInvoiceInput
+  connect?: Prisma.RevenueWhereUniqueInput
+}
+
+export type RevenueUncheckedCreateNestedOneWithoutInvoiceInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutInvoiceInput, Prisma.RevenueUncheckedCreateWithoutInvoiceInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutInvoiceInput
+  connect?: Prisma.RevenueWhereUniqueInput
+}
+
+export type RevenueUpdateOneWithoutInvoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutInvoiceInput, Prisma.RevenueUncheckedCreateWithoutInvoiceInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutInvoiceInput
+  upsert?: Prisma.RevenueUpsertWithoutInvoiceInput
+  disconnect?: Prisma.RevenueWhereInput | boolean
+  delete?: Prisma.RevenueWhereInput | boolean
+  connect?: Prisma.RevenueWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutInvoiceInput, Prisma.RevenueUpdateWithoutInvoiceInput>, Prisma.RevenueUncheckedUpdateWithoutInvoiceInput>
+}
+
+export type RevenueUncheckedUpdateOneWithoutInvoiceNestedInput = {
+  create?: Prisma.XOR<Prisma.RevenueCreateWithoutInvoiceInput, Prisma.RevenueUncheckedCreateWithoutInvoiceInput>
+  connectOrCreate?: Prisma.RevenueCreateOrConnectWithoutInvoiceInput
+  upsert?: Prisma.RevenueUpsertWithoutInvoiceInput
+  disconnect?: Prisma.RevenueWhereInput | boolean
+  delete?: Prisma.RevenueWhereInput | boolean
+  connect?: Prisma.RevenueWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.RevenueUpdateToOneWithWhereWithoutInvoiceInput, Prisma.RevenueUpdateWithoutInvoiceInput>, Prisma.RevenueUncheckedUpdateWithoutInvoiceInput>
+}
+
 export type RevenueCreateWithoutUserInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
@@ -568,8 +651,10 @@ export type RevenueCreateWithoutUserInput = {
   activityType?: $Enums.ActivityType | null
   attachmentUrl?: string | null
   attachmentName?: string | null
+  locked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
+  invoice?: Prisma.InvoiceCreateNestedOneWithoutRevenueInput
 }
 
 export type RevenueUncheckedCreateWithoutUserInput = {
@@ -581,6 +666,8 @@ export type RevenueUncheckedCreateWithoutUserInput = {
   activityType?: $Enums.ActivityType | null
   attachmentUrl?: string | null
   attachmentName?: string | null
+  invoiceId?: string | null
+  locked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -624,8 +711,86 @@ export type RevenueScalarWhereInput = {
   activityType?: Prisma.EnumActivityTypeNullableFilter<"Revenue"> | $Enums.ActivityType | null
   attachmentUrl?: Prisma.StringNullableFilter<"Revenue"> | string | null
   attachmentName?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  invoiceId?: Prisma.StringNullableFilter<"Revenue"> | string | null
+  locked?: Prisma.BoolFilter<"Revenue"> | boolean
   createdAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Revenue"> | Date | string
+}
+
+export type RevenueCreateWithoutInvoiceInput = {
+  id?: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  month: number
+  year: number
+  description?: string | null
+  activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
+  locked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  user: Prisma.UserCreateNestedOneWithoutRevenuesInput
+}
+
+export type RevenueUncheckedCreateWithoutInvoiceInput = {
+  id?: string
+  userId: string
+  amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  month: number
+  year: number
+  description?: string | null
+  activityType?: $Enums.ActivityType | null
+  attachmentUrl?: string | null
+  attachmentName?: string | null
+  locked?: boolean
+  createdAt?: Date | string
+  updatedAt?: Date | string
+}
+
+export type RevenueCreateOrConnectWithoutInvoiceInput = {
+  where: Prisma.RevenueWhereUniqueInput
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutInvoiceInput, Prisma.RevenueUncheckedCreateWithoutInvoiceInput>
+}
+
+export type RevenueUpsertWithoutInvoiceInput = {
+  update: Prisma.XOR<Prisma.RevenueUpdateWithoutInvoiceInput, Prisma.RevenueUncheckedUpdateWithoutInvoiceInput>
+  create: Prisma.XOR<Prisma.RevenueCreateWithoutInvoiceInput, Prisma.RevenueUncheckedCreateWithoutInvoiceInput>
+  where?: Prisma.RevenueWhereInput
+}
+
+export type RevenueUpdateToOneWithWhereWithoutInvoiceInput = {
+  where?: Prisma.RevenueWhereInput
+  data: Prisma.XOR<Prisma.RevenueUpdateWithoutInvoiceInput, Prisma.RevenueUncheckedUpdateWithoutInvoiceInput>
+}
+
+export type RevenueUpdateWithoutInvoiceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  user?: Prisma.UserUpdateOneRequiredWithoutRevenuesNestedInput
+}
+
+export type RevenueUncheckedUpdateWithoutInvoiceInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  userId?: Prisma.StringFieldUpdateOperationsInput | string
+  amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  month?: Prisma.IntFieldUpdateOperationsInput | number
+  year?: Prisma.IntFieldUpdateOperationsInput | number
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
 export type RevenueCreateManyUserInput = {
@@ -637,6 +802,8 @@ export type RevenueCreateManyUserInput = {
   activityType?: $Enums.ActivityType | null
   attachmentUrl?: string | null
   attachmentName?: string | null
+  invoiceId?: string | null
+  locked?: boolean
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -650,8 +817,10 @@ export type RevenueUpdateWithoutUserInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  invoice?: Prisma.InvoiceUpdateOneWithoutRevenueNestedInput
 }
 
 export type RevenueUncheckedUpdateWithoutUserInput = {
@@ -663,6 +832,8 @@ export type RevenueUncheckedUpdateWithoutUserInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -676,6 +847,8 @@ export type RevenueUncheckedUpdateManyWithoutUserInput = {
   activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
   attachmentUrl?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   attachmentName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  invoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  locked?: Prisma.BoolFieldUpdateOperationsInput | boolean
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -692,9 +865,12 @@ export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   activityType?: boolean
   attachmentUrl?: boolean
   attachmentName?: boolean
+  invoiceId?: boolean
+  locked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -707,9 +883,12 @@ export type RevenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   activityType?: boolean
   attachmentUrl?: boolean
   attachmentName?: boolean
+  invoiceId?: boolean
+  locked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -722,9 +901,12 @@ export type RevenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   activityType?: boolean
   attachmentUrl?: boolean
   attachmentName?: boolean
+  invoiceId?: boolean
+  locked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
 }, ExtArgs["result"]["revenue"]>
 
 export type RevenueSelectScalar = {
@@ -737,25 +919,31 @@ export type RevenueSelectScalar = {
   activityType?: boolean
   attachmentUrl?: boolean
   attachmentName?: boolean
+  invoiceId?: boolean
+  locked?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "month" | "year" | "description" | "activityType" | "attachmentUrl" | "attachmentName" | "createdAt" | "updatedAt", ExtArgs["result"]["revenue"]>
+export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "month" | "year" | "description" | "activityType" | "attachmentUrl" | "attachmentName" | "invoiceId" | "locked" | "createdAt" | "updatedAt", ExtArgs["result"]["revenue"]>
 export type RevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
 }
 export type RevenueIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
 }
 export type RevenueIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
+  invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
 }
 
 export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Revenue"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
+    invoice: Prisma.$InvoicePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -767,6 +955,8 @@ export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     activityType: $Enums.ActivityType | null
     attachmentUrl: string | null
     attachmentName: string | null
+    invoiceId: string | null
+    locked: boolean
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["revenue"]>
@@ -1164,6 +1354,7 @@ readonly fields: RevenueFieldRefs;
 export interface Prisma__RevenueClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  invoice<T extends Prisma.Revenue$invoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Revenue$invoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1202,6 +1393,8 @@ export interface RevenueFieldRefs {
   readonly activityType: Prisma.FieldRef<"Revenue", 'ActivityType'>
   readonly attachmentUrl: Prisma.FieldRef<"Revenue", 'String'>
   readonly attachmentName: Prisma.FieldRef<"Revenue", 'String'>
+  readonly invoiceId: Prisma.FieldRef<"Revenue", 'String'>
+  readonly locked: Prisma.FieldRef<"Revenue", 'Boolean'>
   readonly createdAt: Prisma.FieldRef<"Revenue", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Revenue", 'DateTime'>
 }
@@ -1602,6 +1795,25 @@ export type RevenueDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Inter
    * Limit how many Revenues to delete.
    */
   limit?: number
+}
+
+/**
+ * Revenue.invoice
+ */
+export type Revenue$invoiceArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Invoice
+   */
+  select?: Prisma.InvoiceSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Invoice
+   */
+  omit?: Prisma.InvoiceOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.InvoiceInclude<ExtArgs> | null
+  where?: Prisma.InvoiceWhereInput
 }
 
 /**

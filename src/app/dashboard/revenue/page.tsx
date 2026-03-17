@@ -1,7 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { Trash2, Plus, Calculator, Paperclip, X, FileText, Image } from "lucide-react";
+import { Trash2, Plus, Calculator, Paperclip, X, FileText, Image, Lock } from "lucide-react";
+import Link from "next/link";
 import { MonthPicker, MONTH_NAMES } from "@/components/dashboard/month-picker";
 
 interface RevenueEntry {
@@ -11,6 +12,8 @@ interface RevenueEntry {
   activityType: string | null;
   attachmentUrl: string | null;
   attachmentName: string | null;
+  invoiceId: string | null;
+  locked: boolean;
   createdAt: string;
 }
 
@@ -347,20 +350,44 @@ export default function RevenuePage() {
                 className="flex items-center justify-between rounded-lg border border-border/50 px-4 py-3"
               >
                 <div>
-                  <p className="text-sm font-medium text-foreground">
-                    {entry.description || "Revenu"}
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-sm font-medium text-foreground">
+                      {entry.description || "Revenu"}
+                    </p>
+                    {entry.locked && (
+                      <span title="Lié à une facture"><Lock className="h-3 w-3 text-muted-foreground" /></span>
+                    )}
+                  </div>
                   <p className="text-xs text-muted-foreground">
                     {ACTIVITY_OPTIONS.find((a) => a.value === (entry.activityType || defaultActivityType))?.label ?? "—"}
                     {" · "}
                     {new Date(entry.createdAt).toLocaleDateString("fr-FR")}
+                    {entry.invoiceId && (
+                      <>
+                        {" · "}
+                        <Link
+                          href={`/dashboard/invoices/${entry.invoiceId}`}
+                          className="text-primary hover:underline"
+                        >
+                          Voir la facture
+                        </Link>
+                      </>
+                    )}
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
                   <span className="font-semibold text-foreground">
                     {formatEuro(Number(entry.amount))}
                   </span>
-                  {entry.attachmentUrl ? (
+                  {entry.invoiceId ? (
+                    <Link
+                      href={`/dashboard/invoices/${entry.invoiceId}`}
+                      title="Voir la facture"
+                      className="p-1 text-primary hover:text-primary/70"
+                    >
+                      <FileText className="h-4 w-4" />
+                    </Link>
+                  ) : entry.attachmentUrl ? (
                     <div className="flex items-center gap-1">
                       <button
                         onClick={() => handleAttachmentView(entry.id)}
@@ -373,7 +400,7 @@ export default function RevenuePage() {
                           <FileText className="h-4 w-4" />
                         )}
                       </button>
-                      {!isCurrentOrFuture && (
+                      {!isCurrentOrFuture && !entry.locked && (
                         <button
                           onClick={() => handleAttachmentDelete(entry.id)}
                           className="p-0.5 text-muted-foreground hover:text-destructive"
@@ -383,7 +410,7 @@ export default function RevenuePage() {
                         </button>
                       )}
                     </div>
-                  ) : !isCurrentOrFuture ? (
+                  ) : !isCurrentOrFuture && !entry.locked ? (
                     <label className={`cursor-pointer p-1 text-muted-foreground hover:text-primary ${uploadingId === entry.id ? "animate-pulse" : ""}`} title="Ajouter une pièce jointe">
                       <Paperclip className="h-4 w-4" />
                       <input
@@ -398,7 +425,7 @@ export default function RevenuePage() {
                       />
                     </label>
                   ) : null}
-                  {!isCurrentOrFuture && (
+                  {!isCurrentOrFuture && !entry.locked && (
                     <button
                       onClick={() => handleDelete(entry.id)}
                       className="p-1 text-muted-foreground hover:text-destructive"

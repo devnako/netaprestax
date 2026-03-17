@@ -167,6 +167,8 @@ export async function PATCH(
           year: paidAt.getFullYear(),
           description: `Facture ${invoice.number} — ${invoice.client.name}`,
           activityType: profile?.activityType || null,
+          invoiceId: id,
+          locked: true,
         },
       }),
     ]);

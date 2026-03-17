@@ -94,6 +94,10 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
   }
 
+  if (revenue.locked) {
+    return NextResponse.json({ error: "Ce revenu est lié à une facture et ne peut pas être supprimé" }, { status: 403 });
+  }
+
   if (revenue.attachmentUrl) {
     try { await del(revenue.attachmentUrl); } catch {}
   }

@@ -174,6 +174,8 @@ export const RevenueScalarFieldEnum = {
   activityType: 'activityType',
   attachmentUrl: 'attachmentUrl',
   attachmentName: 'attachmentName',
+  invoiceId: 'invoiceId',
+  locked: 'locked',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const

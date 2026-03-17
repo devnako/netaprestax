@@ -80,18 +80,11 @@ export async function POST(
 
   // If the invoice was paid and user wants to remove the corresponding revenue
   if (invoice.status === "PAID" && removeRevenue) {
-    const totalHT = invoice.lines.reduce(
-      (sum, line) => sum + Number(line.quantity) * Number(line.unitPrice),
-      0
-    );
-    const amount = Math.round(totalHT * 100) / 100;
-
     operations.push(
       prisma.revenue.deleteMany({
         where: {
           userId: session.user.id,
-          description: { contains: invoice.number },
-          amount,
+          invoiceId: id,
         },
       }) as any
     );
