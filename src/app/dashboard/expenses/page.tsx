@@ -113,22 +113,26 @@ export default function ExpensesPage() {
     setUploadingId(entryId);
     setError(null);
     try {
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("type", "expense");
-      formData.append("id", entryId);
-      const res = await fetch("/api/attachments", { method: "POST", body: formData });
+      const { upload } = await import("@vercel/blob/client");
+      const blob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/attachments/upload",
+      });
+      const res = await fetch("/api/attachments", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ type: "expense", id: entryId, url: blob.url, name: file.name }),
+      });
       if (res.ok) {
-        const data = await res.json();
         setExpenses((prev) =>
-          prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: data.url, attachmentName: data.name } : e))
+          prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: blob.url, attachmentName: file.name } : e))
         );
       } else {
         const body = await res.json();
-        setError(body.error ?? "Erreur lors de l'upload");
+        setError(body.error ?? "Erreur lors de la sauvegarde");
       }
-    } catch {
-      setError("Erreur réseau lors de l'upload");
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Erreur lors de l'upload");
     }
     setUploadingId(null);
   };
