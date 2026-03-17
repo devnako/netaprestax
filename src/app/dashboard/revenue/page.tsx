@@ -124,37 +124,19 @@ export default function RevenuePage() {
     setUploadingId(entryId);
     setError(null);
     try {
-      // 1. Get client token
-      const tokenRes = await fetch("/api/attachments/upload", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ filename: file.name }),
-      });
-      if (!tokenRes.ok) {
-        const body = await tokenRes.json();
-        setError(body.error ?? "Erreur lors de l'upload");
-        setUploadingId(null);
-        return;
-      }
-      const { clientToken } = await tokenRes.json();
-
-      // 2. Upload directly to Vercel Blob
-      const { put } = await import("@vercel/blob/client");
-      const blob = await put(file.name, file, { access: "public", token: clientToken });
-
-      // 3. Save URL to database
-      const res = await fetch("/api/attachments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ type: "revenue", id: entryId, url: blob.url, name: file.name }),
-      });
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("type", "revenue");
+      formData.append("id", entryId);
+      const res = await fetch("/api/attachments/upload", { method: "POST", body: formData });
       if (res.ok) {
+        const data = await res.json();
         setEntries((prev) =>
-          prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: blob.url, attachmentName: file.name } : e))
+          prev.map((e) => (e.id === entryId ? { ...e, attachmentUrl: data.url, attachmentName: data.name } : e))
         );
       } else {
         const body = await res.json();
-        setError(body.error ?? "Erreur lors de la sauvegarde");
+        setError(body.error ?? "Erreur lors de l'upload");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "Erreur lors de l'upload");

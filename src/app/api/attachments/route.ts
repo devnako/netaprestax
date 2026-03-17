@@ -4,43 +4,6 @@ import { del } from "@vercel/blob";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-// POST: save blob URL to database (file already uploaded client-side to Vercel Blob)
-export async function POST(request: NextRequest) {
-  const session = await auth.api.getSession({ headers: await headers() });
-  if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
-
-  const { type, id, url, name } = await request.json();
-
-  if (!type || !id || !url || !name) {
-    return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
-  }
-
-  // Verify ownership
-  if (type === "revenue") {
-    const revenue = await prisma.revenue.findUnique({ where: { id } });
-    if (!revenue || revenue.userId !== session.user.id) {
-      return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
-    }
-    await prisma.revenue.update({
-      where: { id },
-      data: { attachmentUrl: url, attachmentName: name },
-    });
-  } else if (type === "expense") {
-    const expense = await prisma.expense.findUnique({ where: { id } });
-    if (!expense || expense.userId !== session.user.id) {
-      return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
-    }
-    await prisma.expense.update({
-      where: { id },
-      data: { attachmentUrl: url, attachmentName: name },
-    });
-  } else {
-    return NextResponse.json({ error: "Type invalide" }, { status: 400 });
-  }
-
-  return NextResponse.json({ url, name });
-}
-
 export async function DELETE(request: NextRequest) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
