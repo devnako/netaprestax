@@ -120,6 +120,10 @@ User ──────────── FiscalProfile (1:1)
 - `locked` (boolean) — empêche suppression des revenus issus de factures
 - `attachmentUrl` / `attachmentName` — pièce jointe via Vercel Blob
 
+**Champs notables sur Invoice et Quote :**
+- `paymentMethod` — moyen de paiement (Virement bancaire, Chèque, Espèces, Carte bancaire, Autre)
+- `bankAccountHolder` / `bankIban` / `bankBic` — coordonnées bancaires (uniquement si virement)
+
 ### Variables d'environnement
 
 **Requises :**
@@ -170,6 +174,18 @@ CRON_SECRET                 # Auth pour endpoints cron
 ---
 
 ## Historique de développement
+
+### Fait — 17 mars 2026 (session 4)
+
+- Moyen de paiement sur factures et devis :
+  - Champs `paymentMethod`, `bankAccountHolder`, `bankIban`, `bankBic` ajoutés sur Invoice et Quote (Prisma)
+  - Sélecteur dans les formulaires de création facture et devis (Virement bancaire, Chèque, Espèces, Carte bancaire, Autre)
+  - Si "Virement bancaire" : champs optionnels titulaire du compte, IBAN, BIC
+  - Affichage sur les pages détail facture et devis (encart bleu coordonnées bancaires)
+  - Édition possible en mode modification de facture
+  - Section "Règlement" en bas du PDF avec moyen de paiement + coordonnées bancaires si applicable
+  - Champs copiés lors de la conversion devis → facture et de la duplication de devis
+- Fix du PATCH `/api/invoices/[id]` : supporte maintenant les éditions de contenu (lignes, notes, conditions, moyen de paiement) en plus des changements de statut
 
 ### Fait — 17 mars 2026 (session 3)
 
@@ -241,6 +257,7 @@ CRON_SECRET                 # Auth pour endpoints cron
 ## À faire — Priorité
 
 - **Tester upload pièces jointes** : le store Blob est maintenant en mode privé avec proxy server-side, à vérifier en prod
+- **Page d'édition de devis manquante** : le lien "Modifier" sur un devis DRAFT pointe vers `/dashboard/quotes/[id]/edit` qui n'existe pas encore
 
 ## À faire — Roadmap
 
