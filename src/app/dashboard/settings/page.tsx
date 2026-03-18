@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback } from "react";
 import { useRouter } from "next/navigation";
-import { CheckCircle2, User, Clock, AlertTriangle } from "lucide-react";
+import { CheckCircle2, User, Clock, AlertTriangle, UserCheck, Trash2 } from "lucide-react";
 import { useSession, updateUser, changePassword } from "@/lib/auth-client";
 import { getAcreEndDate, isAcreActive } from "@/lib/fiscal/engine";
 
@@ -49,6 +49,13 @@ export default function SettingsPage() {
   const [savingName, setSavingName] = useState(false);
   const [nameSaved, setNameSaved] = useState(false);
 
+  // Accountant access state
+  const [accountantEmail, setAccountantEmail] = useState("");
+  const [accountantAccesses, setAccountantAccesses] = useState<{ id: string; accountant: { email: string; name: string | null }; status: string }[]>([]);
+  const [inviting, setInviting] = useState(false);
+  const [inviteError, setInviteError] = useState<string | null>(null);
+  const [inviteSuccess, setInviteSuccess] = useState(false);
+
   // Password state
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
@@ -62,10 +69,15 @@ export default function SettingsPage() {
   }, [session]);
 
   const loadProfile = useCallback(async () => {
-    const res = await fetch("/api/settings");
-    if (res.ok) {
-      const data = await res.json();
-      setProfile(data);
+    const [profileRes, accessRes] = await Promise.all([
+      fetch("/api/settings"),
+      fetch("/api/accountant-access"),
+    ]);
+    if (profileRes.ok) {
+      setProfile(await profileRes.json());
+    }
+    if (accessRes.ok) {
+      setAccountantAccesses(await accessRes.json());
     }
     setLoading(false);
   }, []);
@@ -113,6 +125,42 @@ export default function SettingsPage() {
     setSavingName(false);
     setNameSaved(true);
     setTimeout(() => setNameSaved(false), 3000);
+  };
+
+  const handleInviteAccountant = async () => {
+    if (!accountantEmail.trim()) return;
+    setInviting(true);
+    setInviteError(null);
+    setInviteSuccess(false);
+
+    const res = await fetch("/api/accountant-access", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: accountantEmail.trim() }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json();
+      setInviteError(data.error || "Erreur");
+      setInviting(false);
+      return;
+    }
+
+    setAccountantEmail("");
+    setInviting(false);
+    setInviteSuccess(true);
+    setTimeout(() => setInviteSuccess(false), 3000);
+    // Reload accesses
+    const accessRes = await fetch("/api/accountant-access");
+    if (accessRes.ok) setAccountantAccesses(await accessRes.json());
+  };
+
+  const handleRevokeAccess = async (accessId: string) => {
+    if (!confirm("Révoquer l'accès de ce comptable ?")) return;
+    const res = await fetch(`/api/accountant-access?id=${accessId}`, { method: "DELETE" });
+    if (res.ok) {
+      setAccountantAccesses((prev) => prev.filter((a) => a.id !== accessId));
+    }
   };
 
   const handlePasswordChange = async () => {
@@ -555,6 +603,74 @@ export default function SettingsPage() {
           {saving ? "Enregistrement..." : "Enregistrer les modifications"}
         </button>
       </div>
+      </section>
+
+      {/* Accountant Access Section */}
+      <section className="mt-10 max-w-lg border-t border-border pt-6">
+        <h2 className="flex items-center gap-2 text-lg font-semibold text-foreground">
+          <UserCheck className="h-5 w-5" />
+          Accès comptable
+        </h2>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Donnez accès en lecture seule à votre comptable pour qu&apos;il puisse consulter vos revenus, frais, factures et devis.
+        </p>
+
+        {/* Invite form */}
+        <div className="mt-4 space-y-3">
+          {inviteError && (
+            <div className="rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+              {inviteError}
+            </div>
+          )}
+          {inviteSuccess && (
+            <div className="flex items-center gap-2 rounded-lg bg-accent/10 p-3 text-sm text-accent">
+              <CheckCircle2 className="h-4 w-4" /> Accès accordé
+            </div>
+          )}
+
+          <div className="flex gap-2">
+            <input
+              type="email"
+              value={accountantEmail}
+              onChange={(e) => setAccountantEmail(e.target.value)}
+              placeholder="Email du comptable"
+              className="flex-1 rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+            />
+            <button
+              onClick={handleInviteAccountant}
+              disabled={inviting || !accountantEmail.trim()}
+              className="shrink-0 rounded-lg bg-primary px-4 py-2.5 text-sm font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+            >
+              {inviting ? "..." : "Inviter"}
+            </button>
+          </div>
+        </div>
+
+        {/* Existing accesses */}
+        {accountantAccesses.length > 0 && (
+          <div className="mt-4 space-y-2">
+            {accountantAccesses.map((access) => (
+              <div
+                key={access.id}
+                className="flex items-center justify-between rounded-lg border border-border bg-white p-3"
+              >
+                <div>
+                  <p className="text-sm font-medium text-foreground">
+                    {access.accountant.name || access.accountant.email}
+                  </p>
+                  <p className="text-xs text-muted-foreground">{access.accountant.email}</p>
+                </div>
+                <button
+                  onClick={() => handleRevokeAccess(access.id)}
+                  className="rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
+                  title="Révoquer l'accès"
+                >
+                  <Trash2 className="h-4 w-4" />
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
       </section>
     </div>
   );

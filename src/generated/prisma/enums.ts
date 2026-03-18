@@ -79,3 +79,20 @@ export const InvoiceStatus = {
 } as const
 
 export type InvoiceStatus = (typeof InvoiceStatus)[keyof typeof InvoiceStatus]
+
+
+export const UserRole = {
+  USER: 'USER',
+  ACCOUNTANT: 'ACCOUNTANT'
+} as const
+
+export type UserRole = (typeof UserRole)[keyof typeof UserRole]
+
+
+export const AccessStatus = {
+  PENDING: 'PENDING',
+  ACTIVE: 'ACTIVE',
+  REVOKED: 'REVOKED'
+} as const
+
+export type AccessStatus = (typeof AccessStatus)[keyof typeof AccessStatus]

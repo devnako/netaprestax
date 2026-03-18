@@ -77,3 +77,8 @@ export type Invoice = Prisma.InvoiceModel
  * 
  */
 export type DocumentLine = Prisma.DocumentLineModel
+/**
+ * Model AccountantAccess
+ * 
+ */
+export type AccountantAccess = Prisma.AccountantAccessModel

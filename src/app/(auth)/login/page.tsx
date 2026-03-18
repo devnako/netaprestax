@@ -136,6 +136,12 @@ export default function LoginPage() {
           Créer un compte
         </Link>
       </p>
+
+      <p className="mt-3 text-center text-xs text-muted-foreground">
+        <Link href="/accountant/login" className="hover:text-primary hover:underline">
+          Vous êtes comptable ? Accéder à vos clients →
+        </Link>
+      </p>
     </>
   );
 }

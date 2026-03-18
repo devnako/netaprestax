@@ -395,7 +395,8 @@ export const ModelName = {
   Client: 'Client',
   Quote: 'Quote',
   Invoice: 'Invoice',
-  DocumentLine: 'DocumentLine'
+  DocumentLine: 'DocumentLine',
+  AccountantAccess: 'AccountantAccess'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -411,7 +412,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "session" | "account" | "verification" | "fiscalProfile" | "revenue" | "expense" | "alertLog" | "client" | "quote" | "invoice" | "documentLine"
+    modelProps: "user" | "session" | "account" | "verification" | "fiscalProfile" | "revenue" | "expense" | "alertLog" | "client" | "quote" | "invoice" | "documentLine" | "accountantAccess"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1303,6 +1304,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    AccountantAccess: {
+      payload: Prisma.$AccountantAccessPayload<ExtArgs>
+      fields: Prisma.AccountantAccessFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.AccountantAccessFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.AccountantAccessFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>
+        }
+        findFirst: {
+          args: Prisma.AccountantAccessFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.AccountantAccessFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>
+        }
+        findMany: {
+          args: Prisma.AccountantAccessFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>[]
+        }
+        create: {
+          args: Prisma.AccountantAccessCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>
+        }
+        createMany: {
+          args: Prisma.AccountantAccessCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.AccountantAccessCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>[]
+        }
+        delete: {
+          args: Prisma.AccountantAccessDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>
+        }
+        update: {
+          args: Prisma.AccountantAccessUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>
+        }
+        deleteMany: {
+          args: Prisma.AccountantAccessDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.AccountantAccessUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.AccountantAccessUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>[]
+        }
+        upsert: {
+          args: Prisma.AccountantAccessUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$AccountantAccessPayload>
+        }
+        aggregate: {
+          args: Prisma.AccountantAccessAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateAccountantAccess>
+        }
+        groupBy: {
+          args: Prisma.AccountantAccessGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountantAccessGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.AccountantAccessCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AccountantAccessCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1349,7 +1424,8 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -1546,6 +1622,18 @@ export const DocumentLineScalarFieldEnum = {
 export type DocumentLineScalarFieldEnum = (typeof DocumentLineScalarFieldEnum)[keyof typeof DocumentLineScalarFieldEnum]
 
 
+export const AccountantAccessScalarFieldEnum = {
+  id: 'id',
+  accountantId: 'accountantId',
+  clientId: 'clientId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountantAccessScalarFieldEnum = (typeof AccountantAccessScalarFieldEnum)[keyof typeof AccountantAccessScalarFieldEnum]
+
+
 export const SortOrder = {
   asc: 'asc',
   desc: 'desc'
@@ -1608,6 +1696,20 @@ export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel
  * Reference to a field of type 'DateTime[]'
  */
 export type ListDateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime[]'>
+    
+
+
+/**
+ * Reference to a field of type 'UserRole'
+ */
+export type EnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole'>
+    
+
+
+/**
+ * Reference to a field of type 'UserRole[]'
+ */
+export type ListEnumUserRoleFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'UserRole[]'>
     
 
 
@@ -1738,6 +1840,20 @@ export type ListEnumInvoiceStatusFieldRefInput<$PrismaModel> = FieldRefInputType
 
 
 /**
+ * Reference to a field of type 'AccessStatus'
+ */
+export type EnumAccessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessStatus'>
+    
+
+
+/**
+ * Reference to a field of type 'AccessStatus[]'
+ */
+export type ListEnumAccessStatusFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'AccessStatus[]'>
+    
+
+
+/**
  * Reference to a field of type 'Float'
  */
 export type FloatFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Float'>
@@ -1857,6 +1973,7 @@ export type GlobalOmitConfig = {
   quote?: Prisma.QuoteOmit
   invoice?: Prisma.InvoiceOmit
   documentLine?: Prisma.DocumentLineOmit
+  accountantAccess?: Prisma.AccountantAccessOmit
 }
 
 /* Types for Logging */

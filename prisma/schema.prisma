@@ -20,6 +20,8 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
+  role          UserRole  @default(USER)
+
   sessions Session[]
   accounts Account[]
   profile  FiscalProfile?
@@ -29,6 +31,8 @@ model User {
   clients   Client[]
   quotes    Quote[]
   invoices  Invoice[]
+  accountantAccesses AccountantAccess[] @relation("AccountantUser")
+  clientAccesses     AccountantAccess[] @relation("ClientUser")
 }
 
 model Session {
@@ -297,4 +301,31 @@ enum InvoiceStatus {
   PAID
   OVERDUE
   CANCELLED
+}
+
+enum UserRole {
+  USER
+  ACCOUNTANT
+}
+
+enum AccessStatus {
+  PENDING
+  ACTIVE
+  REVOKED
+}
+
+model AccountantAccess {
+  id           String       @id @default(cuid())
+  accountantId String
+  clientId     String
+  status       AccessStatus @default(ACTIVE)
+  createdAt    DateTime     @default(now())
+  updatedAt    DateTime     @updatedAt
+
+  accountant User @relation("AccountantUser", fields: [accountantId], references: [id], onDelete: Cascade)
+  client     User @relation("ClientUser", fields: [clientId], references: [id], onDelete: Cascade)
+
+  @@unique([accountantId, clientId])
+  @@index([accountantId])
+  @@index([clientId])
 }

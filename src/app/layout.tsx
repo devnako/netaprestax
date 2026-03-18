@@ -8,7 +8,7 @@ const geistSans = Geist({
 });
 
 export const metadata: Metadata = {
-  title: "NetAprèsTax — SAIS-TU VRAIMENT CE QU'IL TE RESTE ?",
+  title: "NetAprèsTax — Ce qu'il te reste vraiment",
   description:
     "Calcule ton vrai revenu net en auto-entrepreneur. Cotisations, impôts, frais — vois ce qu'il te reste dans la poche.",
   keywords: [

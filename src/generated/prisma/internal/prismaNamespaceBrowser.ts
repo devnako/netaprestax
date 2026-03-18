@@ -62,7 +62,8 @@ export const ModelName = {
   Client: 'Client',
   Quote: 'Quote',
   Invoice: 'Invoice',
-  DocumentLine: 'DocumentLine'
+  DocumentLine: 'DocumentLine',
+  AccountantAccess: 'AccountantAccess'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -88,7 +89,8 @@ export const UserScalarFieldEnum = {
   emailVerified: 'emailVerified',
   image: 'image',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  role: 'role'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
@@ -283,6 +285,18 @@ export const DocumentLineScalarFieldEnum = {
 } as const
 
 export type DocumentLineScalarFieldEnum = (typeof DocumentLineScalarFieldEnum)[keyof typeof DocumentLineScalarFieldEnum]
+
+
+export const AccountantAccessScalarFieldEnum = {
+  id: 'id',
+  accountantId: 'accountantId',
+  clientId: 'clientId',
+  status: 'status',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type AccountantAccessScalarFieldEnum = (typeof AccountantAccessScalarFieldEnum)[keyof typeof AccountantAccessScalarFieldEnum]
 
 
 export const SortOrder = {
