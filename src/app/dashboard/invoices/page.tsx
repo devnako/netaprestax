@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, FileText } from "lucide-react";
+import { openPdfPreview } from "@/lib/pdf-preview";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
@@ -214,11 +215,20 @@ export default function InvoicesPage() {
                     {new Date(invoice.createdAt).toLocaleDateString("fr-FR")}
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-foreground">
-                    {formatEuro(computeTotalHT(invoice.lines))}
-                  </p>
-                  <p className="text-xs text-muted-foreground">HT</p>
+                <div className="flex items-start gap-3">
+                  <button
+                    onClick={(e) => { e.stopPropagation(); openPdfPreview(`/api/invoices/pdf?id=${invoice.id}`); }}
+                    className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
+                    title="Aperçu PDF"
+                  >
+                    <FileText className="h-4 w-4" />
+                  </button>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-foreground">
+                      {formatEuro(computeTotalHT(invoice.lines))}
+                    </p>
+                    <p className="text-xs text-muted-foreground">HT</p>
+                  </div>
                 </div>
               </div>
             </div>

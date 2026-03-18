@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Plus, Trash2 } from "lucide-react";
+import { Plus, Trash2, FileText } from "lucide-react";
+import { openPdfPreview } from "@/lib/pdf-preview";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
@@ -161,6 +162,13 @@ export default function QuotesPage() {
                     </p>
                     <p className="text-xs text-muted-foreground">HT</p>
                   </div>
+                  <button
+                    onClick={(e) => { e.stopPropagation(); openPdfPreview(`/api/quotes/pdf?id=${quote.id}`); }}
+                    className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
+                    title="Aperçu PDF"
+                  >
+                    <FileText className="h-4 w-4" />
+                  </button>
                   <button
                     onClick={(e) => handleDelete(e, quote.id)}
                     className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
