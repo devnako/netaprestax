@@ -4,6 +4,10 @@ export async function openPdfPreview(apiUrl: string) {
   const html = await res.text();
   const html2pdf = (await import("html2pdf.js")).default;
   const container = document.createElement("div");
+  container.style.position = "fixed";
+  container.style.left = "-9999px";
+  container.style.top = "0";
+  container.style.width = "210mm";
   container.innerHTML = html;
   document.body.appendChild(container);
   const el = container.querySelector("body") || container;
