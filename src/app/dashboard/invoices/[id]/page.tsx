@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Trash2, Edit2, Eye } from "lucide-react";
+import { Trash2, Edit2, FileText } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { LineItemsEditor } from "@/components/invoicing/line-items-editor";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
@@ -729,7 +729,7 @@ export default function InvoiceDetailPage() {
                   onClick={handlePDF}
                   className="w-full flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-center font-medium text-foreground hover:bg-muted"
                 >
-                  <Eye size={16} />
+                  <FileText size={16} />
                   Aperçu PDF
                 </button>
               </>

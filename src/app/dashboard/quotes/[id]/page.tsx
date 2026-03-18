@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
-import { Plus, Eye, Copy, Trash2 } from "lucide-react";
+import { Plus, FileText, Copy, Trash2 } from "lucide-react";
 
 interface QuoteLine {
   id: string;
@@ -200,7 +200,7 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Eye className="inline h-4 w-4 mr-2" />
+              <FileText className="inline h-4 w-4 mr-2" />
               Aperçu PDF
             </button>
             <button
@@ -233,7 +233,7 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Eye className="inline h-4 w-4 mr-2" />
+              <FileText className="inline h-4 w-4 mr-2" />
               Aperçu PDF
             </button>
           </div>
@@ -252,7 +252,7 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Eye className="inline h-4 w-4 mr-2" />
+              <FileText className="inline h-4 w-4 mr-2" />
               Aperçu PDF
             </button>
           </div>
@@ -264,7 +264,7 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Eye className="inline h-4 w-4 mr-2" />
+              <FileText className="inline h-4 w-4 mr-2" />
               Aperçu PDF
             </button>
             <button

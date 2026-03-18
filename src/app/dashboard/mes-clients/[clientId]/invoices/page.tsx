@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Eye } from "lucide-react";
+import { FileText } from "lucide-react";
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: "Brouillon",
@@ -107,7 +107,7 @@ export default function InvoicesPage() {
                     className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
                     title="Télécharger PDF"
                   >
-                    <Eye className="h-4 w-4" />
+                    <FileText className="h-4 w-4" />
                   </button>
                   <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[inv.status]}`}>
                     {STATUS_LABELS[inv.status]}
