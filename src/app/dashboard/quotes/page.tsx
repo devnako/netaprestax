@@ -163,7 +163,7 @@ export default function QuotesPage() {
                     <p className="text-xs text-muted-foreground">HT</p>
                   </div>
                   <button
-                    onClick={(e) => { e.stopPropagation(); openPdfPreview(`/api/quotes/pdf?id=${quote.id}`); }}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); openPdfPreview(`/api/quotes/pdf?id=${quote.id}`); }}
                     className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
                     title="Aperçu PDF"
                   >

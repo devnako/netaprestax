@@ -217,7 +217,7 @@ export default function InvoicesPage() {
                 </div>
                 <div className="flex items-start gap-3">
                   <button
-                    onClick={(e) => { e.stopPropagation(); openPdfPreview(`/api/invoices/pdf?id=${invoice.id}`); }}
+                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); openPdfPreview(`/api/invoices/pdf?id=${invoice.id}`); }}
                     className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
                     title="Aperçu PDF"
                   >
