@@ -6,6 +6,7 @@ import { Trash2, Edit2, FileText } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { LineItemsEditor } from "@/components/invoicing/line-items-editor";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
+import { openPdfPreview } from "@/lib/pdf-preview";
 
 interface InvoiceLine {
   description: string;
@@ -220,7 +221,7 @@ export default function InvoiceDetailPage() {
   };
 
   const handlePDF = () => {
-    window.open(`/api/invoices/pdf?id=${id}`, "_blank");
+    openPdfPreview(`/api/invoices/pdf?id=${id}`);
   };
 
   const handleCreateCreditNote = async () => {

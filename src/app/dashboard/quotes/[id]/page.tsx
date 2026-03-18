@@ -5,6 +5,7 @@ import { useRouter, useParams } from "next/navigation";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
 import { Plus, FileText, Copy, Trash2 } from "lucide-react";
+import { openPdfPreview } from "@/lib/pdf-preview";
 
 interface QuoteLine {
   id: string;
@@ -156,7 +157,7 @@ export default function QuoteDetailPage() {
   };
 
   const handlePDF = () => {
-    window.open(`/api/quotes/pdf?id=${id}`, "_blank");
+    openPdfPreview(`/api/quotes/pdf?id=${id}`);
   };
 
   if (loading) {

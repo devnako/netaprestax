@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { FileText } from "lucide-react";
+import { openPdfPreview } from "@/lib/pdf-preview";
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: "Brouillon",
@@ -65,7 +66,7 @@ export default function InvoicesPage() {
     }, 0);
 
   const handlePDF = (inv: Invoice) => {
-    window.open(`/api/invoices/pdf?id=${inv.id}`, "_blank");
+    openPdfPreview(`/api/invoices/pdf?id=${inv.id}`);
   };
 
   return (

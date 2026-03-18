@@ -5,6 +5,7 @@ import { useParams } from "next/navigation";
 import Link from "next/link";
 import { FileText, Image } from "lucide-react";
 import { MonthPicker } from "@/components/dashboard/month-picker";
+import { openPdfPreview } from "@/lib/pdf-preview";
 
 const ACTIVITY_LABELS: Record<string, string> = {
   BIC_VENTE: "Vente",
@@ -83,7 +84,7 @@ export default function RevenuePage() {
                     </span>
                     {r.invoiceId ? (
                       <button
-                        onClick={() => window.open(`/api/invoices/pdf?id=${r.invoiceId}`, "_blank")}
+                        onClick={() => openPdfPreview(`/api/invoices/pdf?id=${r.invoiceId}`)}
                         title="Voir la facture"
                         className="p-1 text-primary hover:text-primary/70"
                       >
@@ -116,7 +117,7 @@ export default function RevenuePage() {
                       <>
                         {r.description && " · "}
                         <button
-                          onClick={() => window.open(`/api/invoices/pdf?id=${r.invoiceId}`, "_blank")}
+                          onClick={() => openPdfPreview(`/api/invoices/pdf?id=${r.invoiceId}`)}
                           className="text-primary hover:underline"
                         >
                           Voir la facture
