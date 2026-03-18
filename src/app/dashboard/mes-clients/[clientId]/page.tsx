@@ -12,12 +12,12 @@ import { Wallet, TrendingDown, PiggyBank } from "lucide-react";
 export default async function ClientDashboardPage({
   params,
 }: {
-  params: { clientId: string };
+  params: Promise<{ clientId: string }>;
 }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session) redirect("/login");
 
-  const clientId = params.clientId;
+  const { clientId } = await params;
   const hasAccess = await verifyAccountantAccess(session.user.id, clientId);
   if (!hasAccess) redirect("/dashboard/mes-clients");
 
