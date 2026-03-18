@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { verifyAccountantAccess } from "@/lib/accountant";
 import { generateDocumentHtml } from "@/lib/invoicing/pdf-template";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -15,9 +16,15 @@ export async function GET(request: NextRequest) {
     where: { id },
     include: { client: true, lines: { orderBy: { sortOrder: "asc" } } },
   });
-  if (!quote || quote.userId !== session.user.id) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+  if (!quote) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+  const isOwner = quote.userId === session.user.id;
+  const isAccountant = !isOwner && await verifyAccountantAccess(session.user.id, quote.userId);
+  if (!isOwner && !isAccountant) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
 
-  const profile = await prisma.fiscalProfile.findUnique({ where: { userId: session.user.id } });
+  const [profile, quoteOwner] = await Promise.all([
+    prisma.fiscalProfile.findUnique({ where: { userId: quote.userId } }),
+    isOwner ? null : prisma.user.findUnique({ where: { id: quote.userId }, select: { name: true, email: true } }),
+  ]);
 
   const html = generateDocumentHtml({
     type: "devis",
@@ -26,7 +33,7 @@ export async function GET(request: NextRequest) {
     validUntil: quote.validUntil?.toISOString() || null,
     status: quote.status,
     business: {
-      name: session.user.name || session.user.email,
+      name: isOwner ? (session.user.name || session.user.email) : (quoteOwner?.name || quoteOwner?.email || ""),
       ownerName: profile?.ownerName || null,
       siret: profile?.siret || null,
       address: profile?.address || null,
