@@ -2,7 +2,7 @@
 
 import { useState, useEffect, useCallback, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import { Plus } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
@@ -65,6 +65,16 @@ export default function QuotesPage() {
   const handleMonthChange = (m: number, y: number) => {
     setMonth(m);
     setYear(y);
+  };
+
+  const handleDelete = async (e: React.MouseEvent, quoteId: string) => {
+    e.stopPropagation();
+    if (!confirm("Êtes-vous sûr de vouloir supprimer ce devis ?")) return;
+
+    const res = await fetch(`/api/quotes/${quoteId}`, { method: "DELETE" });
+    if (res.ok) {
+      setQuotes((prev) => prev.filter((q) => q.id !== quoteId));
+    }
   };
 
   const filteredQuotes = useMemo(() => {
@@ -144,11 +154,22 @@ export default function QuotesPage() {
                     {new Date(quote.createdAt).toLocaleDateString("fr-FR")}
                   </p>
                 </div>
-                <div className="text-right">
-                  <p className="text-lg font-bold text-foreground">
-                    {formatEuro(computeTotalHT(quote.lines))}
-                  </p>
-                  <p className="text-xs text-muted-foreground">HT</p>
+                <div className="flex items-start gap-3">
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-foreground">
+                      {formatEuro(computeTotalHT(quote.lines))}
+                    </p>
+                    <p className="text-xs text-muted-foreground">HT</p>
+                  </div>
+                  {quote.status === "DRAFT" && (
+                    <button
+                      onClick={(e) => handleDelete(e, quote.id)}
+                      className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
+                      title="Supprimer"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </button>
+                  )}
                 </div>
               </div>
             </div>
