@@ -46,16 +46,20 @@ export async function POST(request: NextRequest) {
   }
 
   const accountant = await prisma.user.findFirst({
-    where: {
-      email,
-      role: "ACCOUNTANT",
-    },
+    where: { email },
   });
 
   if (!accountant) {
     return NextResponse.json(
-      { error: "Comptable non trouvé" },
+      { error: "Aucun utilisateur trouvé avec cet email" },
       { status: 404 }
+    );
+  }
+
+  if (accountant.id === session.user.id) {
+    return NextResponse.json(
+      { error: "Vous ne pouvez pas vous inviter vous-même" },
+      { status: 400 }
     );
   }
 
