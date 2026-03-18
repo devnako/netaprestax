@@ -32,8 +32,29 @@ src/
 ├── app/
 │   ├── (auth)/                    # Pages auth (login, register, forgot/reset-password)
 │   ├── (legal)/                   # Pages légales (cgu, mentions-legales, confidentialite)
+│   ├── accountant/
+│   │   ├── login/                 # Login comptable dédié
+│   │   └── dashboard/             # Dashboard comptable (lecture seule)
+│   │       ├── page.tsx           # Liste des clients
+│   │       ├── layout.tsx         # Layout avec nav + déconnexion
+│   │       └── [clientId]/        # Vue client
+│   │           ├── page.tsx       # Dashboard client (RSC)
+│   │           ├── layout.tsx     # Layout avec bannière lecture seule + nav
+│   │           ├── revenue/       # Revenus (lecture seule)
+│   │           ├── expenses/      # Frais (lecture seule)
+│   │           ├── invoices/      # Factures (lecture seule)
+│   │           ├── quotes/        # Devis (lecture seule)
+│   │           └── history/       # Historique graphiques (lecture seule)
 │   ├── api/
 │   │   ├── auth/[...all]/         # Better Auth catch-all
+│   │   ├── accountant-access/     # GET/POST/DELETE gestion accès comptable
+│   │   ├── accountant/clients/    # GET liste clients du comptable
+│   │   ├── accountant/[clientId]/ # Routes lecture seule comptable
+│   │   │   ├── revenue/           # GET revenus client
+│   │   │   ├── expenses/          # GET frais client
+│   │   │   ├── invoices/          # GET factures client
+│   │   │   ├── quotes/            # GET devis client
+│   │   │   └── history/           # GET historique client
 │   │   ├── alerts/                # GET alertes seuil CA
 │   │   ├── attachments/           # GET (proxy privé) + DELETE pièces jointes
 │   │   ├── attachments/upload/    # POST upload vers Vercel Blob
@@ -64,7 +85,7 @@ src/
 │   │   ├── invoices/              # Liste + détail factures
 │   │   ├── quotes/                # Liste + détail devis
 │   │   ├── revenue/               # Gestion revenus
-│   │   ├── settings/              # Paramètres utilisateur
+│   │   ├── settings/              # Paramètres utilisateur + section accès comptable
 │   │   └── simulation/            # Simulation fiscale
 │   ├── onboarding/                # Onboarding 4 étapes
 │   ├── layout.tsx                 # Layout racine (fonts Geist)
@@ -102,6 +123,8 @@ User ──────────── FiscalProfile (1:1)
   ├── Client (1:N) ──── Quote (1:N) ── DocumentLine (1:N)
   │                └─── Invoice (1:N) ── DocumentLine (1:N)
   │                                   ── Invoice[] (self-ref: creditNotes)
+  ├── AccountantAccess (1:N, "AccountantUser") ── User (comptable → clients)
+  ├── AccountantAccess (1:N, "ClientUser")     ── User (client → comptables)
   ├── Session (1:N)
   ├── Account (1:N)
   └── Verification (1:N)
@@ -114,6 +137,8 @@ User ──────────── FiscalProfile (1:1)
 - `QuoteStatus` : DRAFT, SENT, ACCEPTED, REFUSED
 - `InvoiceStatus` : DRAFT, PENDING, PAID, OVERDUE, CANCELLED
 - `AlertType` : SEUIL_75, SEUIL_90, SEUIL_100, TVA_APPROCHE, TVA_DEPASSE
+- `UserRole` : USER, ACCOUNTANT
+- `AccessStatus` : PENDING, ACTIVE, REVOKED
 
 **Champs notables sur Revenue :**
 - `invoiceId` (unique, optionnel) — lie le revenu à la facture source
@@ -174,6 +199,23 @@ CRON_SECRET                 # Auth pour endpoints cron
 ---
 
 ## Historique de développement
+
+### Fait — 18 mars 2026 (session 5)
+
+- Accès comptable en lecture seule :
+  - Modèle Prisma `AccountantAccess` avec enums `UserRole` (USER/ACCOUNTANT) et `AccessStatus` (PENDING/ACTIVE/REVOKED)
+  - `src/lib/accountant.ts` : helpers `verifyAccountantAccess` et `getAccountantSession`
+  - Login comptable dédié (`/accountant/login`) sans Google OAuth
+  - Dashboard comptable (`/accountant/dashboard`) avec liste des clients
+  - Vue client lecture seule avec bannière bleue "Mode lecture seule" :
+    - Dashboard principal (RSC, stat cards, détail calcul, barre CA annuel)
+    - Revenus, frais, factures, devis (listes sans actions de modification)
+    - Historique avec graphiques Recharts
+  - 7 routes API comptable avec vérification d'accès (`/api/accountant/clients`, `/api/accountant/[clientId]/*`)
+  - Route API `/api/accountant-access` : GET/POST/DELETE pour gérer les accès
+  - Section "Accès comptable" dans les paramètres utilisateur (invitation par email, révocation)
+  - Liens vers l'espace comptable sur les pages login et register
+  - Middleware `proxy.ts` mis à jour pour protéger `/accountant/dashboard`
 
 ### Fait — 17 mars 2026 (session 4)
 
@@ -261,7 +303,6 @@ CRON_SECRET                 # Auth pour endpoints cron
 
 ## À faire — Roadmap
 
-- Accès comptable (lecture seule)
 - Stripe + plan Pro
 - Rappels de déclaration URSSAF par email (quand nom de domaine ok)
 - Envoi de factures par email (quand nom de domaine ok)
