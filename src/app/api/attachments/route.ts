@@ -1,5 +1,6 @@
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
+import { verifyAccountantAccess } from "@/lib/accountant";
 import { del, head } from "@vercel/blob";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
@@ -25,14 +26,20 @@ export async function GET(request: NextRequest) {
 
   if (type === "revenue") {
     const revenue = await prisma.revenue.findUnique({ where: { id } });
-    if (!revenue || revenue.userId !== session.user.id) {
+    if (!revenue) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+    const isOwner = revenue.userId === session.user.id;
+    const isAccountant = !isOwner && await verifyAccountantAccess(session.user.id, revenue.userId);
+    if (!isOwner && !isAccountant) {
       return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
     }
     attachmentUrl = revenue.attachmentUrl;
     attachmentName = revenue.attachmentName;
   } else if (type === "expense") {
     const expense = await prisma.expense.findUnique({ where: { id } });
-    if (!expense || expense.userId !== session.user.id) {
+    if (!expense) return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
+    const isOwner = expense.userId === session.user.id;
+    const isAccountant = !isOwner && await verifyAccountantAccess(session.user.id, expense.userId);
+    if (!isOwner && !isAccountant) {
       return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
     }
     attachmentUrl = expense.attachmentUrl;
