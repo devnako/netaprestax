@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
 import { Plus, Trash2, FileText } from "lucide-react";
 import { openPdfPreview } from "@/lib/pdf-preview";
 import { StatusBadge } from "@/components/invoicing/status-badge";
@@ -30,7 +30,6 @@ function formatEuro(value: number) {
 }
 
 export default function QuotesPage() {
-  const router = useRouter();
   const now = new Date();
   const [quotes, setQuotes] = useState<Quote[]>([]);
   const [loading, setLoading] = useState(true);
@@ -136,42 +135,46 @@ export default function QuotesPage() {
           filteredQuotes.map((quote) => (
             <div
               key={quote.id}
-              onClick={() => router.push(`/dashboard/quotes/${quote.id}`)}
-              className="cursor-pointer rounded-2xl border border-border bg-white p-4 md:p-6 hover:border-primary hover:shadow-sm transition"
+              className="rounded-2xl border border-border bg-white hover:border-primary hover:shadow-sm transition"
             >
-              <div className="flex items-start justify-between gap-4">
-                <div className="flex-1">
-                  <div className="flex items-baseline gap-3">
-                    <h3 className="text-sm font-medium text-foreground">Devis {quote.number}</h3>
-                    <StatusBadge status={quote.status} type="quote" />
-                    {quote.invoiceId && (
-                      <span className="inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">
-                        Facturé
-                      </span>
-                    )}
+              <div className="flex items-center">
+                <Link
+                  href={`/dashboard/quotes/${quote.id}`}
+                  className="flex flex-1 items-start justify-between gap-4 p-4 md:p-6"
+                >
+                  <div className="flex-1">
+                    <div className="flex items-baseline gap-3">
+                      <h3 className="text-sm font-medium text-foreground">Devis {quote.number}</h3>
+                      <StatusBadge status={quote.status} type="quote" />
+                      {quote.invoiceId && (
+                        <span className="inline-block rounded-full bg-green-100 px-2.5 py-0.5 text-xs font-semibold text-green-700">
+                          Facturé
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-1 text-sm text-foreground font-semibold">{quote.client.name}</p>
+                    <p className="text-xs text-muted-foreground">
+                      {new Date(quote.createdAt).toLocaleDateString("fr-FR")}
+                    </p>
                   </div>
-                  <p className="mt-1 text-sm text-foreground font-semibold">{quote.client.name}</p>
-                  <p className="text-xs text-muted-foreground">
-                    {new Date(quote.createdAt).toLocaleDateString("fr-FR")}
-                  </p>
-                </div>
-                <div className="flex items-start gap-3">
                   <div className="text-right">
                     <p className="text-lg font-bold text-foreground">
                       {formatEuro(computeTotalHT(quote.lines))}
                     </p>
                     <p className="text-xs text-muted-foreground">HT</p>
                   </div>
+                </Link>
+                <div className="flex shrink-0 gap-1 mr-4">
                   <button
-                    onClick={(e) => { e.preventDefault(); e.stopPropagation(); openPdfPreview(`/api/quotes/pdf?id=${quote.id}`); }}
-                    className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
+                    onClick={() => openPdfPreview(`/api/quotes/pdf?id=${quote.id}`)}
+                    className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition"
                     title="Aperçu PDF"
                   >
                     <FileText className="h-4 w-4" />
                   </button>
                   <button
                     onClick={(e) => handleDelete(e, quote.id)}
-                    className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
+                    className="rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
                     title="Supprimer"
                   >
                     <Trash2 className="h-4 w-4" />
