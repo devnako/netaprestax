@@ -12,7 +12,7 @@ interface Client {
   siret?: string;
 }
 
-export default function AccountantDashboardPage() {
+export default function MesClientsPage() {
   const [clients, setClients] = useState<Client[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -35,9 +35,12 @@ export default function AccountantDashboardPage() {
   }, []);
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 pb-20 md:pb-0">
       <div>
         <h1 className="text-2xl font-bold text-foreground">Mes clients</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
+          Accès en lecture seule aux dossiers de vos clients
+        </p>
       </div>
 
       {loading && (
@@ -69,7 +72,7 @@ export default function AccountantDashboardPage() {
           {clients.map((client) => (
             <Link
               key={client.id}
-              href={`/accountant/dashboard/${client.id}`}
+              href={`/dashboard/mes-clients/${client.id}`}
               className="rounded-xl border border-border bg-white p-4 hover:bg-muted transition-colors"
             >
               <h3 className="font-semibold text-foreground">

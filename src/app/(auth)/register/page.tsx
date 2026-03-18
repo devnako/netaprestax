@@ -148,12 +148,6 @@ export default function RegisterPage() {
           Se connecter
         </Link>
       </p>
-
-      <p className="mt-3 text-center text-xs text-muted-foreground">
-        <Link href="/accountant/login" className="hover:text-primary hover:underline">
-          Vous êtes comptable ? Accéder à vos clients →
-        </Link>
-      </p>
     </>
   );
 }

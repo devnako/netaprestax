@@ -1,14 +1,14 @@
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { getAccountantSession } from "@/lib/accountant";
+import { auth } from "@/lib/auth";
 import { verifyAccountantAccess } from "@/lib/accountant";
 
 export async function GET(
   request: NextRequest,
   { params }: { params: Promise<{ clientId: string }> }
 ) {
-  const session = await getAccountantSession(await headers());
+  const session = await auth.api.getSession({ headers: await headers() });
 
   if (!session) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });

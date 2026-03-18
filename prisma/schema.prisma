@@ -20,8 +20,6 @@ model User {
   createdAt     DateTime  @default(now())
   updatedAt     DateTime  @updatedAt
 
-  role          UserRole  @default(USER)
-
   sessions Session[]
   accounts Account[]
   profile  FiscalProfile?
@@ -301,11 +299,6 @@ enum InvoiceStatus {
   PAID
   OVERDUE
   CANCELLED
-}
-
-enum UserRole {
-  USER
-  ACCOUNTANT
 }
 
 enum AccessStatus {

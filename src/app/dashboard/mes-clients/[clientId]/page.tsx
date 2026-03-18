@@ -2,6 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
+import { verifyAccountantAccess } from "@/lib/accountant";
 import { calculerNetReel } from "@/lib/fiscal/engine";
 import { ACTIVITY_LABELS, SEUILS_CA } from "@/lib/fiscal/rates";
 import { formatCurrency, formatPercent } from "@/lib/utils";
@@ -13,29 +14,15 @@ export default async function ClientDashboardPage({
 }: {
   params: { clientId: string };
 }) {
-  const session = await auth.api.getSession({
-    headers: await headers(),
-  });
-
-  if (!session) redirect("/accountant/login");
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/login");
 
   const clientId = params.clientId;
+  const hasAccess = await verifyAccountantAccess(session.user.id, clientId);
+  if (!hasAccess) redirect("/dashboard/mes-clients");
 
-  // Verify accountant access
-  const access = await prisma.accountantAccess.findFirst({
-    where: {
-      accountantId: session.user.id,
-      clientId,
-    },
-  });
-
-  if (!access) redirect("/accountant/dashboard");
-
-  const client = await prisma.user.findUnique({
-    where: { id: clientId },
-  });
-
-  if (!client) redirect("/accountant/dashboard");
+  const client = await prisma.user.findUnique({ where: { id: clientId } });
+  if (!client) redirect("/dashboard/mes-clients");
 
   const profile = await prisma.fiscalProfile.findUnique({
     where: { userId: clientId },
@@ -43,15 +30,8 @@ export default async function ClientDashboardPage({
 
   if (!profile) {
     return (
-      <div className="space-y-8">
-        <div>
-          <h1 className="text-2xl font-bold text-foreground">
-            {client.name || client.email}
-          </h1>
-        </div>
-        <div className="rounded-2xl border border-border bg-white p-8 text-center">
-          <p className="text-muted-foreground">Profil fiscal non configuré</p>
-        </div>
+      <div className="rounded-2xl border border-border bg-white p-8 text-center">
+        <p className="text-muted-foreground">Profil fiscal non configuré</p>
       </div>
     );
   }
@@ -60,28 +40,17 @@ export default async function ClientDashboardPage({
   const currentMonth = now.getMonth() + 1;
   const currentYear = now.getFullYear();
 
-  // Get current month revenues
-  const monthRevenues = await prisma.revenue.findMany({
-    where: {
-      userId: clientId,
-      month: currentMonth,
-      year: currentYear,
-    },
-  });
-
-  // Get current month expenses
-  const expenses = await prisma.expense.findMany({
-    where: {
-      userId: clientId,
-      month: currentMonth,
-      year: currentYear,
-    },
-  });
-
-  // Get yearly total CA
-  const yearlyRevenues = await prisma.revenue.findMany({
-    where: { userId: clientId, year: currentYear },
-  });
+  const [monthRevenues, expenses, yearlyRevenues] = await Promise.all([
+    prisma.revenue.findMany({
+      where: { userId: clientId, month: currentMonth, year: currentYear },
+    }),
+    prisma.expense.findMany({
+      where: { userId: clientId, month: currentMonth, year: currentYear },
+    }),
+    prisma.revenue.findMany({
+      where: { userId: clientId, year: currentYear },
+    }),
+  ]);
 
   const totalFrais = expenses.reduce((sum, e) => sum + Number(e.amount), 0);
   const ca = monthRevenues.reduce((sum, r) => sum + Number(r.amount), 0);
@@ -89,14 +58,12 @@ export default async function ClientDashboardPage({
   const seuilCA = SEUILS_CA[profile.activityType as keyof typeof SEUILS_CA];
   const seuilPercent = Math.min((yearlyCA / seuilCA) * 100, 100);
 
-  // Group revenues by activity type
   const revenuesByActivity = new Map<string, number>();
   for (const rev of monthRevenues) {
     const type = rev.activityType || profile.activityType;
     revenuesByActivity.set(type, (revenuesByActivity.get(type) || 0) + Number(rev.amount));
   }
 
-  // Calculate per activity type
   let totalCotisations = 0;
   let totalCFP = 0;
   let totalIR = 0;
@@ -163,8 +130,7 @@ export default async function ClientDashboardPage({
   ];
 
   return (
-    <div className="space-y-8 pb-20 md:pb-0">
-      {/* Header */}
+    <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-bold text-foreground">
           {monthNames[currentMonth - 1]} {currentYear}
@@ -181,12 +147,11 @@ export default async function ClientDashboardPage({
             Pas de CA ce mois-ci
           </h2>
           <p className="mt-2 text-muted-foreground">
-            Aucun chiffre d'affaires enregistré pour {monthNames[currentMonth - 1]} {currentYear}.
+            Aucun chiffre d&apos;affaires enregistré pour {monthNames[currentMonth - 1]} {currentYear}.
           </p>
         </div>
       ) : (
         <>
-          {/* Main cards */}
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             <StatCard
               label="Chiffre d'affaires"
@@ -213,7 +178,6 @@ export default async function ClientDashboardPage({
             />
           </div>
 
-          {/* Breakdown */}
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">Détail du calcul</h2>
             <div className="mt-4 space-y-3">
@@ -254,7 +218,6 @@ export default async function ClientDashboardPage({
             </div>
           </div>
 
-          {/* Yearly CA progress */}
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <div className="flex items-center justify-between">
               <h2 className="text-lg font-semibold text-foreground">CA annuel {currentYear}</h2>
@@ -298,9 +261,7 @@ function StatCard({
   return (
     <div
       className={`rounded-xl border p-3 md:p-5 ${
-        highlight
-          ? "border-accent bg-accent/5"
-          : "border-border bg-white"
+        highlight ? "border-accent bg-accent/5" : "border-border bg-white"
       }`}
     >
       <div className="flex items-center gap-1.5 md:gap-2">

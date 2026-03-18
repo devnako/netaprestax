@@ -1,7 +1,10 @@
 import Link from "next/link";
-import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download, Users, FileText, FileCheck } from "lucide-react";
+import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download, Users, FileText, FileCheck, Briefcase } from "lucide-react";
 import { SignOutButton } from "@/components/dashboard/sign-out-button";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
+import { auth } from "@/lib/auth";
+import { prisma } from "@/lib/db";
+import { headers } from "next/headers";
 
 const NAV_ITEMS = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
@@ -17,11 +20,22 @@ const NAV_ITEMS = [
   { href: "/dashboard/settings", icon: Settings, label: "Paramètres" },
 ] as const;
 
-export default function DashboardLayout({
+export default async function DashboardLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
+  let hasClients = false;
+  try {
+    const session = await auth.api.getSession({ headers: await headers() });
+    if (session) {
+      const count = await prisma.accountantAccess.count({
+        where: { accountantId: session.user.id, status: "ACTIVE" },
+      });
+      hasClients = count > 0;
+    }
+  } catch {}
+
   return (
     <div className="min-h-screen bg-muted pb-20 md:pb-0">
       {/* Top nav */}
@@ -41,6 +55,12 @@ export default function DashboardLayout({
             {NAV_ITEMS.map((item) => (
               <SidebarLink key={item.href} href={item.href} icon={<item.icon className="h-5 w-5" />} label={item.label} />
             ))}
+            {hasClients && (
+              <>
+                <div className="my-2 border-t border-border" />
+                <SidebarLink href="/dashboard/mes-clients" icon={<Briefcase className="h-5 w-5" />} label="Mes clients" />
+              </>
+            )}
           </nav>
         </aside>
 
@@ -49,7 +69,7 @@ export default function DashboardLayout({
       </div>
 
       {/* Bottom tab bar — mobile only */}
-      <MobileNav />
+      <MobileNav hasClients={hasClients} />
     </div>
   );
 }

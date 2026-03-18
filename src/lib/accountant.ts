@@ -10,17 +10,3 @@ export async function verifyAccountantAccess(accountantId: string, clientId: str
   });
   return !!access;
 }
-
-export async function getAccountantSession(headers: Headers) {
-  const { auth } = await import("@/lib/auth");
-  const session = await auth.api.getSession({ headers });
-  if (!session) return null;
-
-  const user = await prisma.user.findUnique({
-    where: { id: session.user.id },
-    select: { role: true },
-  });
-
-  if (user?.role !== "ACCOUNTANT") return null;
-  return session;
-}

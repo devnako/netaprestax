@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Wallet, Receipt, BarChart3,
-  Bell, Calculator, Download, Settings, MoreHorizontal, X, Users, FileText, FileCheck,
+  Bell, Calculator, Download, Settings, MoreHorizontal, X, Users, FileText, FileCheck, Briefcase,
 } from "lucide-react";
 
 const PRIMARY = [
@@ -25,7 +25,7 @@ const SECONDARY = [
   { href: "/dashboard/settings", icon: Settings, label: "Paramètres" },
 ];
 
-export function MobileNav() {
+export function MobileNav({ hasClients }: { hasClients?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -54,7 +54,11 @@ export function MobileNav() {
   const isActive = (href: string) =>
     href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
 
-  const isSecondaryActive = SECONDARY.some((item) => isActive(item.href));
+  const secondaryItems = hasClients
+    ? [...SECONDARY, { href: "/dashboard/mes-clients", icon: Briefcase, label: "Mes clients" }]
+    : SECONDARY;
+
+  const isSecondaryActive = secondaryItems.some((item) => isActive(item.href));
 
   return (
     <nav className="fixed inset-x-0 bottom-0 z-50 border-t border-border bg-white md:hidden">
@@ -86,7 +90,7 @@ export function MobileNav() {
 
           {open && (
             <div className="absolute bottom-full right-0 mb-2 w-48 rounded-xl border border-border bg-white p-2 shadow-lg">
-              {SECONDARY.map((item) => (
+              {secondaryItems.map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
