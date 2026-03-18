@@ -161,15 +161,13 @@ export default function QuotesPage() {
                     </p>
                     <p className="text-xs text-muted-foreground">HT</p>
                   </div>
-                  {quote.status === "DRAFT" && (
-                    <button
-                      onClick={(e) => handleDelete(e, quote.id)}
-                      className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
-                      title="Supprimer"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </button>
-                  )}
+                  <button
+                    onClick={(e) => handleDelete(e, quote.id)}
+                    className="mt-1 rounded-lg p-1.5 text-muted-foreground hover:bg-red-50 hover:text-red-600 transition"
+                    title="Supprimer"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </button>
                 </div>
               </div>
             </div>

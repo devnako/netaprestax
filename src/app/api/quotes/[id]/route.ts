@@ -128,13 +128,6 @@ export async function DELETE(
     return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
   }
 
-  if (quote.status !== "DRAFT") {
-    return NextResponse.json(
-      { error: "Seuls les devis en brouillon peuvent être supprimés" },
-      { status: 400 }
-    );
-  }
-
   await prisma.quote.delete({ where: { id } });
   return NextResponse.json({ success: true });
 }
