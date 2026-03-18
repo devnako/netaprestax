@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
-import { Plus, Download, Copy, Trash2 } from "lucide-react";
+import { Plus, Eye, Copy, Trash2 } from "lucide-react";
 
 interface QuoteLine {
   id: string;
@@ -155,25 +155,8 @@ export default function QuoteDetailPage() {
     router.push(`/dashboard/quotes/${newQuote.id}`);
   };
 
-  const handlePDF = async () => {
-    const res = await fetch(`/api/quotes/pdf?id=${id}`);
-    const html = await res.text();
-    const html2pdf = (await import("html2pdf.js")).default;
-    const container = document.createElement("div");
-    container.innerHTML = html;
-    document.body.appendChild(container);
-    const el = container.querySelector("body") || container;
-    await html2pdf()
-      .set({
-        margin: 0,
-        filename: `devis-${quote?.number || "document"}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(el)
-      .save();
-    document.body.removeChild(container);
+  const handlePDF = () => {
+    window.open(`/api/quotes/pdf?id=${id}`, "_blank");
   };
 
   if (loading) {
@@ -217,8 +200,8 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Download className="inline h-4 w-4 mr-2" />
-              Télécharger PDF
+              <Eye className="inline h-4 w-4 mr-2" />
+              Aperçu PDF
             </button>
             <button
               onClick={handleDelete}
@@ -250,8 +233,8 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Download className="inline h-4 w-4 mr-2" />
-              Télécharger PDF
+              <Eye className="inline h-4 w-4 mr-2" />
+              Aperçu PDF
             </button>
           </div>
         );
@@ -269,8 +252,8 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Download className="inline h-4 w-4 mr-2" />
-              Télécharger PDF
+              <Eye className="inline h-4 w-4 mr-2" />
+              Aperçu PDF
             </button>
           </div>
         );
@@ -281,8 +264,8 @@ export default function QuoteDetailPage() {
               onClick={handlePDF}
               className={`w-full ${commonClass} border border-border text-foreground hover:bg-white`}
             >
-              <Download className="inline h-4 w-4 mr-2" />
-              Télécharger PDF
+              <Eye className="inline h-4 w-4 mr-2" />
+              Aperçu PDF
             </button>
             <button
               onClick={handleDuplicate}

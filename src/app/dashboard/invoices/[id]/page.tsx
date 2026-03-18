@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
-import { Trash2, Edit2, Download } from "lucide-react";
+import { Trash2, Edit2, Eye } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { LineItemsEditor } from "@/components/invoicing/line-items-editor";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
@@ -219,25 +219,8 @@ export default function InvoiceDetailPage() {
     }
   };
 
-  const handlePDF = async () => {
-    const res = await fetch(`/api/invoices/pdf?id=${id}`);
-    const html = await res.text();
-    const html2pdf = (await import("html2pdf.js")).default;
-    const container = document.createElement("div");
-    container.innerHTML = html;
-    document.body.appendChild(container);
-    const el = container.querySelector("body") || container;
-    await html2pdf()
-      .set({
-        margin: 0,
-        filename: `${invoice?.parentInvoiceId ? "avoir" : "facture"}-${invoice?.number || "document"}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(el)
-      .save();
-    document.body.removeChild(container);
+  const handlePDF = () => {
+    window.open(`/api/invoices/pdf?id=${id}`, "_blank");
   };
 
   const handleCreateCreditNote = async () => {
@@ -746,8 +729,8 @@ export default function InvoiceDetailPage() {
                   onClick={handlePDF}
                   className="w-full flex items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-center font-medium text-foreground hover:bg-muted"
                 >
-                  <Download size={16} />
-                  Télécharger PDF
+                  <Eye size={16} />
+                  Aperçu PDF
                 </button>
               </>
             )}

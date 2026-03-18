@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
+import Link from "next/link";
 import { FileText, Image } from "lucide-react";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
@@ -19,6 +20,7 @@ interface RevenueEntry {
   activityType?: string;
   attachmentUrl?: string | null;
   attachmentName?: string | null;
+  invoiceId?: string | null;
 }
 
 export default function RevenuePage() {
@@ -79,7 +81,15 @@ export default function RevenuePage() {
                     <span className="font-semibold text-foreground">
                       {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(r.amount)}
                     </span>
-                    {r.attachmentUrl && (
+                    {r.invoiceId ? (
+                      <button
+                        onClick={() => window.open(`/api/invoices/pdf?id=${r.invoiceId}`, "_blank")}
+                        title="Voir la facture"
+                        className="p-1 text-primary hover:text-primary/70"
+                      >
+                        <FileText className="h-4 w-4" />
+                      </button>
+                    ) : r.attachmentUrl ? (
                       <button
                         onClick={() => window.open(`/api/attachments?type=revenue&id=${r.id}`, "_blank")}
                         title={r.attachmentName || "Pièce jointe"}
@@ -91,7 +101,7 @@ export default function RevenuePage() {
                           <FileText className="h-4 w-4" />
                         )}
                       </button>
-                    )}
+                    ) : null}
                   </div>
                   {r.activityType && (
                     <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
@@ -99,8 +109,21 @@ export default function RevenuePage() {
                     </span>
                   )}
                 </div>
-                {r.description && (
-                  <p className="mt-1 text-sm text-muted-foreground">{r.description}</p>
+                {(r.description || r.invoiceId) && (
+                  <p className="mt-1 text-sm text-muted-foreground">
+                    {r.description}
+                    {r.invoiceId && (
+                      <>
+                        {r.description && " · "}
+                        <button
+                          onClick={() => window.open(`/api/invoices/pdf?id=${r.invoiceId}`, "_blank")}
+                          className="text-primary hover:underline"
+                        >
+                          Voir la facture
+                        </button>
+                      </>
+                    )}
+                  </p>
                 )}
               </div>
             ))}

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Download } from "lucide-react";
+import { Eye } from "lucide-react";
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: "Brouillon",
@@ -59,26 +59,8 @@ export default function QuotesPage() {
       return sum + ht + vat;
     }, 0);
 
-  const handlePDF = async (q: Quote) => {
-    const res = await fetch(`/api/quotes/pdf?id=${q.id}`);
-    if (!res.ok) return;
-    const html = await res.text();
-    const html2pdf = (await import("html2pdf.js")).default;
-    const container = document.createElement("div");
-    container.innerHTML = html;
-    document.body.appendChild(container);
-    const el = container.querySelector("body") || container;
-    await html2pdf()
-      .set({
-        margin: 0,
-        filename: `devis-${q.number}.pdf`,
-        image: { type: "jpeg", quality: 0.98 },
-        html2canvas: { scale: 2, useCORS: true },
-        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-      })
-      .from(el)
-      .save();
-    document.body.removeChild(container);
+  const handlePDF = (q: Quote) => {
+    window.open(`/api/quotes/pdf?id=${q.id}`, "_blank");
   };
 
   return (
@@ -120,7 +102,7 @@ export default function QuotesPage() {
                     className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
                     title="Télécharger PDF"
                   >
-                    <Download className="h-4 w-4" />
+                    <Eye className="h-4 w-4" />
                   </button>
                   <span className={`rounded-full px-2.5 py-0.5 text-xs font-medium ${STATUS_COLORS[q.status]}`}>
                     {STATUS_LABELS[q.status]}
