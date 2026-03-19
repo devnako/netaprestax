@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Download } from "lucide-react";
-import { downloadPdf } from "@/lib/pdf-download";
 
 const STATUS_LABELS: Record<string, string> = {
   DRAFT: "Brouillon",
@@ -69,7 +68,22 @@ export default function InvoicesPage() {
     const res = await fetch(`/api/invoices/pdf?id=${inv.id}`);
     if (!res.ok) return;
     const html = await res.text();
-    await downloadPdf(html, `${inv.parentInvoiceId ? "avoir" : "facture"}-${inv.number}.pdf`);
+    const html2pdf = (await import("html2pdf.js")).default;
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    const el = container.querySelector("body") || container;
+    await html2pdf()
+      .set({
+        margin: 0,
+        filename: `${inv.parentInvoiceId ? "avoir" : "facture"}-${inv.number}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .from(el)
+      .save();
+    document.body.removeChild(container);
   };
 
   return (

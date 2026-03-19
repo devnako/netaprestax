@@ -5,7 +5,6 @@ import { useRouter, useParams } from "next/navigation";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
 import { Plus, Download, Copy, Trash2 } from "lucide-react";
-import { downloadPdf } from "@/lib/pdf-download";
 
 interface QuoteLine {
   id: string;
@@ -159,7 +158,22 @@ export default function QuoteDetailPage() {
   const handlePDF = async () => {
     const res = await fetch(`/api/quotes/pdf?id=${id}`);
     const html = await res.text();
-    await downloadPdf(html, `devis-${quote?.number || "document"}.pdf`);
+    const html2pdf = (await import("html2pdf.js")).default;
+    const container = document.createElement("div");
+    container.innerHTML = html;
+    document.body.appendChild(container);
+    const el = container.querySelector("body") || container;
+    await html2pdf()
+      .set({
+        margin: 0,
+        filename: `devis-${quote?.number || "document"}.pdf`,
+        image: { type: "jpeg", quality: 0.98 },
+        html2canvas: { scale: 2, useCORS: true },
+        jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      })
+      .from(el)
+      .save();
+    document.body.removeChild(container);
   };
 
   if (loading) {
