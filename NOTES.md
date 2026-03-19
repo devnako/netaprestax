@@ -45,7 +45,11 @@ src/
 │   │           ├── invoices/      # Factures (lecture seule)
 │   │           ├── quotes/        # Devis (lecture seule)
 │   │           └── history/       # Historique graphiques (lecture seule)
+│   ├── admin/
+│   │   ├── layout.tsx             # Layout admin (vérifie isAdmin, redirige sinon)
+│   │   └── page.tsx               # Liste utilisateurs + actions admin
 │   ├── api/
+│   │   ├── admin/users/           # GET liste, PATCH toggle admin, DELETE supprimer
 │   │   ├── auth/[...all]/         # Better Auth catch-all
 │   │   ├── accountant-access/     # GET/POST/DELETE gestion accès comptable
 │   │   ├── accountant/clients/    # GET liste clients du comptable
@@ -199,6 +203,26 @@ CRON_SECRET                 # Auth pour endpoints cron
 ---
 
 ## Historique de développement
+
+### Fait — 20 mars 2026 (session 7)
+
+- **Fix flash styles cassés lors du téléchargement PDF** :
+  - Cause : le template PDF contient `<style>* { margin:0; padding:0 }</style>` qui, injecté via `container.innerHTML`, s'appliquait globalement à la page
+  - Plus visible en vue comptable (layout `"use client"` avec `usePathname()` qui re-rend) mais aussi présent en vue normale
+  - Fix : `container.querySelectorAll("style").forEach((s) => s.remove())` avant `appendChild` dans les 5 fichiers concernés
+  - Les éléments PDF utilisent tous des styles inline, donc le rendu PDF n'est pas affecté
+  - Fichiers : `mes-clients/[clientId]/invoices|quotes|revenue/page.tsx` + `invoices/[id]/page.tsx` + `quotes/[id]/page.tsx`
+- **Panel admin** (`/admin`) :
+  - Champ `isAdmin Boolean @default(false)` ajouté au modèle User (Prisma)
+  - `isAdmin: true` en base pour `filipe.salgado.pro@gmail.com`
+  - Layout admin server-side : vérifie `isAdmin`, redirige vers `/dashboard` sinon
+  - Page `/admin` : liste de tous les utilisateurs (nom, email, date inscription, rôle)
+  - Actions : toggle admin (Shield/ShieldOff), supprimer compte (Trash2)
+  - Sécurité : admin ne peut pas se supprimer ni retirer ses propres droits
+  - API : `GET /api/admin/users`, `PATCH /api/admin/users/[id]`, `DELETE /api/admin/users/[id]`
+  - Middleware `proxy.ts` protège `/admin/*`
+  - Responsive : table desktop, cards mobile
+  - Fichiers créés : `src/app/admin/layout.tsx`, `src/app/admin/page.tsx`, `src/app/api/admin/users/route.ts`, `src/app/api/admin/users/[id]/route.ts`
 
 ### Fait — 19 mars 2026 (session 6)
 
