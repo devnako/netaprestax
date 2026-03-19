@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { FileText, Image } from "lucide-react";
+import { Download, FileText, Image } from "lucide-react";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
 const ACTIVITY_LABELS: Record<string, string> = {
@@ -82,24 +82,30 @@ export default function RevenuePage() {
                     </span>
                     {r.invoiceId ? (
                       <button
-                        onClick={() => {
-                          const res = fetch(`/api/invoices/pdf?id=${r.invoiceId}`);
-                          res.then(async (r) => {
-                            if (!r.ok) return;
-                            const html = await r.text();
-                            const html2pdf = (await import("html2pdf.js")).default;
-                            const container = document.createElement("div");
-                            container.innerHTML = html;
-                            document.body.appendChild(container);
-                            const el = container.querySelector("body") || container;
-                            await html2pdf().set({ margin: 0, image: { type: "jpeg", quality: 0.98 }, html2canvas: { scale: 2, useCORS: true }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" } }).from(el).save();
-                            document.body.removeChild(container);
-                          });
+                        onClick={async () => {
+                          const res = await fetch(`/api/invoices/pdf?id=${r.invoiceId}`);
+                          if (!res.ok) return;
+                          const html = await res.text();
+                          const html2pdf = (await import("html2pdf.js")).default;
+                          const container = document.createElement("div");
+                          container.innerHTML = html;
+                          document.body.appendChild(container);
+                          const el = container.querySelector("body") || container;
+                          await html2pdf()
+                            .set({
+                              margin: 0,
+                              image: { type: "jpeg", quality: 0.98 },
+                              html2canvas: { scale: 2, useCORS: true },
+                              jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+                            })
+                            .from(el)
+                            .save();
+                          document.body.removeChild(container);
                         }}
-                        title="Voir la facture"
-                        className="p-1 text-primary hover:text-primary/70"
+                        title="Télécharger la facture"
+                        className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
                       >
-                        <FileText className="h-4 w-4" />
+                        <Download className="h-4 w-4" />
                       </button>
                     ) : r.attachmentUrl ? (
                       <button
