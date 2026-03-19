@@ -200,6 +200,20 @@ CRON_SECRET                 # Auth pour endpoints cron
 
 ## Historique de développement
 
+### Fait — 19 mars 2026 (session 6)
+
+- **Revert aperçu PDF navigateur** :
+  - Tentatives d'aperçu PDF dans le navigateur (via `html2pdf.js` `.output("blob")` + `window.open`) abandonnées
+  - Problème : html2canvas nécessite des éléments visibles dans le DOM → flash de HTML non stylisé
+  - Tentatives : `position: fixed; left: -9999px` (page blanche), `opacity:0 + onclone` (idem)
+  - Revert complet vers commit `662efde` : retour au téléchargement PDF direct via `.save()`
+- **Icônes pièces jointes sur revenus comptable** :
+  - Le revert avait supprimé les icônes pièces jointes de la page revenus comptable
+  - Restauré avec le même pattern que la page frais comptable :
+    - Revenu lié à une facture : icône Download qui télécharge le PDF (même bouton que l'onglet factures)
+    - Revenu avec pièce jointe : icône Image/FileText qui ouvre via `window.open`
+  - Fichier modifié : `src/app/dashboard/mes-clients/[clientId]/revenue/page.tsx`
+
 ### Fait — 18 mars 2026 (session 5)
 
 - Accès comptable en lecture seule :
