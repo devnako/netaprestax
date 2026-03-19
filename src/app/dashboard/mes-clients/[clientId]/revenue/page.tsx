@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import Link from "next/link";
-import { FileText, Image } from "lucide-react";
 import { MonthPicker } from "@/components/dashboard/month-picker";
-import { openPdfPreview } from "@/lib/pdf-preview";
 
 const ACTIVITY_LABELS: Record<string, string> = {
   BIC_VENTE: "Vente",
@@ -19,9 +16,6 @@ interface RevenueEntry {
   amount: number;
   description?: string;
   activityType?: string;
-  attachmentUrl?: string | null;
-  attachmentName?: string | null;
-  invoiceId?: string | null;
 }
 
 export default function RevenuePage() {
@@ -78,53 +72,17 @@ export default function RevenuePage() {
             {revenues.map((r) => (
               <div key={r.id} className="rounded-xl border border-border bg-white p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-foreground">
-                      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(r.amount)}
-                    </span>
-                    {r.invoiceId ? (
-                      <button
-                        onClick={() => openPdfPreview(`/api/invoices/pdf?id=${r.invoiceId}`)}
-                        title="Voir la facture"
-                        className="p-1 text-primary hover:text-primary/70"
-                      >
-                        <FileText className="h-4 w-4" />
-                      </button>
-                    ) : r.attachmentUrl ? (
-                      <button
-                        onClick={() => window.open(`/api/attachments?type=revenue&id=${r.id}`, "_blank")}
-                        title={r.attachmentName || "Pièce jointe"}
-                        className="p-1 text-primary hover:text-primary/70"
-                      >
-                        {r.attachmentName?.match(/\.(jpg|jpeg|png|webp)$/i) ? (
-                          <Image className="h-4 w-4" />
-                        ) : (
-                          <FileText className="h-4 w-4" />
-                        )}
-                      </button>
-                    ) : null}
-                  </div>
+                  <span className="font-semibold text-foreground">
+                    {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(r.amount)}
+                  </span>
                   {r.activityType && (
                     <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
                       {ACTIVITY_LABELS[r.activityType] || r.activityType}
                     </span>
                   )}
                 </div>
-                {(r.description || r.invoiceId) && (
-                  <p className="mt-1 text-sm text-muted-foreground">
-                    {r.description}
-                    {r.invoiceId && (
-                      <>
-                        {r.description && " · "}
-                        <button
-                          onClick={() => openPdfPreview(`/api/invoices/pdf?id=${r.invoiceId}`)}
-                          className="text-primary hover:underline"
-                        >
-                          Voir la facture
-                        </button>
-                      </>
-                    )}
-                  </p>
+                {r.description && (
+                  <p className="mt-1 text-sm text-muted-foreground">{r.description}</p>
                 )}
               </div>
             ))}

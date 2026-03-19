@@ -1,9 +1,8 @@
 "use client";
 
 import { useState, useEffect, useCallback, useMemo } from "react";
-import Link from "next/link";
-import { Plus, Search, FileText } from "lucide-react";
-import { openPdfPreview } from "@/lib/pdf-preview";
+import { useRouter } from "next/navigation";
+import { Plus, Search } from "lucide-react";
 import { StatusBadge } from "@/components/invoicing/status-badge";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
@@ -43,6 +42,7 @@ function formatEuro(value: number) {
 
 
 export default function InvoicesPage() {
+  const router = useRouter();
   const now = new Date();
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loading, setLoading] = useState(true);
@@ -177,60 +177,49 @@ export default function InvoicesPage() {
           filteredInvoices.map((invoice) => (
             <div
               key={invoice.id}
-              className="rounded-2xl border border-border bg-white hover:border-primary hover:shadow-sm transition"
+              onClick={() => router.push(`/dashboard/invoices/${invoice.id}`)}
+              className="cursor-pointer rounded-2xl border border-border bg-white p-4 md:p-6 hover:border-primary hover:shadow-sm transition"
             >
-              <div className="flex items-center">
-                <Link
-                  href={`/dashboard/invoices/${invoice.id}`}
-                  className="flex flex-1 items-start justify-between gap-4 p-4 md:p-6"
-                >
-                  <div className="flex-1">
-                    <div className="flex items-baseline gap-3 flex-wrap">
-                      <h3 className="text-sm font-medium text-foreground">
-                        {invoice.parentInvoiceId ? "Avoir" : "Facture"} {invoice.number}
-                      </h3>
-                      {invoice.parentInvoiceId ? (
-                        <span className="inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-700">
-                          Avoir
-                        </span>
-                      ) : (
-                        <StatusBadge status={invoice.status} type="invoice" />
-                      )}
-                      {invoice.quoteId && invoice.quote && (
-                        <span className="inline-block text-xs text-muted-foreground">
-                          Devis {invoice.quote.number}
-                        </span>
-                      )}
-                      {invoice.parentInvoice && (
-                        <span className="inline-block text-xs text-muted-foreground">
-                          Facture {invoice.parentInvoice.number}
-                        </span>
-                      )}
-                      {invoice.creditNotes.length > 0 && (
-                        <span className="inline-block text-xs text-orange-600">
-                          Avoir {invoice.creditNotes[0].number}
-                        </span>
-                      )}
-                    </div>
-                    <p className="mt-1 text-sm text-foreground font-semibold">{invoice.client.name}</p>
-                    <p className="text-xs text-muted-foreground">
-                      {new Date(invoice.createdAt).toLocaleDateString("fr-FR")}
-                    </p>
+              <div className="flex items-start justify-between gap-4">
+                <div className="flex-1">
+                  <div className="flex items-baseline gap-3 flex-wrap">
+                    <h3 className="text-sm font-medium text-foreground">
+                      {invoice.parentInvoiceId ? "Avoir" : "Facture"} {invoice.number}
+                    </h3>
+                    {invoice.parentInvoiceId ? (
+                      <span className="inline-block rounded-full bg-orange-100 px-2.5 py-0.5 text-xs font-semibold text-orange-700">
+                        Avoir
+                      </span>
+                    ) : (
+                      <StatusBadge status={invoice.status} type="invoice" />
+                    )}
+                    {invoice.quoteId && invoice.quote && (
+                      <span className="inline-block text-xs text-muted-foreground">
+                        Devis {invoice.quote.number}
+                      </span>
+                    )}
+                    {invoice.parentInvoice && (
+                      <span className="inline-block text-xs text-muted-foreground">
+                        Facture {invoice.parentInvoice.number}
+                      </span>
+                    )}
+                    {invoice.creditNotes.length > 0 && (
+                      <span className="inline-block text-xs text-orange-600">
+                        Avoir {invoice.creditNotes[0].number}
+                      </span>
+                    )}
                   </div>
-                  <div className="text-right">
-                    <p className="text-lg font-bold text-foreground">
-                      {formatEuro(computeTotalHT(invoice.lines))}
-                    </p>
-                    <p className="text-xs text-muted-foreground">HT</p>
-                  </div>
-                </Link>
-                <button
-                  onClick={() => openPdfPreview(`/api/invoices/pdf?id=${invoice.id}`)}
-                  className="shrink-0 rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground transition mr-4"
-                  title="Aperçu PDF"
-                >
-                  <FileText className="h-4 w-4" />
-                </button>
+                  <p className="mt-1 text-sm text-foreground font-semibold">{invoice.client.name}</p>
+                  <p className="text-xs text-muted-foreground">
+                    {new Date(invoice.createdAt).toLocaleDateString("fr-FR")}
+                  </p>
+                </div>
+                <div className="text-right">
+                  <p className="text-lg font-bold text-foreground">
+                    {formatEuro(computeTotalHT(invoice.lines))}
+                  </p>
+                  <p className="text-xs text-muted-foreground">HT</p>
+                </div>
               </div>
             </div>
           ))
