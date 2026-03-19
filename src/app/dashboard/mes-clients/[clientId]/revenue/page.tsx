@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
 import { Download, FileText, Image } from "lucide-react";
 import { MonthPicker } from "@/components/dashboard/month-picker";
+import { downloadPdf } from "@/lib/pdf-download";
 
 const ACTIVITY_LABELS: Record<string, string> = {
   BIC_VENTE: "Vente",
@@ -86,21 +87,7 @@ export default function RevenuePage() {
                           const res = await fetch(`/api/invoices/pdf?id=${r.invoiceId}`);
                           if (!res.ok) return;
                           const html = await res.text();
-                          const html2pdf = (await import("html2pdf.js")).default;
-                          const container = document.createElement("div");
-                          container.innerHTML = html;
-                          document.body.appendChild(container);
-                          const el = container.querySelector("body") || container;
-                          await html2pdf()
-                            .set({
-                              margin: 0,
-                              image: { type: "jpeg", quality: 0.98 },
-                              html2canvas: { scale: 2, useCORS: true },
-                              jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-                            })
-                            .from(el)
-                            .save();
-                          document.body.removeChild(container);
+                          await downloadPdf(html, "facture.pdf");
                         }}
                         title="Télécharger la facture"
                         className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
