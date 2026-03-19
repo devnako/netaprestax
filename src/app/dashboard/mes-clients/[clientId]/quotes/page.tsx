@@ -66,6 +66,7 @@ export default function QuotesPage() {
     const html2pdf = (await import("html2pdf.js")).default;
     const container = document.createElement("div");
     container.innerHTML = html;
+    container.querySelectorAll("style").forEach((s) => s.remove());
     document.body.appendChild(container);
     const el = container.querySelector("body") || container;
     await html2pdf()
