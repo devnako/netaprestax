@@ -36,6 +36,29 @@ interface RevenueEntry {
   } | null;
 }
 
+async function handleInvoicePDF(invoiceId: string) {
+  const res = await fetch(`/api/invoices/pdf?id=${invoiceId}`);
+  if (!res.ok) return;
+  const html = await res.text();
+  const html2pdf = (await import("html2pdf.js")).default;
+  const container = document.createElement("div");
+  container.innerHTML = html;
+  container.querySelectorAll("style").forEach((s) => s.remove());
+  document.body.appendChild(container);
+  const el = container.querySelector("body") || container;
+  await html2pdf()
+    .set({
+      margin: 0,
+      filename: `facture.pdf`,
+      image: { type: "jpeg", quality: 0.98 },
+      html2canvas: { scale: 2, useCORS: true },
+      jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+    })
+    .from(el)
+    .save();
+  document.body.removeChild(container);
+}
+
 export default function RevenuePage() {
   const params = useParams();
   const clientId = params.clientId as string;
@@ -132,7 +155,15 @@ export default function RevenuePage() {
                     )}
                   </div>
                   <div className="flex items-center gap-2">
-                    {!r.invoiceId && r.attachmentUrl ? (
+                    {r.invoiceId ? (
+                      <button
+                        onClick={() => handleInvoicePDF(r.invoiceId!)}
+                        title="Télécharger le PDF"
+                        className="p-1 text-primary hover:text-primary/70"
+                      >
+                        <FileText className="h-4 w-4" />
+                      </button>
+                    ) : r.attachmentUrl ? (
                       <button
                         onClick={() => window.open(`/api/attachments?type=revenue&id=${r.id}`, "_blank")}
                         title={r.attachmentName || "Pièce jointe"}
