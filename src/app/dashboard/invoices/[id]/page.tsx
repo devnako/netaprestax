@@ -284,7 +284,14 @@ export default function InvoiceDetailPage() {
     );
   }
 
-  const totals = computeDocumentTotals(invoice.lines, tvaAssujetti);
+  const displayLines = isEditing
+    ? editLines.map((l) => ({
+        quantity: parseFloat(l.quantity) || 0,
+        unitPrice: parseFloat(l.unitPrice) || 0,
+        vatRate: tvaAssujetti ? parseFloat(l.vatRate) || 0 : null,
+      }))
+    : invoice.lines;
+  const totals = computeDocumentTotals(displayLines, tvaAssujetti);
 
   return (
     <div className="space-y-6">
