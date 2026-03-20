@@ -122,7 +122,7 @@ export default function RevenuePage() {
                     </div>
                     {r.invoiceId && (
                       <a
-                        href={`/dashboard/invoices/${r.invoiceId}`}
+                        href={`/api/invoices/pdf?id=${r.invoiceId}`}
                         target="_blank"
                         className="text-xs text-primary hover:underline"
                         onClick={(e) => e.stopPropagation()}
