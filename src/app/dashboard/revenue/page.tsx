@@ -207,10 +207,26 @@ export default function RevenuePage() {
 
       {/* Total CA */}
       <div className="rounded-2xl border border-accent bg-accent/5 p-6 text-center">
-        <p className="text-sm text-muted-foreground">CA du mois</p>
+        <p className="text-sm text-muted-foreground">CA du mois{tvaAssujetti ? " (HT)" : ""}</p>
         <p className="mt-1 text-3xl font-bold text-accent">
           {loading ? "..." : formatEuro(total)}
         </p>
+        {!loading && tvaAssujetti && (() => {
+          const totalVAT = entries.reduce((sum, entry) => {
+            if (entry.invoiceId && entry.invoice?.tvaAssujetti) {
+              return sum + entry.invoice.lines.reduce((s, l) => {
+                const ht = Number(l.quantity) * Number(l.unitPrice);
+                return s + ht * (Number(l.vatRate) || 0) / 100;
+              }, 0);
+            }
+            return sum + (Number(entry.vatAmount) || 0);
+          }, 0);
+          return totalVAT > 0 ? (
+            <p className="mt-1 text-sm text-muted-foreground">
+              TTC : {formatEuro(total + totalVAT)} — dont {formatEuro(totalVAT)} de TVA
+            </p>
+          ) : null;
+        })()}
         <p className="mt-1 text-xs text-muted-foreground">
           {entries.length} entrée{entries.length !== 1 ? "s" : ""}
         </p>

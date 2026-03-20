@@ -167,10 +167,18 @@ export default function ExpensesPage() {
 
       {/* Total */}
       <div className="rounded-2xl border border-orange-300 bg-orange-50 p-6 text-center">
-        <p className="text-sm text-muted-foreground">Total frais du mois</p>
+        <p className="text-sm text-muted-foreground">Total frais du mois{tvaAssujetti ? " (HT)" : ""}</p>
         <p className="mt-1 text-3xl font-bold text-orange-600">
           {loading ? "..." : formatEuro(total)}
         </p>
+        {!loading && tvaAssujetti && (() => {
+          const totalVAT = expenses.reduce((sum, e) => sum + (e.vatAmount ?? 0), 0);
+          return totalVAT > 0 ? (
+            <p className="mt-1 text-sm text-muted-foreground">
+              TTC : {formatEuro(total + totalVAT)} — dont {formatEuro(totalVAT)} de TVA
+            </p>
+          ) : null;
+        })()}
         <p className="mt-1 text-xs text-muted-foreground">
           {expenses.length} frais enregistré{expenses.length !== 1 ? "s" : ""}
         </p>
