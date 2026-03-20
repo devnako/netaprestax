@@ -182,6 +182,7 @@ model Quote {
   clientId          String
   number            String
   status            QuoteStatus @default(DRAFT)
+  tvaAssujetti      Boolean     @default(false)
   notes             String?
   paymentTerms      String?
   paymentMethod     String?
@@ -210,6 +211,7 @@ model Invoice {
   parentInvoiceId   String?
   number            String
   status            InvoiceStatus @default(DRAFT)
+  tvaAssujetti      Boolean       @default(false)
   notes             String?
   paymentTerms      String?
   paymentMethod     String?

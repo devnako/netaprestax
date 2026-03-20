@@ -46,13 +46,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "Client non trouvé" }, { status: 404 });
   }
 
-  const number = await getNextInvoiceNumber(session.user.id, new Date().getFullYear());
+  const [number, profile] = await Promise.all([
+    getNextInvoiceNumber(session.user.id, new Date().getFullYear()),
+    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { tvaAssujetti: true } }),
+  ]);
+  const tvaAssujetti = profile?.tvaAssujetti ?? false;
 
   const invoice = await prisma.invoice.create({
     data: {
       userId: session.user.id,
       clientId,
       number,
+      tvaAssujetti,
       notes: notes || null,
       paymentTerms: paymentTerms || null,
       paymentMethod: paymentMethod || null,
@@ -65,7 +70,7 @@ export async function POST(request: NextRequest) {
           description: line.description,
           quantity: line.quantity,
           unitPrice: line.unitPrice,
-          vatRate: line.vatRate || 20,
+          vatRate: tvaAssujetti ? (line.vatRate || 20) : null,
           sortOrder: index,
         })),
       },

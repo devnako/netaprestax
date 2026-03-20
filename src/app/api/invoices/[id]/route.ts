@@ -83,7 +83,7 @@ export async function PUT(
               description: line.description,
               quantity: line.quantity,
               unitPrice: line.unitPrice,
-              vatRate: line.vatRate || 20,
+              vatRate: invoice.tvaAssujetti ? (line.vatRate || 20) : null,
               sortOrder: index,
             }))
           : undefined,
@@ -136,7 +136,7 @@ export async function PATCH(
               description: line.description,
               quantity: line.quantity,
               unitPrice: line.unitPrice,
-              vatRate: line.vatRate ?? 20,
+              vatRate: invoice.tvaAssujetti ? (line.vatRate ?? 20) : null,
               sortOrder: index,
             })),
           },

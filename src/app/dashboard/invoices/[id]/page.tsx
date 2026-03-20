@@ -29,6 +29,7 @@ interface Invoice {
     name: string;
   };
   status: string;
+  tvaAssujetti: boolean;
   createdAt: string;
   updatedAt: string;
   paidAt: string | null;
@@ -82,15 +83,10 @@ export default function InvoiceDetailPage() {
   const [confirmPay, setConfirmPay] = useState(false);
   const [confirmCreditNote, setConfirmCreditNote] = useState(false);
   const [removeRevenue, setRemoveRevenue] = useState(true);
-  const [tvaAssujetti, setTvaAssujetti] = useState(true);
-
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [invoiceRes, settingsRes] = await Promise.all([
-          fetch(`/api/invoices/${id}`),
-          fetch("/api/settings"),
-        ]);
+        const invoiceRes = await fetch(`/api/invoices/${id}`);
 
         if (invoiceRes.ok) {
           const data = await invoiceRes.json();
@@ -109,11 +105,6 @@ export default function InvoiceDetailPage() {
           setEditBankAccountHolder(data.bankAccountHolder || "");
           setEditBankIban(data.bankIban || "");
           setEditBankBic(data.bankBic || "");
-        }
-
-        if (settingsRes.ok) {
-          const settings = await settingsRes.json();
-          setTvaAssujetti(settings.tvaAssujetti ?? true);
         }
       } catch (err) {
         setError("Erreur lors du chargement de la facture");
@@ -139,7 +130,7 @@ export default function InvoiceDetailPage() {
             description: line.description,
             quantity: parseFloat(line.quantity) || 0,
             unitPrice: parseFloat(line.unitPrice) || 0,
-            vatRate: tvaAssujetti ? parseFloat(line.vatRate) : null,
+            vatRate: invoice.tvaAssujetti ? parseFloat(line.vatRate) : null,
           })),
           notes: editNotes,
           paymentTerms: editPaymentTerms,
@@ -288,10 +279,10 @@ export default function InvoiceDetailPage() {
     ? editLines.map((l) => ({
         quantity: parseFloat(l.quantity) || 0,
         unitPrice: parseFloat(l.unitPrice) || 0,
-        vatRate: tvaAssujetti ? parseFloat(l.vatRate) || 0 : null,
+        vatRate: invoice.tvaAssujetti ? parseFloat(l.vatRate) || 0 : null,
       }))
     : invoice.lines;
-  const totals = computeDocumentTotals(displayLines, tvaAssujetti);
+  const totals = computeDocumentTotals(displayLines, invoice.tvaAssujetti);
 
   return (
     <div className="space-y-6">
@@ -402,7 +393,7 @@ export default function InvoiceDetailPage() {
               <LineItemsEditor
                 lines={editLines}
                 onChange={setEditLines}
-                tvaAssujetti={tvaAssujetti}
+                tvaAssujetti={invoice.tvaAssujetti}
                 hideTotals
               />
             ) : (
@@ -425,7 +416,7 @@ export default function InvoiceDetailPage() {
                         Prix unit. HT
                       </label>
                     </div>
-                    {tvaAssujetti && (
+                    {invoice.tvaAssujetti && (
                       <div className="w-24">
                         <label className="text-xs font-medium text-muted-foreground">
                           TVA
@@ -470,7 +461,7 @@ export default function InvoiceDetailPage() {
                             {formatEuro(line.unitPrice)}
                           </p>
                         </div>
-                        {tvaAssujetti && (
+                        {invoice.tvaAssujetti && (
                           <div className="w-full sm:w-24">
                             <label className="sm:hidden text-xs font-medium text-muted-foreground">
                               TVA
@@ -506,7 +497,7 @@ export default function InvoiceDetailPage() {
                 </p>
               </div>
 
-              {tvaAssujetti && totals.vatBreakdown.length > 0 ? (
+              {invoice.tvaAssujetti && totals.vatBreakdown.length > 0 ? (
                 <>
                   {totals.vatBreakdown.map((entry) => (
                     <div key={entry.rate} className="flex justify-between items-center">

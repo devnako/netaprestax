@@ -38,6 +38,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       clientId: quote.clientId,
       quoteId: quote.id,
       number,
+      tvaAssujetti: quote.tvaAssujetti,
       notes: quote.notes,
       paymentTerms: quote.paymentTerms,
       paymentMethod: quote.paymentMethod,

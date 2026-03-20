@@ -32,6 +32,7 @@ export type InvoiceMinAggregateOutputType = {
   parentInvoiceId: string | null
   number: string | null
   status: $Enums.InvoiceStatus | null
+  tvaAssujetti: boolean | null
   notes: string | null
   paymentTerms: string | null
   paymentMethod: string | null
@@ -52,6 +53,7 @@ export type InvoiceMaxAggregateOutputType = {
   parentInvoiceId: string | null
   number: string | null
   status: $Enums.InvoiceStatus | null
+  tvaAssujetti: boolean | null
   notes: string | null
   paymentTerms: string | null
   paymentMethod: string | null
@@ -72,6 +74,7 @@ export type InvoiceCountAggregateOutputType = {
   parentInvoiceId: number
   number: number
   status: number
+  tvaAssujetti: number
   notes: number
   paymentTerms: number
   paymentMethod: number
@@ -94,6 +97,7 @@ export type InvoiceMinAggregateInputType = {
   parentInvoiceId?: true
   number?: true
   status?: true
+  tvaAssujetti?: true
   notes?: true
   paymentTerms?: true
   paymentMethod?: true
@@ -114,6 +118,7 @@ export type InvoiceMaxAggregateInputType = {
   parentInvoiceId?: true
   number?: true
   status?: true
+  tvaAssujetti?: true
   notes?: true
   paymentTerms?: true
   paymentMethod?: true
@@ -134,6 +139,7 @@ export type InvoiceCountAggregateInputType = {
   parentInvoiceId?: true
   number?: true
   status?: true
+  tvaAssujetti?: true
   notes?: true
   paymentTerms?: true
   paymentMethod?: true
@@ -227,6 +233,7 @@ export type InvoiceGroupByOutputType = {
   parentInvoiceId: string | null
   number: string
   status: $Enums.InvoiceStatus
+  tvaAssujetti: boolean
   notes: string | null
   paymentTerms: string | null
   paymentMethod: string | null
@@ -268,6 +275,7 @@ export type InvoiceWhereInput = {
   parentInvoiceId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   number?: Prisma.StringFilter<"Invoice"> | string
   status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFilter<"Invoice"> | boolean
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Invoice"> | string | null
   paymentMethod?: Prisma.StringNullableFilter<"Invoice"> | string | null
@@ -295,6 +303,7 @@ export type InvoiceOrderByWithRelationInput = {
   parentInvoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  tvaAssujetti?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -326,6 +335,7 @@ export type InvoiceWhereUniqueInput = Prisma.AtLeast<{
   parentInvoiceId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   number?: Prisma.StringFilter<"Invoice"> | string
   status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFilter<"Invoice"> | boolean
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Invoice"> | string | null
   paymentMethod?: Prisma.StringNullableFilter<"Invoice"> | string | null
@@ -353,6 +363,7 @@ export type InvoiceOrderByWithAggregationInput = {
   parentInvoiceId?: Prisma.SortOrderInput | Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  tvaAssujetti?: Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -379,6 +390,7 @@ export type InvoiceScalarWhereWithAggregatesInput = {
   parentInvoiceId?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   number?: Prisma.StringWithAggregatesFilter<"Invoice"> | string
   status?: Prisma.EnumInvoiceStatusWithAggregatesFilter<"Invoice"> | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolWithAggregatesFilter<"Invoice"> | boolean
   notes?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   paymentTerms?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
   paymentMethod?: Prisma.StringNullableWithAggregatesFilter<"Invoice"> | string | null
@@ -395,6 +407,7 @@ export type InvoiceCreateInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -422,6 +435,7 @@ export type InvoiceUncheckedCreateInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -441,6 +455,7 @@ export type InvoiceUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -468,6 +483,7 @@ export type InvoiceUncheckedUpdateInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -491,6 +507,7 @@ export type InvoiceCreateManyInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -507,6 +524,7 @@ export type InvoiceUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -527,6 +545,7 @@ export type InvoiceUncheckedUpdateManyInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -567,6 +586,7 @@ export type InvoiceCountOrderByAggregateInput = {
   parentInvoiceId?: Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  tvaAssujetti?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
@@ -587,6 +607,7 @@ export type InvoiceMaxOrderByAggregateInput = {
   parentInvoiceId?: Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  tvaAssujetti?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
@@ -607,6 +628,7 @@ export type InvoiceMinOrderByAggregateInput = {
   parentInvoiceId?: Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
+  tvaAssujetti?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
@@ -833,6 +855,7 @@ export type InvoiceCreateWithoutUserInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -858,6 +881,7 @@ export type InvoiceUncheckedCreateWithoutUserInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -910,6 +934,7 @@ export type InvoiceScalarWhereInput = {
   parentInvoiceId?: Prisma.StringNullableFilter<"Invoice"> | string | null
   number?: Prisma.StringFilter<"Invoice"> | string
   status?: Prisma.EnumInvoiceStatusFilter<"Invoice"> | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFilter<"Invoice"> | boolean
   notes?: Prisma.StringNullableFilter<"Invoice"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Invoice"> | string | null
   paymentMethod?: Prisma.StringNullableFilter<"Invoice"> | string | null
@@ -926,6 +951,7 @@ export type InvoiceCreateWithoutRevenueInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -952,6 +978,7 @@ export type InvoiceUncheckedCreateWithoutRevenueInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -986,6 +1013,7 @@ export type InvoiceUpdateWithoutRevenueInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1012,6 +1040,7 @@ export type InvoiceUncheckedUpdateWithoutRevenueInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1030,6 +1059,7 @@ export type InvoiceCreateWithoutClientInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1055,6 +1085,7 @@ export type InvoiceUncheckedCreateWithoutClientInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1100,6 +1131,7 @@ export type InvoiceCreateWithoutQuoteInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1125,6 +1157,7 @@ export type InvoiceUncheckedCreateWithoutQuoteInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1160,6 +1193,7 @@ export type InvoiceUpdateWithoutQuoteInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1185,6 +1219,7 @@ export type InvoiceUncheckedUpdateWithoutQuoteInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1204,6 +1239,7 @@ export type InvoiceCreateWithoutCreditNotesInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1230,6 +1266,7 @@ export type InvoiceUncheckedCreateWithoutCreditNotesInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1253,6 +1290,7 @@ export type InvoiceCreateWithoutParentInvoiceInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1278,6 +1316,7 @@ export type InvoiceUncheckedCreateWithoutParentInvoiceInput = {
   quoteId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1318,6 +1357,7 @@ export type InvoiceUpdateWithoutCreditNotesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1344,6 +1384,7 @@ export type InvoiceUncheckedUpdateWithoutCreditNotesInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1378,6 +1419,7 @@ export type InvoiceCreateWithoutLinesInput = {
   id?: string
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1404,6 +1446,7 @@ export type InvoiceUncheckedCreateWithoutLinesInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1438,6 +1481,7 @@ export type InvoiceUpdateWithoutLinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1464,6 +1508,7 @@ export type InvoiceUncheckedUpdateWithoutLinesInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1485,6 +1530,7 @@ export type InvoiceCreateManyUserInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1501,6 +1547,7 @@ export type InvoiceUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1526,6 +1573,7 @@ export type InvoiceUncheckedUpdateWithoutUserInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1548,6 +1596,7 @@ export type InvoiceUncheckedUpdateManyWithoutUserInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1567,6 +1616,7 @@ export type InvoiceCreateManyClientInput = {
   parentInvoiceId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1583,6 +1633,7 @@ export type InvoiceUpdateWithoutClientInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1608,6 +1659,7 @@ export type InvoiceUncheckedUpdateWithoutClientInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1630,6 +1682,7 @@ export type InvoiceUncheckedUpdateManyWithoutClientInput = {
   parentInvoiceId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1649,6 +1702,7 @@ export type InvoiceCreateManyParentInvoiceInput = {
   quoteId?: string | null
   number: string
   status?: $Enums.InvoiceStatus
+  tvaAssujetti?: boolean
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1665,6 +1719,7 @@ export type InvoiceUpdateWithoutParentInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1690,6 +1745,7 @@ export type InvoiceUncheckedUpdateWithoutParentInvoiceInput = {
   quoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1712,6 +1768,7 @@ export type InvoiceUncheckedUpdateManyWithoutParentInvoiceInput = {
   quoteId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumInvoiceStatusFieldUpdateOperationsInput | $Enums.InvoiceStatus
+  tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1772,6 +1829,7 @@ export type InvoiceSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   parentInvoiceId?: boolean
   number?: boolean
   status?: boolean
+  tvaAssujetti?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1800,6 +1858,7 @@ export type InvoiceSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   parentInvoiceId?: boolean
   number?: boolean
   status?: boolean
+  tvaAssujetti?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1824,6 +1883,7 @@ export type InvoiceSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   parentInvoiceId?: boolean
   number?: boolean
   status?: boolean
+  tvaAssujetti?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1848,6 +1908,7 @@ export type InvoiceSelectScalar = {
   parentInvoiceId?: boolean
   number?: boolean
   status?: boolean
+  tvaAssujetti?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1860,7 +1921,7 @@ export type InvoiceSelectScalar = {
   updatedAt?: boolean
 }
 
-export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "quoteId" | "parentInvoiceId" | "number" | "status" | "notes" | "paymentTerms" | "paymentMethod" | "bankAccountHolder" | "bankIban" | "bankBic" | "issuedAt" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
+export type InvoiceOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "quoteId" | "parentInvoiceId" | "number" | "status" | "tvaAssujetti" | "notes" | "paymentTerms" | "paymentMethod" | "bankAccountHolder" | "bankIban" | "bankBic" | "issuedAt" | "paidAt" | "createdAt" | "updatedAt", ExtArgs["result"]["invoice"]>
 export type InvoiceInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
@@ -1903,6 +1964,7 @@ export type $InvoicePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     parentInvoiceId: string | null
     number: string
     status: $Enums.InvoiceStatus
+    tvaAssujetti: boolean
     notes: string | null
     paymentTerms: string | null
     paymentMethod: string | null
@@ -2350,6 +2412,7 @@ export interface InvoiceFieldRefs {
   readonly parentInvoiceId: Prisma.FieldRef<"Invoice", 'String'>
   readonly number: Prisma.FieldRef<"Invoice", 'String'>
   readonly status: Prisma.FieldRef<"Invoice", 'InvoiceStatus'>
+  readonly tvaAssujetti: Prisma.FieldRef<"Invoice", 'Boolean'>
   readonly notes: Prisma.FieldRef<"Invoice", 'String'>
   readonly paymentTerms: Prisma.FieldRef<"Invoice", 'String'>
   readonly paymentMethod: Prisma.FieldRef<"Invoice", 'String'>

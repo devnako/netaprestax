@@ -60,7 +60,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
             description: l.description,
             quantity: l.quantity,
             unitPrice: l.unitPrice,
-            vatRate: l.vatRate ?? null,
+            vatRate: quote.tvaAssujetti ? (l.vatRate ?? null) : null,
             sortOrder: i,
           })),
         },

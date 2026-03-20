@@ -32,13 +32,18 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "clientId et lines sont requis" }, { status: 400 });
   }
 
-  const number = await getNextQuoteNumber(session.user.id, new Date().getFullYear());
+  const [number, profile] = await Promise.all([
+    getNextQuoteNumber(session.user.id, new Date().getFullYear()),
+    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { tvaAssujetti: true } }),
+  ]);
+  const tvaAssujetti = profile?.tvaAssujetti ?? false;
 
   const quote = await prisma.quote.create({
     data: {
       userId: session.user.id,
       clientId,
       number,
+      tvaAssujetti,
       notes: notes || null,
       paymentTerms: paymentTerms || null,
       paymentMethod: paymentMethod || null,

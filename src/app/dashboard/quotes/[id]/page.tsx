@@ -30,6 +30,7 @@ interface Quote {
     name: string;
   };
   status: string;
+  tvaAssujetti: boolean;
   createdAt: string;
   lines: QuoteLine[];
   notes: string | null;
@@ -64,25 +65,15 @@ export default function QuoteDetailPage() {
   const [editBankIban, setEditBankIban] = useState("");
   const [editBankBic, setEditBankBic] = useState("");
   const [editValidUntil, setEditValidUntil] = useState("");
-  const [tvaAssujetti, setTvaAssujetti] = useState(true);
-
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [quoteRes, settingsRes] = await Promise.all([
-          fetch(`/api/quotes/${id}`),
-          fetch("/api/settings"),
-        ]);
+        const quoteRes = await fetch(`/api/quotes/${id}`);
 
         if (quoteRes.ok) {
           const data = await quoteRes.json();
           setQuote(data);
           initEditState(data);
-        }
-
-        if (settingsRes.ok) {
-          const settings = await settingsRes.json();
-          setTvaAssujetti(settings.tvaAssujetti ?? true);
         }
       } catch {
         setError("Erreur lors du chargement du devis");
@@ -127,7 +118,7 @@ export default function QuoteDetailPage() {
             description: line.description,
             quantity: parseFloat(line.quantity) || 0,
             unitPrice: parseFloat(line.unitPrice) || 0,
-            vatRate: tvaAssujetti ? parseFloat(line.vatRate) : null,
+            vatRate: quote.tvaAssujetti ? parseFloat(line.vatRate) : null,
           })),
           notes: editNotes,
           paymentTerms: editPaymentTerms,
@@ -292,10 +283,10 @@ export default function QuoteDetailPage() {
     ? editLines.map((l) => ({
         quantity: parseFloat(l.quantity) || 0,
         unitPrice: parseFloat(l.unitPrice) || 0,
-        vatRate: tvaAssujetti ? parseFloat(l.vatRate) || 0 : null,
+        vatRate: quote.tvaAssujetti ? parseFloat(l.vatRate) || 0 : null,
       }))
     : quote.lines;
-  const totals = computeDocumentTotals(displayLines, tvaAssujetti);
+  const totals = computeDocumentTotals(displayLines, quote.tvaAssujetti);
 
   const renderActions = () => {
     const commonClass = "rounded-lg px-4 py-2.5 font-medium transition text-sm";
@@ -581,7 +572,7 @@ export default function QuoteDetailPage() {
               <LineItemsEditor
                 lines={editLines}
                 onChange={setEditLines}
-                tvaAssujetti={tvaAssujetti}
+                tvaAssujetti={quote.tvaAssujetti}
                 hideTotals
               />
             ) : (

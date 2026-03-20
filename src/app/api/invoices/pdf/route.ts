@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
       professionalEmail: profile?.professionalEmail || null,
       phone: profile?.phone || null,
       tvaNumber: profile?.tvaNumber || null,
-      tvaAssujetti: profile?.tvaAssujetti || false,
+      tvaAssujetti: invoice.tvaAssujetti,
     },
     client: {
       name: invoice.client.name,

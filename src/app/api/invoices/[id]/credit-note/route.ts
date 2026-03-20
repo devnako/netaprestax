@@ -58,6 +58,7 @@ export async function POST(
         clientId: invoice.clientId,
         parentInvoiceId: invoice.id,
         number,
+        tvaAssujetti: invoice.tvaAssujetti,
         status: "PENDING",
         notes: `Avoir sur facture ${invoice.number} — ${invoice.client.name}`,
         paymentTerms: null,
