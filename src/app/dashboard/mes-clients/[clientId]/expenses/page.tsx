@@ -52,7 +52,12 @@ export default function ExpensesPage() {
     fetchData();
   }, [clientId, month, year]);
 
-  const total = expenses.reduce((sum, e) => sum + e.amount + (e.vatAmount ?? 0), 0);
+  const totalHT = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const totalVAT = expenses.reduce((sum, e) => sum + (e.vatAmount ?? 0), 0);
+
+  function formatEuro(v: number) {
+    return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(v);
+  }
 
   return (
     <div className="space-y-6 pb-20 md:pb-0">
@@ -69,13 +74,17 @@ export default function ExpensesPage() {
         </div>
       ) : (
         <>
-          <div className="rounded-xl border border-border bg-white p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Total</span>
-              <span className="text-lg font-bold text-foreground">
-                {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(total)}
-              </span>
-            </div>
+          <div className="rounded-2xl border border-orange-300 bg-orange-50 p-6 text-center">
+            <p className="text-sm text-muted-foreground">Total frais du mois (HT)</p>
+            <p className="mt-1 text-3xl font-bold text-orange-600">{formatEuro(totalHT)}</p>
+            {totalVAT > 0 && (
+              <p className="mt-1 text-sm text-muted-foreground">
+                TTC : {formatEuro(totalHT + totalVAT)} — dont {formatEuro(totalVAT)} de TVA
+              </p>
+            )}
+            <p className="mt-1 text-xs text-muted-foreground">
+              {expenses.length} frais enregistré{expenses.length !== 1 ? "s" : ""}
+            </p>
           </div>
           <div className="space-y-3">
             {expenses.map((e) => (

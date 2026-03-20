@@ -22,6 +22,7 @@ export async function GET() {
             select: {
               businessName: true,
               siret: true,
+              tvaAssujetti: true,
             },
           },
         },
@@ -35,6 +36,7 @@ export async function GET() {
     email: access.client.email,
     businessName: access.client.profile?.businessName,
     siret: access.client.profile?.siret,
+    tvaAssujetti: access.client.profile?.tvaAssujetti ?? false,
   }));
 
   return NextResponse.json(clients);

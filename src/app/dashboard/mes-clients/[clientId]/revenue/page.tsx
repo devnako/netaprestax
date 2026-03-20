@@ -43,7 +43,7 @@ export default function RevenuePage() {
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
   const [revenues, setRevenues] = useState<RevenueEntry[]>([]);
-  const [total, setTotal] = useState(0);
+  const [totalHT, setTotalHT] = useState(0);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export default function RevenuePage() {
         if (res.ok) {
           const data = await res.json();
           setRevenues(data.revenues.map((r: any) => ({ ...r, amount: Number(r.amount) })));
-          setTotal(data.total);
+          setTotalHT(data.total);
         }
       } catch {} finally {
         setLoading(false);
@@ -62,6 +62,13 @@ export default function RevenuePage() {
     };
     fetchData();
   }, [clientId, month, year]);
+
+  const totalVAT = revenues.reduce((sum, r) => {
+    if (r.invoiceId && r.invoice?.tvaAssujetti) {
+      return sum + computeInvoiceVAT(r.invoice.lines);
+    }
+    return sum + (r.vatAmount ?? 0);
+  }, 0);
 
   return (
     <div className="space-y-6 pb-20 md:pb-0">
@@ -78,13 +85,17 @@ export default function RevenuePage() {
         </div>
       ) : (
         <>
-          <div className="rounded-xl border border-border bg-white p-4">
-            <div className="flex items-center justify-between">
-              <span className="text-sm text-muted-foreground">Total</span>
-              <span className="text-lg font-bold text-foreground">
-                {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(total)}
-              </span>
-            </div>
+          <div className="rounded-2xl border border-accent bg-accent/5 p-6 text-center">
+            <p className="text-sm text-muted-foreground">CA du mois (HT)</p>
+            <p className="mt-1 text-3xl font-bold text-accent">{formatEuro(totalHT)}</p>
+            {totalVAT > 0 && (
+              <p className="mt-1 text-sm text-muted-foreground">
+                TTC : {formatEuro(totalHT + totalVAT)} — dont {formatEuro(totalVAT)} de TVA
+              </p>
+            )}
+            <p className="mt-1 text-xs text-muted-foreground">
+              {revenues.length} entrée{revenues.length !== 1 ? "s" : ""}
+            </p>
           </div>
           <div className="space-y-3">
             {revenues.map((r) => (

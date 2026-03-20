@@ -10,6 +10,7 @@ import {
   FileCheck,
   FileText,
   BarChart3,
+  Percent,
   Eye,
   ChevronLeft,
 } from "lucide-react";
@@ -27,6 +28,7 @@ interface ClientInfo {
   id: string;
   name?: string;
   businessName?: string;
+  tvaAssujetti?: boolean;
 }
 
 export default function ClientLayout({
@@ -38,6 +40,7 @@ export default function ClientLayout({
   const pathname = usePathname();
   const clientId = params.clientId as string;
   const [clientName, setClientName] = useState<string>("");
+  const [tvaAssujetti, setTvaAssujetti] = useState(false);
 
   useEffect(() => {
     const fetchClient = async () => {
@@ -48,6 +51,7 @@ export default function ClientLayout({
           const client = clients.find((c) => c.id === clientId);
           if (client) {
             setClientName(client.businessName || client.name || "Client");
+            setTvaAssujetti(client.tvaAssujetti ?? false);
           }
         }
       } catch {}
@@ -84,7 +88,7 @@ export default function ClientLayout({
       </div>
 
       <div className="flex gap-1 overflow-x-auto rounded-xl border border-border bg-white p-1">
-        {NAV_ITEMS.map((item) => (
+        {[...NAV_ITEMS, ...(tvaAssujetti ? [{ href: "/tva", icon: Percent, label: "TVA" }] : [])].map((item) => (
           <Link
             key={item.href}
             href={`${basePath}${item.href}`}
