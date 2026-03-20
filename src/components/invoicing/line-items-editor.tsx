@@ -189,13 +189,36 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti }: Props) {
         Ajouter une ligne
       </button>
 
-      {/* Total HT */}
+      {/* Totals */}
       <div className="flex justify-end pt-4 border-t border-border">
-        <div className="text-right">
-          <p className="text-xs font-medium text-muted-foreground mb-1">Total HT</p>
-          <p className="text-lg font-bold text-foreground">
-            {formatter.format(calculateTotalHT())}
-          </p>
+        <div className="text-right space-y-1">
+          <div>
+            <p className="text-xs font-medium text-muted-foreground mb-0.5">Total HT</p>
+            <p className={`font-bold text-foreground ${tvaAssujetti ? "text-base" : "text-lg"}`}>
+              {formatter.format(calculateTotalHT())}
+            </p>
+          </div>
+          {tvaAssujetti && (() => {
+            const totalHT = calculateTotalHT();
+            const totalVAT = lines.reduce((sum, line) => {
+              const ht = calculateLineTotal(line.quantity, line.unitPrice);
+              const rate = parseFloat(line.vatRate) || 0;
+              return sum + ht * rate / 100;
+            }, 0);
+            if (totalVAT <= 0) return null;
+            return (
+              <>
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-0.5">TVA</p>
+                  <p className="text-sm text-foreground">{formatter.format(totalVAT)}</p>
+                </div>
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-0.5">Total TTC</p>
+                  <p className="text-lg font-bold text-primary">{formatter.format(totalHT + totalVAT)}</p>
+                </div>
+              </>
+            );
+          })()}
         </div>
       </div>
     </div>
