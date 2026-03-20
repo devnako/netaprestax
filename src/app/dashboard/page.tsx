@@ -202,7 +202,7 @@ export default async function DashboardPage() {
           {/* Main cards */}
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
             <StatCard
-              label="Chiffre d'affaires"
+              label={profile.tvaAssujetti ? "CA (HT)" : "Chiffre d'affaires"}
               value={formatCurrency(result.ca)}
               icon={<Wallet className="h-5 w-5 text-primary" />}
             />
@@ -230,7 +230,7 @@ export default async function DashboardPage() {
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">Détail du calcul</h2>
             <div className="mt-4 space-y-3">
-              <BreakdownLine label="Chiffre d'affaires" value={formatCurrency(ca)} />
+              <BreakdownLine label={profile.tvaAssujetti ? "Chiffre d'affaires (HT)" : "Chiffre d'affaires"} value={formatCurrency(ca)} />
               <BreakdownLine
                 label={`Cotisations sociales (${formatPercent(result.tauxCotisations)})`}
                 value={`-${formatCurrency(result.cotisationsSociales)}`}

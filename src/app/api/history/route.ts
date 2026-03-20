@@ -100,9 +100,9 @@ export async function GET(request: NextRequest) {
 
   const months = Array.from({ length: 12 }, (_, i) => {
     const month = i + 1;
-    const revenue = revenues.find((r) => r.month === month);
+    const monthRevenues = revenues.filter((r) => r.month === month);
     const monthExpenses = expenses.filter((e) => e.month === month);
-    const ca = revenue ? Number(revenue.amount) : 0;
+    const ca = monthRevenues.reduce((sum, r) => sum + Number(r.amount), 0);
     const frais = monthExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
     const result = ca > 0

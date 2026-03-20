@@ -111,7 +111,7 @@ export default function HistoryPage() {
         <>
           {/* Summary cards */}
           <div className={`grid grid-cols-2 gap-3 ${tvaAssujetti ? "md:grid-cols-5" : "md:grid-cols-4"} md:gap-4`}>
-            <SummaryCard label="CA total" value={formatEuro(totalCA)} />
+            <SummaryCard label={tvaAssujetti ? "CA total (HT)" : "CA total"} value={formatEuro(totalCA)} />
             <SummaryCard label="Net total" value={formatEuro(totalNet)} accent />
             <SummaryCard label="Prélèvements" value={formatEuro(totalCotisations + totalImpot)} />
             <SummaryCard label="Mois actifs" value={`${moisActifs} / 12`} />
@@ -126,7 +126,7 @@ export default function HistoryPage() {
 
           {/* Bar chart: CA vs Net mensuel */}
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
-            <h2 className="text-lg font-semibold text-foreground">CA vs Net mensuel</h2>
+            <h2 className="text-lg font-semibold text-foreground">{tvaAssujetti ? "CA (HT) vs Net mensuel" : "CA vs Net mensuel"}</h2>
             <div className="mt-4 h-72">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={data} barGap={2}>
@@ -135,7 +135,7 @@ export default function HistoryPage() {
                   <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${v / 1000}k`} />
                   <Tooltip content={<CustomTooltip />} />
                   <Legend />
-                  <Bar dataKey="ca" name="CA" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                  <Bar dataKey="ca" name={tvaAssujetti ? "CA (HT)" : "CA"} fill="#2563eb" radius={[4, 4, 0, 0]} />
                   <Bar dataKey="net" name="Net" fill="#16a34a" radius={[4, 4, 0, 0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -156,7 +156,7 @@ export default function HistoryPage() {
                   <Line
                     type="monotone"
                     dataKey="cumulCA"
-                    name="CA cumulé"
+                    name={tvaAssujetti ? "CA cumulé (HT)" : "CA cumulé"}
                     stroke="#2563eb"
                     strokeWidth={2}
                     dot={{ r: 3 }}
@@ -203,7 +203,7 @@ export default function HistoryPage() {
                 <thead>
                   <tr className="border-b border-border text-left text-muted-foreground">
                     <th className="pb-3 pr-4">Mois</th>
-                    <th className="pb-3 pr-4 text-right">CA</th>
+                    <th className="pb-3 pr-4 text-right">{tvaAssujetti ? "CA (HT)" : "CA"}</th>
                     <th className="pb-3 pr-4 text-right">Cotisations</th>
                     <th className="pb-3 pr-4 text-right">Impôt</th>
                     <th className="pb-3 pr-4 text-right">Frais</th>
