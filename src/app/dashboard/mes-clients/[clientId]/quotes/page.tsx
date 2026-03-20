@@ -23,6 +23,7 @@ interface Quote {
   number: string;
   status: string;
   issuedAt: string;
+  tvaAssujetti: boolean;
   client: { name: string };
   lines: { quantity: string; unitPrice: string; vatRate?: string }[];
 }
@@ -52,11 +53,21 @@ export default function QuotesPage() {
 
   const filtered = quotes.filter((q) => filter === "ALL" || q.status === filter);
 
-  const calcTotal = (lines: Quote["lines"]) =>
+  function formatEuro(v: number) {
+    return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(v);
+  }
+
+  const computeTotalHT = (lines: Quote["lines"]) =>
+    lines.reduce((sum, l) => {
+      const ht = Number(l.quantity) * Number(l.unitPrice);
+      return sum + ht;
+    }, 0);
+
+  const computeTotalVAT = (lines: Quote["lines"]) =>
     lines.reduce((sum, l) => {
       const ht = Number(l.quantity) * Number(l.unitPrice);
       const vat = l.vatRate ? ht * Number(l.vatRate) / 100 : 0;
-      return sum + ht + vat;
+      return sum + vat;
     }, 0);
 
   const handlePDF = async (q: Quote) => {
@@ -130,9 +141,23 @@ export default function QuotesPage() {
               </div>
               <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
                 <span>{new Date(q.issuedAt).toLocaleDateString("fr-FR")}</span>
-                <span className="font-semibold text-foreground">
-                  {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(calcTotal(q.lines))}
-                </span>
+                <div className="text-right">
+                  {q.tvaAssujetti ? (() => {
+                    const ht = computeTotalHT(q.lines);
+                    const vat = computeTotalVAT(q.lines);
+                    return (
+                      <>
+                        <span className="font-semibold text-foreground">{formatEuro(ht + vat)}</span>
+                        <p className="text-xs text-muted-foreground">dont {formatEuro(vat)} de TVA</p>
+                      </>
+                    );
+                  })() : (
+                    <>
+                      <span className="font-semibold text-foreground">{formatEuro(computeTotalHT(q.lines))}</span>
+                      <p className="text-xs text-muted-foreground">TTC</p>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           ))}

@@ -23,6 +23,8 @@ interface ExpenseEntry {
   label: string;
   attachmentUrl?: string | null;
   attachmentName?: string | null;
+  vatRate: number | null;
+  vatAmount: number | null;
 }
 
 export default function ExpensesPage() {
@@ -41,7 +43,7 @@ export default function ExpensesPage() {
         const res = await fetch(`/api/accountant/${clientId}/expenses?month=${month}&year=${year}`);
         if (res.ok) {
           const data = await res.json();
-          setExpenses(data);
+          setExpenses(data.expenses);
         }
       } catch {} finally {
         setLoading(false);
@@ -50,7 +52,7 @@ export default function ExpensesPage() {
     fetchData();
   }, [clientId, month, year]);
 
-  const total = expenses.reduce((sum, e) => sum + e.amount, 0);
+  const total = expenses.reduce((sum, e) => sum + e.amount + (e.vatAmount ?? 0), 0);
 
   return (
     <div className="space-y-6 pb-20 md:pb-0">
@@ -80,9 +82,14 @@ export default function ExpensesPage() {
               <div key={e.id} className="rounded-xl border border-border bg-white p-4">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="font-semibold text-foreground">
-                      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(e.amount)}
-                    </span>
+                    <div>
+                      <span className="font-semibold text-foreground">
+                        {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(e.amount + (e.vatAmount ?? 0))}
+                      </span>
+                      {e.vatAmount != null && e.vatAmount > 0 && (
+                        <p className="text-xs text-muted-foreground">dont {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(e.vatAmount)} de TVA</p>
+                      )}
+                    </div>
                     {e.attachmentUrl && (
                       <button
                         onClick={() => window.open(`/api/attachments?type=expense&id=${e.id}`, "_blank")}

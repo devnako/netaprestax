@@ -32,10 +32,18 @@ export async function GET(
     prisma.revenue.findMany({
       where: { userId: clientId, month, year },
       orderBy: { createdAt: "desc" },
+      include: {
+        invoice: {
+          select: {
+            tvaAssujetti: true,
+            lines: { select: { quantity: true, unitPrice: true, vatRate: true } },
+          },
+        },
+      },
     }),
     prisma.fiscalProfile.findUnique({
       where: { userId: clientId },
-      select: { activityType: true },
+      select: { activityType: true, tvaAssujetti: true },
     }),
   ]);
 
@@ -45,5 +53,6 @@ export async function GET(
     revenues,
     total,
     defaultActivityType: profile?.activityType ?? null,
+    tvaAssujetti: profile?.tvaAssujetti ?? false,
   });
 }

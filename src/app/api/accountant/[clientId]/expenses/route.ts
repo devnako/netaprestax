@@ -28,23 +28,28 @@ export async function GET(
     return NextResponse.json({ error: "Mois et année requis" }, { status: 400 });
   }
 
-  const expenses = await prisma.expense.findMany({
-    where: {
-      userId: clientId,
-      month,
-      year,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const [expenses, profile] = await Promise.all([
+    prisma.expense.findMany({
+      where: { userId: clientId, month, year },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.fiscalProfile.findUnique({
+      where: { userId: clientId },
+      select: { tvaAssujetti: true },
+    }),
+  ]);
 
-  return NextResponse.json(
-    expenses.map((e) => ({
+  return NextResponse.json({
+    expenses: expenses.map((e) => ({
       id: e.id,
       amount: Number(e.amount),
+      vatRate: e.vatRate !== null ? Number(e.vatRate) : null,
+      vatAmount: e.vatAmount !== null ? Number(e.vatAmount) : null,
       category: e.category,
       label: e.label,
       attachmentUrl: e.attachmentUrl,
       attachmentName: e.attachmentName,
-    }))
-  );
+    })),
+    tvaAssujetti: profile?.tvaAssujetti ?? false,
+  });
 }

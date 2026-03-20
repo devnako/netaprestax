@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { useParams } from "next/navigation";
-import { Download, FileText, Image } from "lucide-react";
+import { FileText, Image } from "lucide-react";
 import { MonthPicker } from "@/components/dashboard/month-picker";
 
 const ACTIVITY_LABELS: Record<string, string> = {
@@ -12,6 +12,14 @@ const ACTIVITY_LABELS: Record<string, string> = {
   BNC_LIBERAL_CIPAV: "Libéral CIPAV",
 };
 
+function formatEuro(v: number) {
+  return new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(v);
+}
+
+function computeInvoiceVAT(lines: { quantity: number; unitPrice: number; vatRate: number | null }[]) {
+  return lines.reduce((sum, l) => sum + Number(l.quantity) * Number(l.unitPrice) * (l.vatRate ? Number(l.vatRate) / 100 : 0), 0);
+}
+
 interface RevenueEntry {
   id: string;
   amount: number;
@@ -20,6 +28,12 @@ interface RevenueEntry {
   attachmentUrl?: string | null;
   attachmentName?: string | null;
   invoiceId?: string | null;
+  vatRate?: number | null;
+  vatAmount?: number | null;
+  invoice?: {
+    tvaAssujetti: boolean;
+    lines: { quantity: number; unitPrice: number; vatRate: number | null }[];
+  } | null;
 }
 
 export default function RevenuePage() {
@@ -76,39 +90,38 @@ export default function RevenuePage() {
             {revenues.map((r) => (
               <div key={r.id} className="rounded-xl border border-border bg-white p-4">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    <span className="font-semibold text-foreground">
-                      {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(r.amount)}
-                    </span>
-                    {r.invoiceId ? (
-                      <button
-                        onClick={async () => {
-                          const res = await fetch(`/api/invoices/pdf?id=${r.invoiceId}`);
-                          if (!res.ok) return;
-                          const html = await res.text();
-                          const html2pdf = (await import("html2pdf.js")).default;
-                          const container = document.createElement("div");
-                          container.innerHTML = html;
-                          container.querySelectorAll("style").forEach((s) => s.remove());
-                          document.body.appendChild(container);
-                          const el = container.querySelector("body") || container;
-                          await html2pdf()
-                            .set({
-                              margin: 0,
-                              image: { type: "jpeg", quality: 0.98 },
-                              html2canvas: { scale: 2, useCORS: true },
-                              jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
-                            })
-                            .from(el)
-                            .save();
-                          document.body.removeChild(container);
-                        }}
-                        title="Télécharger la facture"
-                        className="rounded-lg p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+                  <div className="flex flex-col gap-2">
+                    <div>
+                      {r.invoiceId && r.invoice?.tvaAssujetti ? (() => {
+                        const vat = computeInvoiceVAT(r.invoice.lines);
+                        return (
+                          <>
+                            <span className="font-semibold text-foreground">{formatEuro(r.amount + vat)}</span>
+                            <p className="text-xs text-muted-foreground">dont {formatEuro(vat)} de TVA</p>
+                          </>
+                        );
+                      })() : r.vatAmount && r.vatAmount > 0 ? (
+                        <>
+                          <span className="font-semibold text-foreground">{formatEuro(r.amount + r.vatAmount)}</span>
+                          <p className="text-xs text-muted-foreground">dont {formatEuro(r.vatAmount)} de TVA</p>
+                        </>
+                      ) : (
+                        <span className="font-semibold text-foreground">{formatEuro(r.amount)}</span>
+                      )}
+                    </div>
+                    {r.invoiceId && (
+                      <a
+                        href={`/dashboard/invoices/${r.invoiceId}`}
+                        target="_blank"
+                        className="text-xs text-primary hover:underline"
+                        onClick={(e) => e.stopPropagation()}
                       >
-                        <Download className="h-4 w-4" />
-                      </button>
-                    ) : r.attachmentUrl ? (
+                        Voir la facture
+                      </a>
+                    )}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {!r.invoiceId && r.attachmentUrl ? (
                       <button
                         onClick={() => window.open(`/api/attachments?type=revenue&id=${r.id}`, "_blank")}
                         title={r.attachmentName || "Pièce jointe"}
@@ -121,12 +134,12 @@ export default function RevenuePage() {
                         )}
                       </button>
                     ) : null}
+                    {r.activityType && (
+                      <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
+                        {ACTIVITY_LABELS[r.activityType] || r.activityType}
+                      </span>
+                    )}
                   </div>
-                  {r.activityType && (
-                    <span className="rounded-full bg-primary/10 px-2.5 py-0.5 text-xs font-medium text-primary">
-                      {ACTIVITY_LABELS[r.activityType] || r.activityType}
-                    </span>
-                  )}
                 </div>
                 {r.description && (
                   <p className="mt-1 text-sm text-muted-foreground">{r.description}</p>

@@ -26,6 +26,7 @@ interface Invoice {
   status: string;
   issuedAt: string;
   parentInvoiceId?: string;
+  tvaAssujetti: boolean;
   client: { name: string };
   lines: { quantity: string; unitPrice: string; vatRate?: string }[];
 }
@@ -57,11 +58,17 @@ export default function InvoicesPage() {
     .filter((inv) => !inv.parentInvoiceId)
     .filter((inv) => filter === "ALL" || inv.status === filter);
 
-  const calcTotal = (lines: Invoice["lines"]) =>
+  const formatEuro = (v: number) =>
+    new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR", maximumFractionDigits: 2 }).format(v);
+
+  const computeTotalHT = (lines: Invoice["lines"]) =>
+    lines.reduce((sum, l) => sum + Number(l.quantity) * Number(l.unitPrice), 0);
+
+  const computeTotalVAT = (lines: Invoice["lines"]) =>
     lines.reduce((sum, l) => {
       const ht = Number(l.quantity) * Number(l.unitPrice);
       const vat = l.vatRate ? ht * Number(l.vatRate) / 100 : 0;
-      return sum + ht + vat;
+      return sum + vat;
     }, 0);
 
   const handlePDF = async (inv: Invoice) => {
@@ -135,9 +142,23 @@ export default function InvoicesPage() {
               </div>
               <div className="mt-2 flex items-center justify-between text-sm text-muted-foreground">
                 <span>{new Date(inv.issuedAt).toLocaleDateString("fr-FR")}</span>
-                <span className="font-semibold text-foreground">
-                  {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(calcTotal(inv.lines))}
-                </span>
+                <div className="text-right">
+                  {inv.tvaAssujetti ? (() => {
+                    const ht = computeTotalHT(inv.lines);
+                    const vat = computeTotalVAT(inv.lines);
+                    return (
+                      <>
+                        <p className="text-lg font-bold text-foreground">{formatEuro(ht + vat)}</p>
+                        <p className="text-xs text-muted-foreground">dont {formatEuro(vat)} de TVA</p>
+                      </>
+                    );
+                  })() : (
+                    <>
+                      <p className="text-lg font-bold text-foreground">{formatEuro(computeTotalHT(inv.lines))}</p>
+                      <p className="text-xs text-muted-foreground">TTC</p>
+                    </>
+                  )}
+                </div>
               </div>
             </div>
           ))}
