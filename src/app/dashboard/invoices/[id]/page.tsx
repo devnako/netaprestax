@@ -396,6 +396,7 @@ export default function InvoiceDetailPage() {
                 lines={editLines}
                 onChange={setEditLines}
                 tvaAssujetti={tvaAssujetti}
+                hideTotals
               />
             ) : (
               <div className="overflow-x-auto">

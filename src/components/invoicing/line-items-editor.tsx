@@ -13,6 +13,7 @@ interface Props {
   lines: LineItem[];
   onChange: (lines: LineItem[]) => void;
   tvaAssujetti: boolean;
+  hideTotals?: boolean;
 }
 
 const formatter = new Intl.NumberFormat("fr-FR", {
@@ -22,7 +23,7 @@ const formatter = new Intl.NumberFormat("fr-FR", {
   maximumFractionDigits: 2,
 });
 
-export function LineItemsEditor({ lines, onChange, tvaAssujetti }: Props) {
+export function LineItemsEditor({ lines, onChange, tvaAssujetti, hideTotals }: Props) {
   const handleLineChange = (index: number, field: keyof LineItem, value: string) => {
     const newLines = [...lines];
     newLines[index] = { ...newLines[index], [field]: value };
@@ -190,7 +191,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti }: Props) {
       </button>
 
       {/* Totals */}
-      <div className="flex justify-end pt-4 border-t border-border">
+      {!hideTotals && <div className="flex justify-end pt-4 border-t border-border">
         <div className="text-right space-y-1">
           <div>
             <p className="text-xs font-medium text-muted-foreground mb-0.5">Total HT</p>
@@ -220,7 +221,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti }: Props) {
             );
           })()}
         </div>
-      </div>
+      </div>}
     </div>
   );
 }
