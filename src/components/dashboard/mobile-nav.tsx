@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Wallet, Receipt, BarChart3,
-  Bell, Calculator, Download, Settings, MoreHorizontal, X, Users, FileText, FileCheck, Briefcase,
+  Bell, Calculator, Download, Settings, MoreHorizontal, X, Users, FileText, FileCheck, Briefcase, Percent,
 } from "lucide-react";
 
 const PRIMARY = [
@@ -25,7 +25,7 @@ const SECONDARY = [
   { href: "/dashboard/settings", icon: Settings, label: "Paramètres" },
 ];
 
-export function MobileNav({ hasClients }: { hasClients?: boolean }) {
+export function MobileNav({ hasClients, tvaAssujetti }: { hasClients?: boolean; tvaAssujetti?: boolean }) {
   const [open, setOpen] = useState(false);
   const pathname = usePathname();
   const menuRef = useRef<HTMLDivElement>(null);
@@ -54,9 +54,12 @@ export function MobileNav({ hasClients }: { hasClients?: boolean }) {
   const isActive = (href: string) =>
     href === "/dashboard" ? pathname === "/dashboard" : pathname.startsWith(href);
 
-  const secondaryItems = hasClients
-    ? [...SECONDARY, { href: "/dashboard/mes-clients", icon: Briefcase, label: "Mes clients" }]
-    : SECONDARY;
+  const secondaryItems = [
+    ...SECONDARY.slice(0, 3),
+    ...(tvaAssujetti ? [{ href: "/dashboard/tva", icon: Percent, label: "TVA" }] : []),
+    ...SECONDARY.slice(3),
+    ...(hasClients ? [{ href: "/dashboard/mes-clients", icon: Briefcase, label: "Mes clients" }] : []),
+  ];
 
   const isSecondaryActive = secondaryItems.some((item) => isActive(item.href));
 

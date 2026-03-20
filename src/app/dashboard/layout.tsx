@@ -1,24 +1,10 @@
 import Link from "next/link";
-import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download, Users, FileText, FileCheck, Briefcase } from "lucide-react";
+import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download, Users, FileText, FileCheck, Briefcase, Percent } from "lucide-react";
 import { SignOutButton } from "@/components/dashboard/sign-out-button";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
-
-const NAV_ITEMS = [
-  { href: "/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
-  { href: "/dashboard/revenue", icon: Wallet, label: "Revenus" },
-  { href: "/dashboard/expenses", icon: Receipt, label: "Frais" },
-  { href: "/dashboard/clients", icon: Users, label: "Clients" },
-  { href: "/dashboard/quotes", icon: FileText, label: "Devis" },
-  { href: "/dashboard/invoices", icon: FileCheck, label: "Factures" },
-  { href: "/dashboard/history", icon: BarChart3, label: "Historique" },
-  { href: "/dashboard/alerts", icon: Bell, label: "Alertes" },
-  { href: "/dashboard/simulation", icon: Calculator, label: "Simulation" },
-  { href: "/dashboard/export", icon: Download, label: "Exporter" },
-  { href: "/dashboard/settings", icon: Settings, label: "Paramètres" },
-] as const;
 
 export default async function DashboardLayout({
   children,
@@ -26,15 +12,38 @@ export default async function DashboardLayout({
   children: React.ReactNode;
 }) {
   let hasClients = false;
+  let tvaAssujetti = false;
   try {
     const session = await auth.api.getSession({ headers: await headers() });
     if (session) {
-      const count = await prisma.accountantAccess.count({
-        where: { accountantId: session.user.id, status: "ACTIVE" },
-      });
-      hasClients = count > 0;
+      const [accessCount, profile] = await Promise.all([
+        prisma.accountantAccess.count({
+          where: { accountantId: session.user.id, status: "ACTIVE" },
+        }),
+        prisma.fiscalProfile.findUnique({
+          where: { userId: session.user.id },
+          select: { tvaAssujetti: true },
+        }),
+      ]);
+      hasClients = accessCount > 0;
+      tvaAssujetti = profile?.tvaAssujetti ?? false;
     }
   } catch {}
+
+  const navItems = [
+    { href: "/dashboard", icon: LayoutDashboard, label: "Tableau de bord" },
+    { href: "/dashboard/revenue", icon: Wallet, label: "Revenus" },
+    { href: "/dashboard/expenses", icon: Receipt, label: "Frais" },
+    { href: "/dashboard/clients", icon: Users, label: "Clients" },
+    { href: "/dashboard/quotes", icon: FileText, label: "Devis" },
+    { href: "/dashboard/invoices", icon: FileCheck, label: "Factures" },
+    ...(tvaAssujetti ? [{ href: "/dashboard/tva", icon: Percent, label: "TVA" }] : []),
+    { href: "/dashboard/history", icon: BarChart3, label: "Historique" },
+    { href: "/dashboard/alerts", icon: Bell, label: "Alertes" },
+    { href: "/dashboard/simulation", icon: Calculator, label: "Simulation" },
+    { href: "/dashboard/export", icon: Download, label: "Exporter" },
+    { href: "/dashboard/settings", icon: Settings, label: "Paramètres" },
+  ];
 
   return (
     <div className="min-h-screen bg-muted pb-20 md:pb-0">
@@ -52,7 +61,7 @@ export default async function DashboardLayout({
         {/* Sidebar — desktop only */}
         <aside className="hidden w-56 shrink-0 md:block">
           <nav className="space-y-1">
-            {NAV_ITEMS.map((item) => (
+            {navItems.map((item) => (
               <SidebarLink key={item.href} href={item.href} icon={<item.icon className="h-5 w-5" />} label={item.label} />
             ))}
             {hasClients && (
@@ -69,7 +78,7 @@ export default async function DashboardLayout({
       </div>
 
       {/* Bottom tab bar — mobile only */}
-      <MobileNav hasClients={hasClients} />
+      <MobileNav hasClients={hasClients} tvaAssujetti={tvaAssujetti} />
     </div>
   );
 }
