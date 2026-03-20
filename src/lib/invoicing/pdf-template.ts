@@ -59,7 +59,7 @@ function formatEuro(n: number): string {
 }
 
 function formatPercent(rate: number): string {
-  return `${(rate * 100).toFixed(1).replace(".", ",")} %`;
+  return `${rate.toFixed(1).replace(".", ",")} %`;
 }
 
 export function generateDocumentHtml(params: DocumentParams): string {
