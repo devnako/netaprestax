@@ -413,7 +413,7 @@ export default function InvoiceDetailPage() {
                     </div>
                     <div className="w-28">
                       <label className="text-xs font-medium text-muted-foreground">
-                        Prix unit. HT
+                        {invoice.tvaAssujetti ? "Prix unit. HT" : "Prix unit."}
                       </label>
                     </div>
                     {invoice.tvaAssujetti && (
@@ -425,7 +425,7 @@ export default function InvoiceDetailPage() {
                     )}
                     <div className="w-24 text-right">
                       <label className="text-xs font-medium text-muted-foreground">
-                        Total HT
+                        {invoice.tvaAssujetti ? "Total HT" : "Total TTC"}
                       </label>
                     </div>
                   </div>
@@ -455,7 +455,7 @@ export default function InvoiceDetailPage() {
                         </div>
                         <div className="w-full sm:w-28">
                           <label className="sm:hidden text-xs font-medium text-muted-foreground">
-                            Prix unit. HT
+                            {invoice.tvaAssujetti ? "Prix unit. HT" : "Prix unit."}
                           </label>
                           <p className="mt-1 sm:mt-0 text-sm text-foreground">
                             {formatEuro(line.unitPrice)}
@@ -473,7 +473,7 @@ export default function InvoiceDetailPage() {
                         )}
                         <div className="w-full sm:w-24 text-right">
                           <label className="sm:hidden text-xs font-medium text-muted-foreground">
-                            Total HT
+                            {invoice.tvaAssujetti ? "Total HT" : "Total TTC"}
                           </label>
                           <p className="mt-1 sm:mt-0 text-sm text-foreground font-semibold">
                             {formatEuro(line.quantity * line.unitPrice)}
@@ -491,7 +491,7 @@ export default function InvoiceDetailPage() {
           <div className="rounded-2xl border border-border bg-white p-6">
             <div className="space-y-3">
               <div className="flex justify-between items-center">
-                <p className="text-sm text-foreground">Total HT</p>
+                <p className="text-sm text-foreground">{invoice.tvaAssujetti ? "Total HT" : "Total TTC"}</p>
                 <p className="text-lg font-bold text-foreground">
                   {formatEuro(totals.totalHT)}
                 </p>

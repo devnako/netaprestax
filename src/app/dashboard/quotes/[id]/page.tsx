@@ -582,11 +582,11 @@ export default function QuoteDetailPage() {
                     <tr className="border-b border-border">
                       <th className="text-left py-2 px-3 font-medium text-muted-foreground">Description</th>
                       <th className="text-right py-2 px-3 font-medium text-muted-foreground">Qté</th>
-                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">Prix unit.</th>
-                      {quote.lines.some((l) => l.vatRate !== null) && (
+                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">{quote.tvaAssujetti ? "Prix unit. HT" : "Prix unit."}</th>
+                      {quote.tvaAssujetti && (
                         <th className="text-right py-2 px-3 font-medium text-muted-foreground">TVA</th>
                       )}
-                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">Total HT</th>
+                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">{quote.tvaAssujetti ? "Total HT" : "Total TTC"}</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -595,7 +595,7 @@ export default function QuoteDetailPage() {
                         <td className="py-3 px-3 text-foreground">{line.description}</td>
                         <td className="text-right py-3 px-3 text-foreground">{line.quantity}</td>
                         <td className="text-right py-3 px-3 text-foreground">{formatEuro(line.unitPrice)}</td>
-                        {quote.lines.some((l) => l.vatRate !== null) && (
+                        {quote.tvaAssujetti && (
                           <td className="text-right py-3 px-3 text-foreground">
                             {line.vatRate ? `${line.vatRate}%` : "—"}
                           </td>
@@ -616,7 +616,7 @@ export default function QuoteDetailPage() {
             <div className="flex justify-end">
               <div className="w-48 space-y-2">
                 <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Total HT</span>
+                  <span className="text-muted-foreground">{quote.tvaAssujetti ? "Total HT" : "Total TTC"}</span>
                   <span className="font-semibold text-foreground">{formatEuro(totals.totalHT)}</span>
                 </div>
                 {totals.vatBreakdown.length > 0 && (

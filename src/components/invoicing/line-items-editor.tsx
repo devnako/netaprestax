@@ -71,7 +71,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti, hideTotals }: P
             </div>
             <div className="w-28">
               <label className="text-xs font-medium text-muted-foreground">
-                Prix unit. HT
+                {tvaAssujetti ? "Prix unit. HT" : "Prix unit."}
               </label>
             </div>
             {tvaAssujetti && (
@@ -80,7 +80,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti, hideTotals }: P
               </div>
             )}
             <div className="w-24 text-right">
-              <label className="text-xs font-medium text-muted-foreground">Total HT</label>
+              <label className="text-xs font-medium text-muted-foreground">{tvaAssujetti ? "Total HT" : "Total TTC"}</label>
             </div>
             <div className="w-10"></div>
           </div>
@@ -120,7 +120,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti, hideTotals }: P
 
                 <div className="w-full sm:w-28">
                   <label className="sm:hidden text-xs font-medium text-muted-foreground">
-                    Prix unit. HT
+                    {tvaAssujetti ? "Prix unit. HT" : "Prix unit."}
                   </label>
                   <div className="mt-1 sm:mt-0 relative">
                     <input
@@ -155,7 +155,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti, hideTotals }: P
 
                 <div className="w-full sm:w-24 text-right">
                   <label className="sm:hidden text-xs font-medium text-muted-foreground">
-                    Total HT
+                    {tvaAssujetti ? "Total HT" : "Total TTC"}
                   </label>
                   <div className="mt-1 sm:mt-0 font-semibold text-foreground text-sm">
                     {formatter.format(calculateLineTotal(line.quantity, line.unitPrice))}
@@ -194,7 +194,7 @@ export function LineItemsEditor({ lines, onChange, tvaAssujetti, hideTotals }: P
       {!hideTotals && <div className="flex justify-end pt-4 border-t border-border">
         <div className="text-right space-y-1">
           <div>
-            <p className="text-xs font-medium text-muted-foreground mb-0.5">Total HT</p>
+            <p className="text-xs font-medium text-muted-foreground mb-0.5">{tvaAssujetti ? "Total HT" : "Total TTC"}</p>
             <p className={`font-bold text-foreground ${tvaAssujetti ? "text-base" : "text-lg"}`}>
               {formatter.format(calculateTotalHT())}
             </p>

@@ -84,7 +84,7 @@ export function generateDocumentHtml(params: DocumentParams): string {
     .join("\n");
 
   const vatHeader = business.tvaAssujetti ? `<th style="padding:8px 12px;text-align:right">TVA</th>` : "";
-  const totalLabel = business.tvaAssujetti ? "Total HT" : "Total";
+  const totalLabel = business.tvaAssujetti ? "Total HT" : "Total TTC";
 
   let totalsHtml = `<tr><td colspan="${business.tvaAssujetti ? 4 : 3}" style="text-align:right;padding:8px 12px;font-weight:600">${totalLabel}</td><td style="padding:8px 12px;text-align:right;font-weight:700">${formatEuro(totals.totalHT)}</td></tr>`;
 
@@ -164,9 +164,9 @@ export function generateDocumentHtml(params: DocumentParams): string {
         <tr style="border-bottom:2px solid #1f2937">
           <th style="padding:8px 12px;text-align:left">Description</th>
           <th style="padding:8px 12px;text-align:right">Qté</th>
-          <th style="padding:8px 12px;text-align:right">Prix unit. HT</th>
+          <th style="padding:8px 12px;text-align:right">${business.tvaAssujetti ? "Prix unit. HT" : "Prix unit."}</th>
           ${vatHeader}
-          <th style="padding:8px 12px;text-align:right">Total HT</th>
+          <th style="padding:8px 12px;text-align:right">${totalLabel}</th>
         </tr>
       </thead>
       <tbody>
