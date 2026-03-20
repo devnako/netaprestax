@@ -18,6 +18,8 @@ const CATEGORIES = [
 interface Expense {
   id: string;
   amount: number;
+  vatRate: number | null;
+  vatAmount: number | null;
   category: string;
   label: string;
   attachmentUrl: string | null;
@@ -39,11 +41,13 @@ export default function ExpensesPage() {
   const [year, setYear] = useState(now.getFullYear());
   const [expenses, setExpenses] = useState<Expense[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tvaAssujetti, setTvaAssujetti] = useState(false);
 
   // Form
   const [label, setLabel] = useState("");
   const [amount, setAmount] = useState("");
   const [category, setCategory] = useState("AUTRE");
+  const [vatRate, setVatRate] = useState("20");
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,7 +57,9 @@ export default function ExpensesPage() {
     setLoading(true);
     const res = await fetch(`/api/expenses?month=${month}&year=${year}`);
     if (res.ok) {
-      setExpenses(await res.json());
+      const data = await res.json();
+      setExpenses(data.expenses);
+      setTvaAssujetti(data.tvaAssujetti);
     }
     setLoading(false);
   }, [month, year]);
@@ -81,6 +87,7 @@ export default function ExpensesPage() {
         label,
         month,
         year,
+        vatRate: tvaAssujetti ? parseFloat(vatRate) : null,
       }),
     });
 
@@ -94,6 +101,7 @@ export default function ExpensesPage() {
     setLabel("");
     setAmount("");
     setCategory("AUTRE");
+    setVatRate("20");
     setSaving(false);
     loadExpenses();
   };
@@ -227,6 +235,18 @@ export default function ExpensesPage() {
                 />
                 <span className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground">€</span>
               </div>
+              {tvaAssujetti && (
+                <select
+                  value={vatRate}
+                  onChange={(e) => setVatRate(e.target.value)}
+                  className="w-full rounded-lg border border-border px-3 py-2.5 text-sm text-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary sm:w-24 sm:shrink-0"
+                >
+                  <option value="0">TVA 0%</option>
+                  <option value="5.5">TVA 5,5%</option>
+                  <option value="10">TVA 10%</option>
+                  <option value="20">TVA 20%</option>
+                </select>
+              )}
             </div>
             <button
               type="submit"
@@ -268,7 +288,14 @@ export default function ExpensesPage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-foreground">{formatEuro(expense.amount)}</span>
+                  <div className="text-right">
+                    <span className="font-semibold text-foreground">
+                      {formatEuro(expense.amount + (expense.vatAmount ?? 0))}
+                    </span>
+                    {expense.vatAmount != null && expense.vatAmount > 0 && (
+                      <p className="text-xs text-muted-foreground">dont {formatEuro(expense.vatAmount)} de TVA</p>
+                    )}
+                  </div>
                   {expense.attachmentUrl ? (
                     <div className="flex items-center gap-1">
                       <button

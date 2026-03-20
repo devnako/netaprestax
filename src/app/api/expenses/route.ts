@@ -20,25 +20,30 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ error: "Mois et année requis" }, { status: 400 });
   }
 
-  const expenses = await prisma.expense.findMany({
-    where: {
-      userId: session.user.id,
-      month,
-      year,
-    },
-    orderBy: { createdAt: "desc" },
-  });
+  const [expenses, profile] = await Promise.all([
+    prisma.expense.findMany({
+      where: { userId: session.user.id, month, year },
+      orderBy: { createdAt: "desc" },
+    }),
+    prisma.fiscalProfile.findUnique({
+      where: { userId: session.user.id },
+      select: { tvaAssujetti: true },
+    }),
+  ]);
 
-  return NextResponse.json(
-    expenses.map((e) => ({
+  return NextResponse.json({
+    expenses: expenses.map((e) => ({
       id: e.id,
       amount: Number(e.amount),
+      vatRate: e.vatRate !== null ? Number(e.vatRate) : null,
+      vatAmount: e.vatAmount !== null ? Number(e.vatAmount) : null,
       category: e.category,
       label: e.label,
       attachmentUrl: e.attachmentUrl,
       attachmentName: e.attachmentName,
-    }))
-  );
+    })),
+    tvaAssujetti: profile?.tvaAssujetti ?? false,
+  });
 }
 
 export async function POST(request: Request) {
@@ -50,16 +55,20 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
   }
 
-  const { amount, category, label, month, year } = await request.json();
+  const { amount, category, label, month, year, vatRate } = await request.json();
 
   if (!amount || !category || !label || !month || !year) {
     return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
   }
 
+  const vatAmount = vatRate != null && vatRate > 0 ? Math.round(amount * vatRate / 100 * 100) / 100 : null;
+
   const expense = await prisma.expense.create({
     data: {
       userId: session.user.id,
       amount,
+      vatRate: vatRate != null ? vatRate : null,
+      vatAmount,
       category,
       label,
       month,

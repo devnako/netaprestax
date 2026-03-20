@@ -104,6 +104,8 @@ model Revenue {
   id             String        @id @default(cuid())
   userId         String
   amount         Decimal       @db.Decimal(10, 2)
+  vatRate        Decimal?      @db.Decimal(5, 2)
+  vatAmount      Decimal?      @db.Decimal(10, 2)
   month          Int
   year           Int
   description    String?
@@ -126,6 +128,8 @@ model Expense {
   id             String          @id @default(cuid())
   userId         String
   amount         Decimal         @db.Decimal(10, 2)
+  vatRate        Decimal?        @db.Decimal(5, 2)
+  vatAmount      Decimal?        @db.Decimal(10, 2)
   category       ExpenseCategory
   label          String
   month          Int

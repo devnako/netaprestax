@@ -35,7 +35,7 @@ export async function GET(request: NextRequest) {
     }),
     prisma.fiscalProfile.findUnique({
       where: { userId: session.user.id },
-      select: { activityType: true },
+      select: { activityType: true, tvaAssujetti: true },
     }),
   ]);
 
@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
     revenues,
     total,
     defaultActivityType: profile?.activityType ?? null,
+    tvaAssujetti: profile?.tvaAssujetti ?? false,
   });
 }
 
@@ -57,7 +58,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
   }
 
-  const { amount, month, year, description, activityType } = await request.json();
+  const { amount, month, year, description, activityType, vatRate } = await request.json();
 
   if (!amount || !month || !year) {
     return NextResponse.json({ error: "Données manquantes" }, { status: 400 });
@@ -67,10 +68,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Le montant doit être positif" }, { status: 400 });
   }
 
+  const vatAmount = vatRate != null && vatRate > 0 ? Math.round(amount * vatRate / 100 * 100) / 100 : null;
+
   const revenue = await prisma.revenue.create({
     data: {
       userId: session.user.id,
       amount,
+      vatRate: vatRate != null ? vatRate : null,
+      vatAmount,
       month,
       year,
       description,

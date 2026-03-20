@@ -28,12 +28,16 @@ export type AggregateRevenue = {
 
 export type RevenueAvgAggregateOutputType = {
   amount: runtime.Decimal | null
+  vatRate: runtime.Decimal | null
+  vatAmount: runtime.Decimal | null
   month: number | null
   year: number | null
 }
 
 export type RevenueSumAggregateOutputType = {
   amount: runtime.Decimal | null
+  vatRate: runtime.Decimal | null
+  vatAmount: runtime.Decimal | null
   month: number | null
   year: number | null
 }
@@ -42,6 +46,8 @@ export type RevenueMinAggregateOutputType = {
   id: string | null
   userId: string | null
   amount: runtime.Decimal | null
+  vatRate: runtime.Decimal | null
+  vatAmount: runtime.Decimal | null
   month: number | null
   year: number | null
   description: string | null
@@ -58,6 +64,8 @@ export type RevenueMaxAggregateOutputType = {
   id: string | null
   userId: string | null
   amount: runtime.Decimal | null
+  vatRate: runtime.Decimal | null
+  vatAmount: runtime.Decimal | null
   month: number | null
   year: number | null
   description: string | null
@@ -74,6 +82,8 @@ export type RevenueCountAggregateOutputType = {
   id: number
   userId: number
   amount: number
+  vatRate: number
+  vatAmount: number
   month: number
   year: number
   description: number
@@ -90,12 +100,16 @@ export type RevenueCountAggregateOutputType = {
 
 export type RevenueAvgAggregateInputType = {
   amount?: true
+  vatRate?: true
+  vatAmount?: true
   month?: true
   year?: true
 }
 
 export type RevenueSumAggregateInputType = {
   amount?: true
+  vatRate?: true
+  vatAmount?: true
   month?: true
   year?: true
 }
@@ -104,6 +118,8 @@ export type RevenueMinAggregateInputType = {
   id?: true
   userId?: true
   amount?: true
+  vatRate?: true
+  vatAmount?: true
   month?: true
   year?: true
   description?: true
@@ -120,6 +136,8 @@ export type RevenueMaxAggregateInputType = {
   id?: true
   userId?: true
   amount?: true
+  vatRate?: true
+  vatAmount?: true
   month?: true
   year?: true
   description?: true
@@ -136,6 +154,8 @@ export type RevenueCountAggregateInputType = {
   id?: true
   userId?: true
   amount?: true
+  vatRate?: true
+  vatAmount?: true
   month?: true
   year?: true
   description?: true
@@ -239,6 +259,8 @@ export type RevenueGroupByOutputType = {
   id: string
   userId: string
   amount: runtime.Decimal
+  vatRate: runtime.Decimal | null
+  vatAmount: runtime.Decimal | null
   month: number
   year: number
   description: string | null
@@ -278,6 +300,8 @@ export type RevenueWhereInput = {
   id?: Prisma.StringFilter<"Revenue"> | string
   userId?: Prisma.StringFilter<"Revenue"> | string
   amount?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFilter<"Revenue"> | number
   year?: Prisma.IntFilter<"Revenue"> | number
   description?: Prisma.StringNullableFilter<"Revenue"> | string | null
@@ -296,6 +320,8 @@ export type RevenueOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -318,6 +344,8 @@ export type RevenueWhereUniqueInput = Prisma.AtLeast<{
   NOT?: Prisma.RevenueWhereInput | Prisma.RevenueWhereInput[]
   userId?: Prisma.StringFilter<"Revenue"> | string
   amount?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFilter<"Revenue"> | number
   year?: Prisma.IntFilter<"Revenue"> | number
   description?: Prisma.StringNullableFilter<"Revenue"> | string | null
@@ -335,6 +363,8 @@ export type RevenueOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrderInput | Prisma.SortOrder
+  vatAmount?: Prisma.SortOrderInput | Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   description?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -359,6 +389,8 @@ export type RevenueScalarWhereWithAggregatesInput = {
   id?: Prisma.StringWithAggregatesFilter<"Revenue"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Revenue"> | string
   amount?: Prisma.DecimalWithAggregatesFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.DecimalNullableWithAggregatesFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.DecimalNullableWithAggregatesFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
   year?: Prisma.IntWithAggregatesFilter<"Revenue"> | number
   description?: Prisma.StringNullableWithAggregatesFilter<"Revenue"> | string | null
@@ -374,6 +406,8 @@ export type RevenueScalarWhereWithAggregatesInput = {
 export type RevenueCreateInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -391,6 +425,8 @@ export type RevenueUncheckedCreateInput = {
   id?: string
   userId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -406,6 +442,8 @@ export type RevenueUncheckedCreateInput = {
 export type RevenueUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -423,6 +461,8 @@ export type RevenueUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -439,6 +479,8 @@ export type RevenueCreateManyInput = {
   id?: string
   userId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -454,6 +496,8 @@ export type RevenueCreateManyInput = {
 export type RevenueUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -469,6 +513,8 @@ export type RevenueUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -495,6 +541,8 @@ export type RevenueCountOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -509,6 +557,8 @@ export type RevenueCountOrderByAggregateInput = {
 
 export type RevenueAvgOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
 }
@@ -517,6 +567,8 @@ export type RevenueMaxOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -533,6 +585,8 @@ export type RevenueMinOrderByAggregateInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
   description?: Prisma.SortOrder
@@ -547,6 +601,8 @@ export type RevenueMinOrderByAggregateInput = {
 
 export type RevenueSumOrderByAggregateInput = {
   amount?: Prisma.SortOrder
+  vatRate?: Prisma.SortOrder
+  vatAmount?: Prisma.SortOrder
   month?: Prisma.SortOrder
   year?: Prisma.SortOrder
 }
@@ -606,6 +662,14 @@ export type DecimalFieldUpdateOperationsInput = {
   divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
 }
 
+export type NullableDecimalFieldUpdateOperationsInput = {
+  set?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  increment?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  decrement?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  multiply?: runtime.Decimal | runtime.DecimalJsLike | number | string
+  divide?: runtime.Decimal | runtime.DecimalJsLike | number | string
+}
+
 export type NullableEnumActivityTypeFieldUpdateOperationsInput = {
   set?: $Enums.ActivityType | null
 }
@@ -645,6 +709,8 @@ export type RevenueUncheckedUpdateOneWithoutInvoiceNestedInput = {
 export type RevenueCreateWithoutUserInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -660,6 +726,8 @@ export type RevenueCreateWithoutUserInput = {
 export type RevenueUncheckedCreateWithoutUserInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -705,6 +773,8 @@ export type RevenueScalarWhereInput = {
   id?: Prisma.StringFilter<"Revenue"> | string
   userId?: Prisma.StringFilter<"Revenue"> | string
   amount?: Prisma.DecimalFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.DecimalNullableFilter<"Revenue"> | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFilter<"Revenue"> | number
   year?: Prisma.IntFilter<"Revenue"> | number
   description?: Prisma.StringNullableFilter<"Revenue"> | string | null
@@ -720,6 +790,8 @@ export type RevenueScalarWhereInput = {
 export type RevenueCreateWithoutInvoiceInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -736,6 +808,8 @@ export type RevenueUncheckedCreateWithoutInvoiceInput = {
   id?: string
   userId: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -766,6 +840,8 @@ export type RevenueUpdateToOneWithWhereWithoutInvoiceInput = {
 export type RevenueUpdateWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -782,6 +858,8 @@ export type RevenueUncheckedUpdateWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -796,6 +874,8 @@ export type RevenueUncheckedUpdateWithoutInvoiceInput = {
 export type RevenueCreateManyUserInput = {
   id?: string
   amount: runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month: number
   year: number
   description?: string | null
@@ -811,6 +891,8 @@ export type RevenueCreateManyUserInput = {
 export type RevenueUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -826,6 +908,8 @@ export type RevenueUpdateWithoutUserInput = {
 export type RevenueUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -841,6 +925,8 @@ export type RevenueUncheckedUpdateWithoutUserInput = {
 export type RevenueUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   amount?: Prisma.DecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string
+  vatRate?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
+  vatAmount?: Prisma.NullableDecimalFieldUpdateOperationsInput | runtime.Decimal | runtime.DecimalJsLike | number | string | null
   month?: Prisma.IntFieldUpdateOperationsInput | number
   year?: Prisma.IntFieldUpdateOperationsInput | number
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -859,6 +945,8 @@ export type RevenueSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   id?: boolean
   userId?: boolean
   amount?: boolean
+  vatRate?: boolean
+  vatAmount?: boolean
   month?: boolean
   year?: boolean
   description?: boolean
@@ -877,6 +965,8 @@ export type RevenueSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   amount?: boolean
+  vatRate?: boolean
+  vatAmount?: boolean
   month?: boolean
   year?: boolean
   description?: boolean
@@ -895,6 +985,8 @@ export type RevenueSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   id?: boolean
   userId?: boolean
   amount?: boolean
+  vatRate?: boolean
+  vatAmount?: boolean
   month?: boolean
   year?: boolean
   description?: boolean
@@ -913,6 +1005,8 @@ export type RevenueSelectScalar = {
   id?: boolean
   userId?: boolean
   amount?: boolean
+  vatRate?: boolean
+  vatAmount?: boolean
   month?: boolean
   year?: boolean
   description?: boolean
@@ -925,7 +1019,7 @@ export type RevenueSelectScalar = {
   updatedAt?: boolean
 }
 
-export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "month" | "year" | "description" | "activityType" | "attachmentUrl" | "attachmentName" | "invoiceId" | "locked" | "createdAt" | "updatedAt", ExtArgs["result"]["revenue"]>
+export type RevenueOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "amount" | "vatRate" | "vatAmount" | "month" | "year" | "description" | "activityType" | "attachmentUrl" | "attachmentName" | "invoiceId" | "locked" | "createdAt" | "updatedAt", ExtArgs["result"]["revenue"]>
 export type RevenueInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
   invoice?: boolean | Prisma.Revenue$invoiceArgs<ExtArgs>
@@ -949,6 +1043,8 @@ export type $RevenuePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     id: string
     userId: string
     amount: runtime.Decimal
+    vatRate: runtime.Decimal | null
+    vatAmount: runtime.Decimal | null
     month: number
     year: number
     description: string | null
@@ -1387,6 +1483,8 @@ export interface RevenueFieldRefs {
   readonly id: Prisma.FieldRef<"Revenue", 'String'>
   readonly userId: Prisma.FieldRef<"Revenue", 'String'>
   readonly amount: Prisma.FieldRef<"Revenue", 'Decimal'>
+  readonly vatRate: Prisma.FieldRef<"Revenue", 'Decimal'>
+  readonly vatAmount: Prisma.FieldRef<"Revenue", 'Decimal'>
   readonly month: Prisma.FieldRef<"Revenue", 'Int'>
   readonly year: Prisma.FieldRef<"Revenue", 'Int'>
   readonly description: Prisma.FieldRef<"Revenue", 'String'>
