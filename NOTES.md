@@ -44,7 +44,8 @@ src/
 │   │           ├── expenses/      # Frais (lecture seule)
 │   │           ├── invoices/      # Factures (lecture seule)
 │   │           ├── quotes/        # Devis (lecture seule)
-│   │           └── history/       # Historique graphiques (lecture seule)
+│   │           ├── history/       # Historique graphiques (lecture seule)
+│   │           └── tva/           # TVA (lecture seule, si assujetti)
 │   ├── admin/
 │   │   ├── layout.tsx             # Layout admin (vérifie isAdmin, redirige sinon)
 │   │   └── page.tsx               # Liste utilisateurs + actions admin
@@ -58,7 +59,8 @@ src/
 │   │   │   ├── expenses/          # GET frais client
 │   │   │   ├── invoices/          # GET factures client
 │   │   │   ├── quotes/            # GET devis client
-│   │   │   └── history/           # GET historique client
+│   │   │   ├── history/           # GET historique client
+│   │   │   └── tva/               # GET TVA client (collectée/déductible/solde)
 │   │   ├── alerts/                # GET alertes seuil CA
 │   │   ├── attachments/           # GET (proxy privé) + DELETE pièces jointes
 │   │   ├── attachments/upload/    # POST upload vers Vercel Blob
@@ -78,7 +80,8 @@ src/
 │   │   ├── quotes/[id]/convert/   # POST conversion devis → facture
 │   │   ├── quotes/pdf/            # Génération HTML devis
 │   │   ├── revenue/               # CRUD revenus
-│   │   └── settings/              # GET/PUT paramètres
+│   │   ├── settings/              # GET/PUT paramètres
+│   │   └── tva/                   # GET TVA (collectée/déductible/solde)
 │   ├── dashboard/
 │   │   ├── page.tsx               # Tableau de bord principal
 │   │   ├── alerts/                # Alertes seuils CA + TVA
@@ -90,7 +93,8 @@ src/
 │   │   ├── quotes/                # Liste + détail devis
 │   │   ├── revenue/               # Gestion revenus
 │   │   ├── settings/              # Paramètres utilisateur + section accès comptable
-│   │   └── simulation/            # Simulation fiscale
+│   │   ├── simulation/            # Simulation fiscale
+│   │   └── tva/                   # Page TVA (assujettis uniquement)
 │   ├── onboarding/                # Onboarding 4 étapes
 │   ├── layout.tsx                 # Layout racine (fonts Geist)
 │   ├── page.tsx                   # Landing page + footer
@@ -203,6 +207,31 @@ CRON_SECRET                 # Auth pour endpoints cron
 ---
 
 ## Historique de développement
+
+### Fait — 20 mars 2026 (session 10)
+
+- **Colonnes TVA dans l'historique** : pour les utilisateurs assujettis, ajout de TVA collectée, déductible et solde par mois dans le tableau et un nouveau graphique en barres (bleu/ambre/rouge). Labels "CA (HT)" pour les assujettis. Résumé annuel TVA dans les cartes
+- **Fix bug historique `.find()` → `.filter().reduce()`** : le CA mensuel ne comptait que le premier revenu par mois au lieu de tous les sommer. Corrigé dans l'API normale et comptable
+- **Synchronisation vue comptable avec vue normale** :
+  - 5 API routes comptable mises à jour (`revenue`, `expenses`, `invoices`, `quotes`, `history`) pour renvoyer les mêmes données TVA que les routes normales
+  - 5 pages comptable mises à jour : montants TTC + "dont TVA", lien "Voir la facture", colonnes/graphiques TVA dans l'historique
+  - Nouvelle route API `accountant/[clientId]/tva/` et page TVA comptable (`mes-clients/[clientId]/tva/`)
+  - Onglet TVA conditionnel dans la navigation comptable (visible si `tvaAssujetti`)
+- **Totaux HT/TTC sur revenus et frais** :
+  - Vue comptable : total en grand "CA du mois (HT)" / "Total frais du mois (HT)" avec "TTC : X € — dont X € de TVA" en dessous
+  - Vue normale : même format appliqué (conditionnel sur `tvaAssujetti`)
+- **Fix lien "Voir la facture" en vue comptable** : redirige vers l'aperçu PDF (`/api/invoices/pdf`) au lieu de la page de modification (`/dashboard/invoices/`)
+- **Icône PDF téléchargement sur revenus comptable** : bouton FileText à droite pour télécharger le PDF de la facture liée via `html2pdf.js`, comme les pièces jointes sur les autres lignes
+- **Harmonisation icône document sur frais comptable** : icône pièce jointe déplacée du côté gauche (à côté du montant) vers le côté droit (à côté du badge catégorie), comme sur la page revenus
+
+### Fait — 20 mars 2026 (session 9)
+
+- **TVA figée par document** : `tvaAssujetti` est copié depuis le profil fiscal au moment de la création de chaque facture et devis, pour garder l'historique correct même si le statut TVA change ensuite
+- **Affichage TTC + détail TVA sur factures** : liste des factures affiche le montant TTC avec "dont X € de TVA" pour les factures assujetties, "TTC" pour les non-assujetties
+- **Affichage TTC + détail TVA sur devis** : même pattern que les factures, avec en-têtes mensuels incluant le total TVA
+- **Fix Total TTC non-assujettis** : les factures/devis non-assujettis affichent correctement "TTC" au lieu de "HT"
+- **TVA sur frais et revenus manuels** : champs `vatRate` et `vatAmount` ajoutés sur Expense et Revenue (Prisma), sélecteur de taux TVA dans les formulaires, montant TVA calculé automatiquement, affiché dans les listes avec "dont X € de TVA"
+- **Page TVA dédiée** (`/dashboard/tva`) : vue mensuelle ou trimestrielle avec navigation, 3 cartes (collectée/déductible/solde coloré rouge/vert), détail par facture payée et par frais, calcul solde à reverser ou crédit de TVA
 
 ### Fait — 20 mars 2026 (session 8)
 
@@ -349,7 +378,7 @@ CRON_SECRET                 # Auth pour endpoints cron
 ## À faire — Priorité
 
 - **Tester upload pièces jointes** : le store Blob est maintenant en mode privé avec proxy server-side, à vérifier en prod
-- **ESLint cleanup** : 38 erreurs / 21 warnings pré-existants (ex: setState dans useEffect sur `mobile-nav.tsx`)
+- **ESLint cleanup** : 43 erreurs / 21 warnings pré-existants (ex: setState dans useEffect sur `mobile-nav.tsx`)
 
 ## À faire — Roadmap
 
