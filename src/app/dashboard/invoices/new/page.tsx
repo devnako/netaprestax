@@ -33,6 +33,7 @@ export default function NewInvoicePage() {
   const [bankIban, setBankIban] = useState("");
   const [bankBic, setBankBic] = useState("");
   const [tvaAssujetti, setTvaAssujetti] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
   const [missingProfile, setMissingProfile] = useState(false);
@@ -64,6 +65,8 @@ export default function NewInvoicePage() {
         }
       } catch (err) {
         setError("Erreur lors du chargement des données");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -151,6 +154,15 @@ export default function NewInvoicePage() {
       setSaving(false);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold text-foreground">Nouvelle facture</h1>
+        <p className="mt-4 text-center text-muted-foreground">Chargement...</p>
+      </div>
+    );
+  }
 
   if (missingProfile) {
     return (

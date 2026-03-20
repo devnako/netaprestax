@@ -34,6 +34,7 @@ export default function NewQuotePage() {
   const [bankBic, setBankBic] = useState("");
   const [validUntil, setValidUntil] = useState("");
   const [tvaAssujetti, setTvaAssujetti] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [missingProfile, setMissingProfile] = useState(false);
@@ -69,6 +70,8 @@ export default function NewQuotePage() {
         setValidUntil(defaultDate.toISOString().split("T")[0]);
       } catch (err) {
         setError("Erreur lors du chargement des données");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -152,6 +155,15 @@ export default function NewQuotePage() {
     const quote = await res.json();
     router.push(`/dashboard/quotes/${quote.id}`);
   };
+
+  if (loading) {
+    return (
+      <div className="max-w-3xl mx-auto">
+        <h1 className="text-2xl font-bold text-foreground">Nouveau devis</h1>
+        <p className="mt-4 text-center text-muted-foreground">Chargement...</p>
+      </div>
+    );
+  }
 
   if (missingProfile) {
     return (
