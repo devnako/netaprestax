@@ -9,6 +9,7 @@ import { MonthPicker } from "@/components/dashboard/month-picker";
 interface InvoiceLine {
   quantity: number;
   unitPrice: number;
+  vatRate: number | null;
 }
 
 interface Invoice {
@@ -19,6 +20,7 @@ interface Invoice {
     name: string;
   };
   status: string;
+  tvaAssujetti: boolean;
   createdAt: string;
   lines: InvoiceLine[];
   quoteId: string | null;
@@ -83,6 +85,14 @@ export default function InvoicesPage() {
     return lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0);
   };
 
+  const computeTotalVAT = (lines: InvoiceLine[]): number => {
+    return lines.reduce((sum, line) => {
+      const ht = line.quantity * line.unitPrice;
+      const rate = line.vatRate ?? 0;
+      return sum + ht * rate / 100;
+    }, 0);
+  };
+
   const filteredInvoices = useMemo(() => {
     return invoices.filter((inv) => {
       // Month filter
@@ -133,7 +143,7 @@ export default function InvoicesPage() {
         month={month}
         year={year}
         onChange={handleMonthChange}
-        subtitle={`${filteredInvoices.length} document${filteredInvoices.length !== 1 ? "s" : ""} — ${formatEuro(monthTotal)} HT`}
+        subtitle={`${filteredInvoices.length} document${filteredInvoices.length !== 1 ? "s" : ""} — ${formatEuro(monthTotal)}`}
       />
 
       {/* Search bar */}
@@ -215,10 +225,27 @@ export default function InvoicesPage() {
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="text-lg font-bold text-foreground">
-                    {formatEuro(computeTotalHT(invoice.lines))}
-                  </p>
-                  <p className="text-xs text-muted-foreground">HT</p>
+                  {invoice.tvaAssujetti ? (() => {
+                    const ht = computeTotalHT(invoice.lines);
+                    const vat = computeTotalVAT(invoice.lines);
+                    return (
+                      <>
+                        <p className="text-lg font-bold text-foreground">
+                          {formatEuro(ht + vat)}
+                        </p>
+                        <p className="text-xs text-muted-foreground">
+                          dont {formatEuro(vat)} de TVA
+                        </p>
+                      </>
+                    );
+                  })() : (
+                    <>
+                      <p className="text-lg font-bold text-foreground">
+                        {formatEuro(computeTotalHT(invoice.lines))}
+                      </p>
+                      <p className="text-xs text-muted-foreground">TTC</p>
+                    </>
+                  )}
                 </div>
               </div>
             </div>

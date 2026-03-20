@@ -24,6 +24,14 @@ export async function GET(request: NextRequest) {
     prisma.revenue.findMany({
       where: { userId: session.user.id, month, year },
       orderBy: { createdAt: "desc" },
+      include: {
+        invoice: {
+          select: {
+            tvaAssujetti: true,
+            lines: { select: { quantity: true, unitPrice: true, vatRate: true } },
+          },
+        },
+      },
     }),
     prisma.fiscalProfile.findUnique({
       where: { userId: session.user.id },

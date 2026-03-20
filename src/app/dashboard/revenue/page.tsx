@@ -15,6 +15,10 @@ interface RevenueEntry {
   invoiceId: string | null;
   locked: boolean;
   createdAt: string;
+  invoice: {
+    tvaAssujetti: boolean;
+    lines: { quantity: string; unitPrice: string; vatRate: string | null }[];
+  } | null;
 }
 
 const ACTIVITY_OPTIONS = [
@@ -376,9 +380,37 @@ export default function RevenuePage() {
                   </p>
                 </div>
                 <div className="flex items-center gap-2">
-                  <span className="font-semibold text-foreground">
-                    {formatEuro(Number(entry.amount))}
-                  </span>
+                  <div className="text-right">
+                    {entry.invoice ? (
+                      entry.invoice.tvaAssujetti ? (() => {
+                        const vat = entry.invoice.lines.reduce((sum, l) => {
+                          const ht = Number(l.quantity) * Number(l.unitPrice);
+                          return sum + ht * (Number(l.vatRate) || 0) / 100;
+                        }, 0);
+                        return (
+                          <>
+                            <span className="font-semibold text-foreground">
+                              {formatEuro(Number(entry.amount) + vat)}
+                            </span>
+                            <p className="text-xs text-muted-foreground">
+                              dont {formatEuro(vat)} de TVA
+                            </p>
+                          </>
+                        );
+                      })() : (
+                        <>
+                          <span className="font-semibold text-foreground">
+                            {formatEuro(Number(entry.amount))}
+                          </span>
+                          <p className="text-xs text-muted-foreground">TTC</p>
+                        </>
+                      )
+                    ) : (
+                      <span className="font-semibold text-foreground">
+                        {formatEuro(Number(entry.amount))}
+                      </span>
+                    )}
+                  </div>
                   {entry.invoiceId ? (
                     <Link
                       href={`/dashboard/invoices/${entry.invoiceId}`}
