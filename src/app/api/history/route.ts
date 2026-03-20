@@ -33,6 +33,53 @@ export async function GET(request: NextRequest) {
     where: { userId: session.user.id, year },
   });
 
+  // Build per-month TVA data if assujetti
+  const tvaByMonth: Record<number, { collectee: number; deductible: number }> = {};
+  if (profile.tvaAssujetti) {
+    for (let i = 1; i <= 12; i++) tvaByMonth[i] = { collectee: 0, deductible: 0 };
+
+    const [paidInvoices, manualRevenues] = await Promise.all([
+      prisma.invoice.findMany({
+        where: {
+          userId: session.user.id,
+          tvaAssujetti: true,
+          status: "PAID",
+          paidAt: { gte: new Date(year, 0, 1), lt: new Date(year + 1, 0, 1) },
+        },
+        include: {
+          lines: { select: { quantity: true, unitPrice: true, vatRate: true } },
+        },
+      }),
+      prisma.revenue.findMany({
+        where: { userId: session.user.id, year, invoiceId: null, vatAmount: { not: null } },
+        select: { month: true, vatAmount: true },
+      }),
+    ]);
+
+    // TVA collectée from paid invoices
+    for (const inv of paidInvoices) {
+      if (!inv.paidAt) continue;
+      const m = inv.paidAt.getMonth() + 1;
+      for (const l of inv.lines) {
+        const ht = Number(l.quantity) * Number(l.unitPrice);
+        const rate = l.vatRate !== null ? Number(l.vatRate) : 0;
+        tvaByMonth[m].collectee += ht * rate / 100;
+      }
+    }
+
+    // TVA déductible from expenses
+    for (const e of expenses) {
+      const vat = Number(e.vatAmount ?? 0);
+      if (vat > 0) tvaByMonth[e.month].deductible += vat;
+    }
+
+    // TVA déductible from manual revenues
+    for (const r of manualRevenues) {
+      const vat = Number(r.vatAmount ?? 0);
+      if (vat > 0) tvaByMonth[r.month].deductible += vat;
+    }
+  }
+
   const fiscalProfile: FiscalProfile = {
     activityType: profile.activityType as FiscalProfile["activityType"],
     versementLiberatoire: profile.versementLiberatoire,
@@ -65,6 +112,10 @@ export async function GET(request: NextRequest) {
     cumulCA += ca;
     cumulNet += result ? result.netReel : 0;
 
+    const tva = tvaByMonth[month];
+    const tvaCollectee = tva ? Math.round(tva.collectee * 100) / 100 : 0;
+    const tvaDeductible = tva ? Math.round(tva.deductible * 100) / 100 : 0;
+
     return {
       mois: monthNames[i],
       month,
@@ -75,8 +126,11 @@ export async function GET(request: NextRequest) {
       net: result ? result.netReel : 0,
       cumulCA,
       cumulNet,
+      tvaCollectee,
+      tvaDeductible,
+      tvaSolde: Math.round((tvaCollectee - tvaDeductible) * 100) / 100,
     };
   });
 
-  return NextResponse.json({ year, months });
+  return NextResponse.json({ year, months, tvaAssujetti: profile.tvaAssujetti });
 }

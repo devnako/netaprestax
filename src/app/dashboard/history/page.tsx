@@ -25,6 +25,9 @@ interface MonthData {
   net: number;
   cumulCA: number;
   cumulNet: number;
+  tvaCollectee: number;
+  tvaDeductible: number;
+  tvaSolde: number;
 }
 
 function formatEuro(value: number) {
@@ -53,6 +56,7 @@ export default function HistoryPage() {
   const [year, setYear] = useState(new Date().getFullYear());
   const [data, setData] = useState<MonthData[]>([]);
   const [loading, setLoading] = useState(true);
+  const [tvaAssujetti, setTvaAssujetti] = useState(false);
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -60,6 +64,7 @@ export default function HistoryPage() {
     if (res.ok) {
       const json = await res.json();
       setData(json.months);
+      setTvaAssujetti(json.tvaAssujetti ?? false);
     }
     setLoading(false);
   }, [year]);
@@ -73,6 +78,9 @@ export default function HistoryPage() {
   const totalCotisations = data.reduce((sum, m) => sum + m.cotisations, 0);
   const totalImpot = data.reduce((sum, m) => sum + m.impot, 0);
   const moisActifs = data.filter((m) => m.ca > 0).length;
+  const totalTvaCollectee = data.reduce((sum, m) => sum + m.tvaCollectee, 0);
+  const totalTvaDeductible = data.reduce((sum, m) => sum + m.tvaDeductible, 0);
+  const totalTvaSolde = Math.round((totalTvaCollectee - totalTvaDeductible) * 100) / 100;
 
   return (
     <div className="space-y-8">
@@ -102,11 +110,18 @@ export default function HistoryPage() {
       ) : (
         <>
           {/* Summary cards */}
-          <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-4">
+          <div className={`grid grid-cols-2 gap-3 ${tvaAssujetti ? "md:grid-cols-5" : "md:grid-cols-4"} md:gap-4`}>
             <SummaryCard label="CA total" value={formatEuro(totalCA)} />
             <SummaryCard label="Net total" value={formatEuro(totalNet)} accent />
             <SummaryCard label="Prélèvements" value={formatEuro(totalCotisations + totalImpot)} />
             <SummaryCard label="Mois actifs" value={`${moisActifs} / 12`} />
+            {tvaAssujetti && (
+              <SummaryCard
+                label={totalTvaSolde >= 0 ? "TVA à reverser" : "Crédit de TVA"}
+                value={formatEuro(Math.abs(totalTvaSolde))}
+                color={totalTvaSolde > 0 ? "red" : totalTvaSolde < 0 ? "green" : undefined}
+              />
+            )}
           </div>
 
           {/* Bar chart: CA vs Net mensuel */}
@@ -159,6 +174,27 @@ export default function HistoryPage() {
             </div>
           </div>
 
+          {/* TVA chart */}
+          {tvaAssujetti && (
+            <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
+              <h2 className="text-lg font-semibold text-foreground">TVA mensuelle</h2>
+              <div className="mt-4 h-72">
+                <ResponsiveContainer width="100%" height="100%">
+                  <BarChart data={data} barGap={2}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="#e5e7eb" />
+                    <XAxis dataKey="mois" tick={{ fontSize: 12 }} />
+                    <YAxis tick={{ fontSize: 12 }} tickFormatter={(v) => `${v}`} />
+                    <Tooltip content={<CustomTooltip />} />
+                    <Legend />
+                    <Bar dataKey="tvaCollectee" name="TVA collectée" fill="#2563eb" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="tvaDeductible" name="TVA déductible" fill="#f59e0b" radius={[4, 4, 0, 0]} />
+                    <Bar dataKey="tvaSolde" name="Solde TVA" fill="#ef4444" radius={[4, 4, 0, 0]} />
+                  </BarChart>
+                </ResponsiveContainer>
+              </div>
+            </div>
+          )}
+
           {/* Monthly table */}
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
             <h2 className="text-lg font-semibold text-foreground">Détail mensuel</h2>
@@ -171,7 +207,14 @@ export default function HistoryPage() {
                     <th className="pb-3 pr-4 text-right">Cotisations</th>
                     <th className="pb-3 pr-4 text-right">Impôt</th>
                     <th className="pb-3 pr-4 text-right">Frais</th>
-                    <th className="pb-3 text-right font-semibold">Net</th>
+                    <th className={`pb-3 ${tvaAssujetti ? "pr-4" : ""} text-right font-semibold`}>Net</th>
+                    {tvaAssujetti && (
+                      <>
+                        <th className="pb-3 pr-4 text-right">Collectée</th>
+                        <th className="pb-3 pr-4 text-right">Déductible</th>
+                        <th className="pb-3 text-right">Solde TVA</th>
+                      </>
+                    )}
                   </tr>
                 </thead>
                 <tbody>
@@ -191,6 +234,21 @@ export default function HistoryPage() {
                       <td className="py-2.5 text-right font-semibold text-accent">
                         {m.net > 0 ? formatEuro(m.net) : "—"}
                       </td>
+                      {tvaAssujetti && (
+                        <>
+                          <td className="py-2.5 pr-4 text-right text-blue-600">
+                            {m.tvaCollectee > 0 ? formatEuro(m.tvaCollectee) : "—"}
+                          </td>
+                          <td className="py-2.5 pr-4 text-right text-amber-600">
+                            {m.tvaDeductible > 0 ? `-${formatEuro(m.tvaDeductible)}` : "—"}
+                          </td>
+                          <td className={`py-2.5 text-right font-medium ${
+                            m.tvaSolde > 0 ? "text-red-600" : m.tvaSolde < 0 ? "text-green-600" : "text-muted-foreground"
+                          }`}>
+                            {m.tvaSolde !== 0 ? formatEuro(m.tvaSolde) : "—"}
+                          </td>
+                        </>
+                      )}
                     </tr>
                   ))}
                   {/* Total row */}
@@ -203,6 +261,17 @@ export default function HistoryPage() {
                       -{formatEuro(data.reduce((s, m) => s + m.frais, 0))}
                     </td>
                     <td className="pt-3 text-right text-accent">{formatEuro(totalNet)}</td>
+                    {tvaAssujetti && (
+                      <>
+                        <td className="pt-3 text-right text-blue-600">{formatEuro(totalTvaCollectee)}</td>
+                        <td className="pt-3 text-right text-amber-600">-{formatEuro(totalTvaDeductible)}</td>
+                        <td className={`pt-3 text-right ${
+                          totalTvaSolde > 0 ? "text-red-600" : totalTvaSolde < 0 ? "text-green-600" : ""
+                        }`}>
+                          {formatEuro(totalTvaSolde)}
+                        </td>
+                      </>
+                    )}
                   </tr>
                 </tbody>
               </table>
@@ -218,15 +287,33 @@ function SummaryCard({
   label,
   value,
   accent,
+  color,
 }: {
   label: string;
   value: string;
   accent?: boolean;
+  color?: "red" | "green";
 }) {
+  const borderBg = color === "red"
+    ? "border-red-200 bg-red-50"
+    : color === "green"
+    ? "border-green-200 bg-green-50"
+    : accent
+    ? "border-accent bg-accent/5"
+    : "border-border bg-white";
+
+  const textColor = color === "red"
+    ? "text-red-600"
+    : color === "green"
+    ? "text-green-600"
+    : accent
+    ? "text-accent"
+    : "text-foreground";
+
   return (
-    <div className={`rounded-xl border p-5 ${accent ? "border-accent bg-accent/5" : "border-border bg-white"}`}>
+    <div className={`rounded-xl border p-5 ${borderBg}`}>
       <p className="text-sm text-muted-foreground">{label}</p>
-      <p className={`mt-1 text-2xl font-bold ${accent ? "text-accent" : "text-foreground"}`}>{value}</p>
+      <p className={`mt-1 text-2xl font-bold ${textColor}`}>{value}</p>
     </div>
   );
 }
