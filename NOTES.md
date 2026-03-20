@@ -204,6 +204,18 @@ CRON_SECRET                 # Auth pour endpoints cron
 
 ## Historique de développement
 
+### Fait — 20 mars 2026 (session 8)
+
+- **Fix taux TVA 2000% dans le PDF** : `formatPercent` faisait `rate * 100` alors que `vatRate` est déjà stocké en valeur entière (20, pas 0.20). Supprimé le `* 100`
+- **Total TVA/TTC dans l'éditeur de lignes** : le composant `LineItemsEditor` affiche maintenant Total HT + TVA + Total TTC pour les utilisateurs assujettis. Ajout du prop `hideTotals` pour éviter les doublons
+- **Fix doublon totaux en mode édition facture** : `hideTotals` passé au `LineItemsEditor` en édition, seul le récapitulatif en bas de page subsiste
+- **Fix recalcul dynamique des totaux** en mode édition : les totaux utilisent `displayLines` (état local `editLines` en édition, `invoice.lines` sinon) au lieu de toujours utiliser les données API
+- **Fix flash colonne TVA** en création facture et devis : ajout d'un état `loading` qui bloque le rendu du formulaire jusqu'au chargement des settings, empêchant le flash de la colonne TVA pour les non-assujettis
+- **Fix 404 modification devis** : la page `/dashboard/quotes/[id]/edit` n'existait pas. Réécriture complète de `quotes/[id]/page.tsx` avec édition inline (même pattern que les factures) : état local pour lignes/notes/conditions/banque/validité, `handleSaveEdit` via PUT API
+- **PDF devis — suppression pénalités + Bon pour accord** :
+  - Les mentions "Pénalités de retard" et "Indemnité forfaitaire de recouvrement" ne s'affichent plus sur les devis (uniquement factures et avoirs)
+  - Ajout d'une zone "Bon pour accord" avec Date et Signature en bas des devis uniquement
+
 ### Fait — 20 mars 2026 (session 7)
 
 - **Fix flash styles cassés lors du téléchargement PDF** :
@@ -337,7 +349,7 @@ CRON_SECRET                 # Auth pour endpoints cron
 ## À faire — Priorité
 
 - **Tester upload pièces jointes** : le store Blob est maintenant en mode privé avec proxy server-side, à vérifier en prod
-- **Page d'édition de devis manquante** : le lien "Modifier" sur un devis DRAFT pointe vers `/dashboard/quotes/[id]/edit` qui n'existe pas encore
+- **ESLint cleanup** : 38 erreurs / 21 warnings pré-existants (ex: setState dans useEffect sur `mobile-nav.tsx`)
 
 ## À faire — Roadmap
 
