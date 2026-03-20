@@ -9,6 +9,7 @@ import { MonthPicker } from "@/components/dashboard/month-picker";
 interface QuoteLine {
   quantity: number;
   unitPrice: number;
+  vatRate: number | null;
 }
 
 interface Quote {
@@ -19,6 +20,7 @@ interface Quote {
     name: string;
   };
   status: string;
+  tvaAssujetti: boolean;
   createdAt: string;
   lines: QuoteLine[];
   invoiceId: string | null;
@@ -62,6 +64,13 @@ export default function QuotesPage() {
     return lines.reduce((sum, line) => sum + line.quantity * line.unitPrice, 0);
   };
 
+  const computeTotalVAT = (lines: QuoteLine[]): number => {
+    return lines.reduce((sum, line) => {
+      const ht = line.quantity * line.unitPrice;
+      return sum + ht * (line.vatRate ?? 0) / 100;
+    }, 0);
+  };
+
   const handleMonthChange = (m: number, y: number) => {
     setMonth(m);
     setYear(y);
@@ -86,8 +95,14 @@ export default function QuotesPage() {
     });
   }, [quotes, month, year, filter]);
 
-  const monthTotal = useMemo(() => {
-    return filteredQuotes.reduce((sum, q) => sum + computeTotalHT(q.lines), 0);
+  const monthTotals = useMemo(() => {
+    let ht = 0;
+    let vat = 0;
+    for (const q of filteredQuotes) {
+      ht += computeTotalHT(q.lines);
+      vat += computeTotalVAT(q.lines);
+    }
+    return { ht, vat, ttc: ht + vat };
   }, [filteredQuotes]);
 
   return (
@@ -107,7 +122,14 @@ export default function QuotesPage() {
         month={month}
         year={year}
         onChange={handleMonthChange}
-        subtitle={`${filteredQuotes.length} devis — ${formatEuro(monthTotal)} HT`}
+        subtitle={
+          <>
+            <span>{filteredQuotes.length} devis — {formatEuro(monthTotals.ttc)}</span>
+            {monthTotals.vat > 0 && (
+              <span className="block text-muted-foreground">dont {formatEuro(monthTotals.vat)} de TVA</span>
+            )}
+          </>
+        }
       />
 
       <div className="flex gap-2 overflow-x-auto">
@@ -156,10 +178,27 @@ export default function QuotesPage() {
                 </div>
                 <div className="flex items-start gap-3">
                   <div className="text-right">
-                    <p className="text-lg font-bold text-foreground">
-                      {formatEuro(computeTotalHT(quote.lines))}
-                    </p>
-                    <p className="text-xs text-muted-foreground">HT</p>
+                    {quote.tvaAssujetti ? (() => {
+                      const ht = computeTotalHT(quote.lines);
+                      const vat = computeTotalVAT(quote.lines);
+                      return (
+                        <>
+                          <p className="text-lg font-bold text-foreground">
+                            {formatEuro(ht + vat)}
+                          </p>
+                          <p className="text-xs text-muted-foreground">
+                            dont {formatEuro(vat)} de TVA
+                          </p>
+                        </>
+                      );
+                    })() : (
+                      <>
+                        <p className="text-lg font-bold text-foreground">
+                          {formatEuro(computeTotalHT(quote.lines))}
+                        </p>
+                        <p className="text-xs text-muted-foreground">TTC</p>
+                      </>
+                    )}
                   </div>
                   <button
                     onClick={(e) => handleDelete(e, quote.id)}

@@ -122,8 +122,14 @@ export default function InvoicesPage() {
     });
   }, [invoices, month, year, filter, searchQuery]);
 
-  const monthTotal = useMemo(() => {
-    return filteredInvoices.reduce((sum, inv) => sum + computeTotalHT(inv.lines), 0);
+  const monthTotals = useMemo(() => {
+    let ht = 0;
+    let vat = 0;
+    for (const inv of filteredInvoices) {
+      ht += computeTotalHT(inv.lines);
+      vat += computeTotalVAT(inv.lines);
+    }
+    return { ht, vat, ttc: ht + vat };
   }, [filteredInvoices]);
 
   return (
@@ -143,7 +149,14 @@ export default function InvoicesPage() {
         month={month}
         year={year}
         onChange={handleMonthChange}
-        subtitle={`${filteredInvoices.length} document${filteredInvoices.length !== 1 ? "s" : ""} — ${formatEuro(monthTotal)}`}
+        subtitle={
+          <>
+            <span>{filteredInvoices.length} document{filteredInvoices.length !== 1 ? "s" : ""} — {formatEuro(monthTotals.ttc)}</span>
+            {monthTotals.vat > 0 && (
+              <span className="block text-muted-foreground">dont {formatEuro(monthTotals.vat)} de TVA</span>
+            )}
+          </>
+        }
       />
 
       {/* Search bar */}

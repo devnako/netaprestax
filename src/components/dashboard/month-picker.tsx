@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { type ReactNode, useState, useEffect, useRef } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const MONTH_NAMES = [
@@ -18,7 +18,7 @@ interface MonthPickerProps {
   year: number;
   onChange: (month: number, year: number) => void;
   /** Optional subtitle shown below the month name */
-  subtitle?: string;
+  subtitle?: ReactNode;
 }
 
 export { MONTH_NAMES };
@@ -80,7 +80,7 @@ export function MonthPicker({ month, year, onChange, subtitle }: MonthPickerProp
           {MONTH_NAMES[month - 1]} {year}
         </p>
         {subtitle && (
-          <p className="text-xs text-muted-foreground">{subtitle}</p>
+          <div className="text-xs text-muted-foreground">{subtitle}</div>
         )}
       </button>
 
