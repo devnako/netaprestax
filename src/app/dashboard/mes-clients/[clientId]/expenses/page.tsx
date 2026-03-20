@@ -90,15 +90,15 @@ export default function ExpensesPage() {
             {expenses.map((e) => (
               <div key={e.id} className="rounded-xl border border-border bg-white p-4">
                 <div className="flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold text-foreground">
+                      {formatEuro(e.amount + (e.vatAmount ?? 0))}
+                    </span>
+                    {e.vatAmount != null && e.vatAmount > 0 && (
+                      <p className="text-xs text-muted-foreground">dont {formatEuro(e.vatAmount)} de TVA</p>
+                    )}
+                  </div>
                   <div className="flex items-center gap-2">
-                    <div>
-                      <span className="font-semibold text-foreground">
-                        {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(e.amount + (e.vatAmount ?? 0))}
-                      </span>
-                      {e.vatAmount != null && e.vatAmount > 0 && (
-                        <p className="text-xs text-muted-foreground">dont {new Intl.NumberFormat("fr-FR", { style: "currency", currency: "EUR" }).format(e.vatAmount)} de TVA</p>
-                      )}
-                    </div>
                     {e.attachmentUrl && (
                       <button
                         onClick={() => window.open(`/api/attachments?type=expense&id=${e.id}`, "_blank")}
@@ -112,10 +112,10 @@ export default function ExpensesPage() {
                         )}
                       </button>
                     )}
+                    <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
+                      {CATEGORY_LABELS[e.category] || e.category}
+                    </span>
                   </div>
-                  <span className="rounded-full bg-muted px-2.5 py-0.5 text-xs font-medium text-muted-foreground">
-                    {CATEGORY_LABELS[e.category] || e.category}
-                  </span>
                 </div>
                 <p className="mt-1 text-sm text-muted-foreground">{e.label}</p>
               </div>
