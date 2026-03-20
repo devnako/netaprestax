@@ -196,9 +196,22 @@ export function generateDocumentHtml(params: DocumentParams): string {
     <!-- Payment terms -->
     <div style="margin-top:${paymentMethod ? "16" : "32"}px;padding-top:20px;border-top:1px solid #e5e7eb;font-size:13px;color:#6b7280">
       ${paymentTerms ? `<p><strong>Conditions de règlement :</strong> ${paymentTerms}</p>` : ""}
+      ${type !== "devis" ? `
       <p style="margin-top:8px"><strong>Pénalités de retard :</strong> En cas de retard de paiement, des pénalités seront exigées au taux de 3 fois le taux d'intérêt légal (art. L.441-10 du Code de commerce).</p>
       <p style="margin-top:4px"><strong>Indemnité forfaitaire de recouvrement :</strong> 40 € (art. D.441-5 du Code de commerce).</p>
+      ` : ""}
     </div>
+
+    ${type === "devis" ? `
+    <!-- Bon pour accord -->
+    <div style="margin-top:48px;padding-top:24px;border-top:1px solid #e5e7eb">
+      <p style="font-weight:700;font-size:15px;margin-bottom:20px">Bon pour accord</p>
+      <div style="display:flex;gap:64px;font-size:14px;color:#1f2937">
+        <p>Date : _______________</p>
+        <p>Signature : _______________</p>
+      </div>
+    </div>
+    ` : ""}
   </div>
 </body>
 </html>`;
