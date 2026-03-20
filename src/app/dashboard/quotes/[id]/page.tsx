@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { useRouter, useParams } from "next/navigation";
 import { StatusBadge } from "@/components/invoicing/status-badge";
+import { LineItemsEditor } from "@/components/invoicing/line-items-editor";
 import { computeDocumentTotals } from "@/lib/invoicing/calculations";
 import { Plus, Download, Copy, Trash2 } from "lucide-react";
 
@@ -12,6 +13,13 @@ interface QuoteLine {
   quantity: number;
   unitPrice: number;
   vatRate: number | null;
+}
+
+interface LineItemInput {
+  description: string;
+  quantity: string;
+  unitPrice: string;
+  vatRate: string;
 }
 
 interface Quote {
@@ -47,20 +55,115 @@ export default function QuoteDetailPage() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [editing, setEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editLines, setEditLines] = useState<LineItemInput[]>([]);
+  const [editNotes, setEditNotes] = useState("");
+  const [editPaymentTerms, setEditPaymentTerms] = useState("");
+  const [editPaymentMethod, setEditPaymentMethod] = useState("");
+  const [editBankAccountHolder, setEditBankAccountHolder] = useState("");
+  const [editBankIban, setEditBankIban] = useState("");
+  const [editBankBic, setEditBankBic] = useState("");
+  const [editValidUntil, setEditValidUntil] = useState("");
+  const [tvaAssujetti, setTvaAssujetti] = useState(true);
 
   useEffect(() => {
-    const loadQuote = async () => {
-      setLoading(true);
-      const res = await fetch(`/api/quotes/${id}`);
-      if (res.ok) {
-        setQuote(await res.json());
+    const loadData = async () => {
+      try {
+        const [quoteRes, settingsRes] = await Promise.all([
+          fetch(`/api/quotes/${id}`),
+          fetch("/api/settings"),
+        ]);
+
+        if (quoteRes.ok) {
+          const data = await quoteRes.json();
+          setQuote(data);
+          initEditState(data);
+        }
+
+        if (settingsRes.ok) {
+          const settings = await settingsRes.json();
+          setTvaAssujetti(settings.tvaAssujetti ?? true);
+        }
+      } catch {
+        setError("Erreur lors du chargement du devis");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    loadQuote();
+    loadData();
   }, [id]);
+
+  const initEditState = (q: Quote) => {
+    setEditLines(
+      q.lines.map((line) => ({
+        description: line.description || "",
+        quantity: line.quantity.toString(),
+        unitPrice: line.unitPrice.toString(),
+        vatRate: (line.vatRate ?? 20).toString(),
+      }))
+    );
+    setEditNotes(q.notes || "");
+    setEditPaymentTerms(q.paymentTerms || "À réception");
+    setEditPaymentMethod(q.paymentMethod || "");
+    setEditBankAccountHolder(q.bankAccountHolder || "");
+    setEditBankIban(q.bankIban || "");
+    setEditBankBic(q.bankBic || "");
+    setEditValidUntil(q.validUntil ? q.validUntil.split("T")[0] : "");
+  };
+
+  const handleSaveEdit = async () => {
+    if (!quote) return;
+    setSaving(true);
+    setError(null);
+
+    try {
+      const response = await fetch(`/api/quotes/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          clientId: quote.clientId,
+          lines: editLines.map((line) => ({
+            description: line.description,
+            quantity: parseFloat(line.quantity) || 0,
+            unitPrice: parseFloat(line.unitPrice) || 0,
+            vatRate: tvaAssujetti ? parseFloat(line.vatRate) : null,
+          })),
+          notes: editNotes,
+          paymentTerms: editPaymentTerms,
+          paymentMethod: editPaymentMethod || null,
+          bankAccountHolder: editBankAccountHolder,
+          bankIban: editBankIban,
+          bankBic: editBankBic,
+          validUntil: editValidUntil || null,
+        }),
+      });
+
+      if (!response.ok) {
+        const data = await response.json();
+        setError(data.error || "Erreur lors de la mise à jour");
+        return;
+      }
+
+      // Reload to get fresh data with relations
+      const reloadRes = await fetch(`/api/quotes/${id}`);
+      if (reloadRes.ok) {
+        const updated = await reloadRes.json();
+        setQuote(updated);
+        initEditState(updated);
+      }
+      setIsEditing(false);
+    } catch {
+      setError("Erreur lors de la mise à jour du devis");
+    } finally {
+      setSaving(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    if (quote) initEditState(quote);
+    setIsEditing(false);
+  };
 
   const handleStatusChange = async (newStatus: string) => {
     setSaving(true);
@@ -185,28 +288,48 @@ export default function QuoteDetailPage() {
     return <div className="text-sm text-muted-foreground">Devis non trouvé</div>;
   }
 
-  const totals = computeDocumentTotals(
-    quote.lines.map((line) => ({
-      quantity: line.quantity,
-      unitPrice: line.unitPrice,
-      vatRate: line.vatRate || null,
-    })),
-    quote.lines.some((l) => l.vatRate !== null)
-  );
+  const displayLines = isEditing
+    ? editLines.map((l) => ({
+        quantity: parseFloat(l.quantity) || 0,
+        unitPrice: parseFloat(l.unitPrice) || 0,
+        vatRate: tvaAssujetti ? parseFloat(l.vatRate) || 0 : null,
+      }))
+    : quote.lines;
+  const totals = computeDocumentTotals(displayLines, tvaAssujetti);
 
   const renderActions = () => {
     const commonClass = "rounded-lg px-4 py-2.5 font-medium transition text-sm";
+
+    if (isEditing) {
+      return (
+        <div className="space-y-2">
+          <button
+            onClick={handleSaveEdit}
+            disabled={saving}
+            className={`w-full ${commonClass} bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-50`}
+          >
+            {saving ? "Enregistrement..." : "Enregistrer"}
+          </button>
+          <button
+            onClick={handleCancelEdit}
+            className={`w-full ${commonClass} border border-border text-foreground hover:bg-muted`}
+          >
+            Annuler
+          </button>
+        </div>
+      );
+    }
 
     switch (quote.status) {
       case "DRAFT":
         return (
           <div className="space-y-2">
-            <a
-              href={`/dashboard/quotes/${id}/edit`}
-              className={`block text-center ${commonClass} bg-primary text-primary-foreground hover:bg-primary/90`}
+            <button
+              onClick={() => setIsEditing(true)}
+              className={`w-full ${commonClass} bg-primary text-primary-foreground hover:bg-primary/90`}
             >
               Modifier
-            </a>
+            </button>
             <button
               onClick={() => handleStatusChange("SENT")}
               disabled={saving}
@@ -343,89 +466,161 @@ export default function QuoteDetailPage() {
                   {new Date(quote.createdAt).toLocaleDateString("fr-FR")}
                 </p>
               </div>
-              {quote.validUntil && (
+              {isEditing ? (
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground">Valide jusqu'au</h3>
+                  <input
+                    type="date"
+                    value={editValidUntil}
+                    onChange={(e) => setEditValidUntil(e.target.value)}
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+                  />
+                </div>
+              ) : quote.validUntil ? (
                 <div>
                   <h3 className="text-sm font-medium text-muted-foreground">Valide jusqu'au</h3>
                   <p className="mt-1 text-foreground">
                     {new Date(quote.validUntil).toLocaleDateString("fr-FR")}
                   </p>
                 </div>
-              )}
+              ) : null}
             </div>
 
-            {quote.paymentTerms && (
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Conditions de paiement</h3>
-                <p className="mt-1 text-foreground">{quote.paymentTerms}</p>
-              </div>
-            )}
-
-            {quote.paymentMethod && (
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Moyen de paiement</h3>
-                <p className="mt-1 text-foreground">{quote.paymentMethod}</p>
-              </div>
-            )}
-
-            {quote.paymentMethod === "Virement bancaire" && (quote.bankAccountHolder || quote.bankIban || quote.bankBic) && (
-              <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 space-y-1">
-                <p className="text-xs font-medium text-blue-800 mb-2">Coordonnées bancaires</p>
-                {quote.bankAccountHolder && (
-                  <p className="text-sm text-blue-900"><span className="font-medium">Titulaire :</span> {quote.bankAccountHolder}</p>
+            {isEditing ? (
+              <div className="space-y-4">
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Conditions de paiement</label>
+                  <select
+                    value={editPaymentTerms}
+                    onChange={(e) => setEditPaymentTerms(e.target.value)}
+                    className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+                  >
+                    <option value="À réception">À réception</option>
+                    <option value="30 jours">30 jours</option>
+                    <option value="60 jours">60 jours</option>
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Moyen de paiement</label>
+                  <select
+                    value={editPaymentMethod}
+                    onChange={(e) => setEditPaymentMethod(e.target.value)}
+                    className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+                  >
+                    <option value="">Non précisé</option>
+                    <option value="Virement bancaire">Virement bancaire</option>
+                    <option value="Chèque">Chèque</option>
+                    <option value="Espèces">Espèces</option>
+                    <option value="Carte bancaire">Carte bancaire</option>
+                    <option value="Autre">Autre</option>
+                  </select>
+                </div>
+                {editPaymentMethod === "Virement bancaire" && (
+                  <div className="space-y-3 rounded-lg border border-border bg-muted/50 p-4">
+                    <p className="text-sm font-medium text-foreground">Coordonnées bancaires</p>
+                    <input type="text" value={editBankAccountHolder} onChange={(e) => setEditBankAccountHolder(e.target.value)} placeholder="Titulaire" className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none" />
+                    <input type="text" value={editBankIban} onChange={(e) => setEditBankIban(e.target.value)} placeholder="IBAN" className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none" />
+                    <input type="text" value={editBankBic} onChange={(e) => setEditBankBic(e.target.value)} placeholder="BIC" className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none" />
+                  </div>
                 )}
-                {quote.bankIban && (
-                  <p className="text-sm text-blue-900"><span className="font-medium">IBAN :</span> {quote.bankIban}</p>
-                )}
-                {quote.bankBic && (
-                  <p className="text-sm text-blue-900"><span className="font-medium">BIC :</span> {quote.bankBic}</p>
-                )}
+                <div>
+                  <label className="block text-sm font-medium text-muted-foreground mb-1">Notes</label>
+                  <textarea
+                    value={editNotes}
+                    onChange={(e) => setEditNotes(e.target.value)}
+                    rows={3}
+                    className="w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+                  />
+                </div>
               </div>
-            )}
+            ) : (
+              <>
+                {quote.paymentTerms && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">Conditions de paiement</h3>
+                    <p className="mt-1 text-foreground">{quote.paymentTerms}</p>
+                  </div>
+                )}
 
-            {quote.notes && (
-              <div>
-                <h3 className="text-sm font-medium text-muted-foreground">Notes</h3>
-                <p className="mt-1 text-foreground whitespace-pre-wrap">{quote.notes}</p>
-              </div>
+                {quote.paymentMethod && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">Moyen de paiement</h3>
+                    <p className="mt-1 text-foreground">{quote.paymentMethod}</p>
+                  </div>
+                )}
+
+                {quote.paymentMethod === "Virement bancaire" && (quote.bankAccountHolder || quote.bankIban || quote.bankBic) && (
+                  <div className="rounded-lg border border-blue-200 bg-blue-50 p-3 space-y-1">
+                    <p className="text-xs font-medium text-blue-800 mb-2">Coordonnées bancaires</p>
+                    {quote.bankAccountHolder && (
+                      <p className="text-sm text-blue-900"><span className="font-medium">Titulaire :</span> {quote.bankAccountHolder}</p>
+                    )}
+                    {quote.bankIban && (
+                      <p className="text-sm text-blue-900"><span className="font-medium">IBAN :</span> {quote.bankIban}</p>
+                    )}
+                    {quote.bankBic && (
+                      <p className="text-sm text-blue-900"><span className="font-medium">BIC :</span> {quote.bankBic}</p>
+                    )}
+                  </div>
+                )}
+
+                {quote.notes && (
+                  <div>
+                    <h3 className="text-sm font-medium text-muted-foreground">Notes</h3>
+                    <p className="mt-1 text-foreground whitespace-pre-wrap">{quote.notes}</p>
+                  </div>
+                )}
+              </>
             )}
           </div>
 
+          {/* Line Items */}
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6 space-y-4">
             <h2 className="font-semibold text-foreground">Articles</h2>
-            <div className="overflow-x-auto">
-              <table className="w-full text-sm">
-                <thead>
-                  <tr className="border-b border-border">
-                    <th className="text-left py-2 px-3 font-medium text-muted-foreground">Description</th>
-                    <th className="text-right py-2 px-3 font-medium text-muted-foreground">Qté</th>
-                    <th className="text-right py-2 px-3 font-medium text-muted-foreground">Prix unit.</th>
-                    {quote.lines.some((l) => l.vatRate !== null) && (
-                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">TVA</th>
-                    )}
-                    <th className="text-right py-2 px-3 font-medium text-muted-foreground">Total HT</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {quote.lines.map((line) => (
-                    <tr key={line.id} className="border-b border-border/50 hover:bg-muted/50">
-                      <td className="py-3 px-3 text-foreground">{line.description}</td>
-                      <td className="text-right py-3 px-3 text-foreground">{line.quantity}</td>
-                      <td className="text-right py-3 px-3 text-foreground">{formatEuro(line.unitPrice)}</td>
+            {isEditing ? (
+              <LineItemsEditor
+                lines={editLines}
+                onChange={setEditLines}
+                tvaAssujetti={tvaAssujetti}
+                hideTotals
+              />
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-sm">
+                  <thead>
+                    <tr className="border-b border-border">
+                      <th className="text-left py-2 px-3 font-medium text-muted-foreground">Description</th>
+                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">Qté</th>
+                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">Prix unit.</th>
                       {quote.lines.some((l) => l.vatRate !== null) && (
-                        <td className="text-right py-3 px-3 text-foreground">
-                          {line.vatRate ? `${line.vatRate}%` : "—"}
-                        </td>
+                        <th className="text-right py-2 px-3 font-medium text-muted-foreground">TVA</th>
                       )}
-                      <td className="text-right py-3 px-3 font-semibold text-foreground">
-                        {formatEuro(line.quantity * line.unitPrice)}
-                      </td>
+                      <th className="text-right py-2 px-3 font-medium text-muted-foreground">Total HT</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                  </thead>
+                  <tbody>
+                    {quote.lines.map((line) => (
+                      <tr key={line.id} className="border-b border-border/50 hover:bg-muted/50">
+                        <td className="py-3 px-3 text-foreground">{line.description}</td>
+                        <td className="text-right py-3 px-3 text-foreground">{line.quantity}</td>
+                        <td className="text-right py-3 px-3 text-foreground">{formatEuro(line.unitPrice)}</td>
+                        {quote.lines.some((l) => l.vatRate !== null) && (
+                          <td className="text-right py-3 px-3 text-foreground">
+                            {line.vatRate ? `${line.vatRate}%` : "—"}
+                          </td>
+                        )}
+                        <td className="text-right py-3 px-3 font-semibold text-foreground">
+                          {formatEuro(line.quantity * line.unitPrice)}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
 
+          {/* Totals */}
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6 space-y-3">
             <div className="flex justify-end">
               <div className="w-48 space-y-2">
