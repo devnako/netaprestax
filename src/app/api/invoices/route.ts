@@ -28,7 +28,7 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
   const body = await request.json();
-  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, lines, activityType } = body;
 
   if (!clientId || !lines || !Array.isArray(lines) || lines.length === 0) {
     return NextResponse.json(
@@ -48,7 +48,7 @@ export async function POST(request: NextRequest) {
 
   const [number, profile] = await Promise.all([
     getNextInvoiceNumber(session.user.id, new Date().getFullYear()),
-    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { tvaAssujetti: true } }),
+    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { tvaAssujetti: true, activityType: true } }),
   ]);
   const tvaAssujetti = profile?.tvaAssujetti ?? false;
 
@@ -58,6 +58,7 @@ export async function POST(request: NextRequest) {
       clientId,
       number,
       tvaAssujetti,
+      activityType: activityType || profile?.activityType || null,
       notes: notes || null,
       paymentTerms: paymentTerms || null,
       paymentMethod: paymentMethod || null,

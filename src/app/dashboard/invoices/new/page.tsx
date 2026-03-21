@@ -33,6 +33,7 @@ export default function NewInvoicePage() {
   const [bankIban, setBankIban] = useState("");
   const [bankBic, setBankBic] = useState("");
   const [tvaAssujetti, setTvaAssujetti] = useState(true);
+  const [activityType, setActivityType] = useState("BIC_PRESTATION");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState("");
@@ -59,6 +60,7 @@ export default function NewInvoicePage() {
         if (settingsRes.ok) {
           const settings = await settingsRes.json();
           setTvaAssujetti(settings.tvaAssujetti ?? true);
+          if (settings.activityType) setActivityType(settings.activityType);
           if (!settings.siret || !settings.address || (settings.tvaAssujetti && !settings.tvaNumber)) {
             setMissingProfile(true);
           }
@@ -125,6 +127,7 @@ export default function NewInvoicePage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           clientId,
+          activityType,
           lines: lines.map((line) => ({
             description: line.description,
             quantity: parseFloat(line.quantity) || 0,
@@ -278,6 +281,23 @@ export default function NewInvoicePage() {
               Créer un nouveau client
             </button>
           )}
+        </div>
+
+        {/* Activity Type */}
+        <div className="rounded-2xl border border-border bg-white p-6">
+          <label className="block text-sm font-medium text-foreground mb-2">
+            Type d&apos;activité
+          </label>
+          <select
+            value={activityType}
+            onChange={(e) => setActivityType(e.target.value)}
+            className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+          >
+            <option value="BIC_VENTE">Vente de marchandises</option>
+            <option value="BIC_PRESTATION">Prestation de services (BIC)</option>
+            <option value="BNC_LIBERAL_URSSAF">Profession libérale (URSSAF)</option>
+            <option value="BNC_LIBERAL_CIPAV">Profession libérale (CIPAV)</option>
+          </select>
         </div>
 
         {/* Line Items */}

@@ -216,6 +216,7 @@ model Invoice {
   number            String
   status            InvoiceStatus @default(DRAFT)
   tvaAssujetti      Boolean       @default(false)
+  activityType      ActivityType?
   notes             String?
   paymentTerms      String?
   paymentMethod     String?

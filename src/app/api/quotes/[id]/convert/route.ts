@@ -30,7 +30,10 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     return NextResponse.json({ error: "Ce devis a déjà été converti en facture" }, { status: 400 });
   }
 
-  const number = await getNextInvoiceNumber(session.user.id, new Date().getFullYear());
+  const [number, profile] = await Promise.all([
+    getNextInvoiceNumber(session.user.id, new Date().getFullYear()),
+    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { activityType: true } }),
+  ]);
 
   const invoice = await prisma.invoice.create({
     data: {
@@ -39,6 +42,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
       quoteId: quote.id,
       number,
       tvaAssujetti: quote.tvaAssujetti,
+      activityType: profile?.activityType || null,
       notes: quote.notes,
       paymentTerms: quote.paymentTerms,
       paymentMethod: quote.paymentMethod,

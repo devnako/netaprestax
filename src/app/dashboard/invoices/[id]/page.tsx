@@ -30,6 +30,7 @@ interface Invoice {
   };
   status: string;
   tvaAssujetti: boolean;
+  activityType: string | null;
   createdAt: string;
   updatedAt: string;
   paidAt: string | null;
@@ -55,6 +56,13 @@ interface Invoice {
   }[];
 }
 
+const ACTIVITY_LABELS: Record<string, string> = {
+  BIC_VENTE: "Vente de marchandises",
+  BIC_PRESTATION: "Prestation de services (BIC)",
+  BNC_LIBERAL_URSSAF: "Profession libérale (URSSAF)",
+  BNC_LIBERAL_CIPAV: "Profession libérale (CIPAV)",
+};
+
 function formatEuro(value: number) {
   return new Intl.NumberFormat("fr-FR", {
     style: "currency",
@@ -79,6 +87,7 @@ export default function InvoiceDetailPage() {
   const [editBankAccountHolder, setEditBankAccountHolder] = useState("");
   const [editBankIban, setEditBankIban] = useState("");
   const [editBankBic, setEditBankBic] = useState("");
+  const [editActivityType, setEditActivityType] = useState("");
   const [saving, setSaving] = useState(false);
   const [confirmPay, setConfirmPay] = useState(false);
   const [confirmCreditNote, setConfirmCreditNote] = useState(false);
@@ -105,6 +114,7 @@ export default function InvoiceDetailPage() {
           setEditBankAccountHolder(data.bankAccountHolder || "");
           setEditBankIban(data.bankIban || "");
           setEditBankBic(data.bankBic || "");
+          setEditActivityType(data.activityType || "");
         }
       } catch (err) {
         setError("Erreur lors du chargement de la facture");
@@ -132,6 +142,7 @@ export default function InvoiceDetailPage() {
             unitPrice: parseFloat(line.unitPrice) || 0,
             vatRate: invoice.tvaAssujetti ? parseFloat(line.vatRate) : null,
           })),
+          activityType: editActivityType || null,
           notes: editNotes,
           paymentTerms: editPaymentTerms,
           paymentMethod: editPaymentMethod || null,
@@ -369,6 +380,14 @@ export default function InvoiceDetailPage() {
                   <p className="text-foreground">{invoice.paymentMethod}</p>
                 </div>
               )}
+              {invoice.activityType && (
+                <div>
+                  <p className="text-xs font-medium text-muted-foreground mb-1">
+                    Type d&apos;activité
+                  </p>
+                  <p className="text-foreground">{ACTIVITY_LABELS[invoice.activityType] || invoice.activityType}</p>
+                </div>
+              )}
             </div>
             {invoice.paymentMethod === "Virement bancaire" && (invoice.bankAccountHolder || invoice.bankIban || invoice.bankBic) && (
               <div className="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3 space-y-1">
@@ -533,6 +552,22 @@ export default function InvoiceDetailPage() {
           {/* Edit Mode - Payment Terms and Notes */}
           {isEditing && (
             <div className="rounded-2xl border border-border bg-white p-6 space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-foreground mb-2">
+                  Type d&apos;activité
+                </label>
+                <select
+                  value={editActivityType}
+                  onChange={(e) => setEditActivityType(e.target.value)}
+                  className="w-full rounded-lg border border-border px-4 py-2.5 text-foreground focus:border-primary focus:outline-none"
+                >
+                  <option value="BIC_VENTE">Vente de marchandises</option>
+                  <option value="BIC_PRESTATION">Prestation de services (BIC)</option>
+                  <option value="BNC_LIBERAL_URSSAF">Profession libérale (URSSAF)</option>
+                  <option value="BNC_LIBERAL_CIPAV">Profession libérale (CIPAV)</option>
+                </select>
+              </div>
+
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">
                   Conditions de paiement

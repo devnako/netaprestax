@@ -1599,6 +1599,7 @@ export const InvoiceScalarFieldEnum = {
   number: 'number',
   status: 'status',
   tvaAssujetti: 'tvaAssujetti',
+  activityType: 'activityType',
   notes: 'notes',
   paymentTerms: 'paymentTerms',
   paymentMethod: 'paymentMethod',

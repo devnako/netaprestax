@@ -39,7 +39,7 @@ export async function PUT(
 
   const { id } = await params;
   const body = await request.json();
-  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, lines, activityType: putActivityType } = body;
 
   const invoice = await prisma.invoice.findUnique({
     where: { id },
@@ -70,6 +70,7 @@ export async function PUT(
     where: { id },
     data: {
       clientId: clientId || undefined,
+      activityType: putActivityType !== undefined ? (putActivityType || null) : undefined,
       notes: notes !== undefined ? notes : undefined,
       paymentTerms: paymentTerms !== undefined ? paymentTerms : undefined,
       paymentMethod: paymentMethod !== undefined ? (paymentMethod || null) : undefined,
@@ -108,10 +109,10 @@ export async function PATCH(
 
   const { id } = await params;
   const body = await request.json();
-  const { status, lines, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic } = body;
+  const { status, lines, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, activityType } = body;
 
   // Content edit mode (no status change)
-  if (!status && (lines || notes !== undefined || paymentTerms !== undefined || paymentMethod !== undefined)) {
+  if (!status && (lines || notes !== undefined || paymentTerms !== undefined || paymentMethod !== undefined || activityType !== undefined)) {
     const invoice = await prisma.invoice.findUnique({ where: { id } });
     if (!invoice || invoice.userId !== session.user.id) {
       return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
@@ -123,6 +124,7 @@ export async function PATCH(
     const updatedInvoice = await prisma.invoice.update({
       where: { id },
       data: {
+        activityType: activityType !== undefined ? (activityType || null) : undefined,
         notes: notes !== undefined ? notes : undefined,
         paymentTerms: paymentTerms !== undefined ? paymentTerms : undefined,
         paymentMethod: paymentMethod !== undefined ? (paymentMethod || null) : undefined,
@@ -192,11 +194,6 @@ export async function PATCH(
   if (status === "PAID") {
     const paidAt = new Date();
 
-    const profile = await prisma.fiscalProfile.findUnique({
-      where: { userId: session.user.id },
-      select: { activityType: true },
-    });
-
     const totalHT = invoice.lines.reduce(
       (sum, line) => sum + Number(line.quantity) * Number(line.unitPrice),
       0
@@ -214,7 +211,7 @@ export async function PATCH(
           month: paidAt.getMonth() + 1,
           year: paidAt.getFullYear(),
           description: `Facture ${invoice.number} — ${invoice.client.name}`,
-          activityType: profile?.activityType || null,
+          activityType: invoice.activityType || null,
           invoiceId: id,
           locked: true,
         },
