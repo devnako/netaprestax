@@ -59,8 +59,14 @@ export async function POST(
         parentInvoiceId: invoice.id,
         number,
         tvaAssujetti: invoice.tvaAssujetti,
+        activityType: invoice.activityType,
+        clientName: invoice.clientName,
+        clientEmail: invoice.clientEmail,
+        clientPhone: invoice.clientPhone,
+        clientAddress: invoice.clientAddress,
+        clientSiret: invoice.clientSiret,
         status: "PENDING",
-        notes: `Avoir sur facture ${invoice.number} — ${invoice.client.name}`,
+        notes: `Avoir sur facture ${invoice.number} — ${invoice.clientName || invoice.client?.name || ""}`,
         paymentTerms: null,
         lines: {
           create: invoice.lines.map((line, index) => ({
@@ -79,19 +85,27 @@ export async function POST(
     }),
   ];
 
-  // If the invoice was paid and user wants to remove the corresponding revenue
-  if (invoice.status === "PAID" && removeRevenue) {
-    operations.push(
-      prisma.revenue.deleteMany({
-        where: {
-          userId: session.user.id,
-          invoiceId: id,
-        },
-      }) as any
-    );
-  }
-
   const [creditNote] = await prisma.$transaction(operations);
+
+  if (invoice.status === "PAID" && removeRevenue) {
+    const totalHT = invoice.lines.reduce(
+      (sum: number, line: any) => sum + Number(line.quantity) * Number(line.unitPrice),
+      0
+    );
+    const now = new Date();
+    await prisma.revenue.create({
+      data: {
+        userId: session.user.id,
+        amount: -Math.round(totalHT * 100) / 100,
+        month: now.getMonth() + 1,
+        year: now.getFullYear(),
+        description: `Avoir ${creditNote.number} sur facture ${invoice.number}`,
+        activityType: invoice.activityType || null,
+        invoiceId: creditNote.id,
+        locked: true,
+      },
+    });
+  }
 
   return NextResponse.json(creditNote, { status: 201 });
 }

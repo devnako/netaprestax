@@ -31,7 +31,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
 
   const { id } = await params;
   const body = await request.json();
-  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, validUntil, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, validUntil, lines, activityType } = body;
 
   const quote = await prisma.quote.findUnique({ where: { id } });
   if (!quote || quote.userId !== session.user.id) {
@@ -48,6 +48,7 @@ export async function PUT(request: NextRequest, { params }: { params: Promise<{ 
       where: { id },
       data: {
         clientId,
+        activityType: activityType !== undefined ? (activityType || null) : undefined,
         notes,
         paymentTerms,
         paymentMethod: paymentMethod || null,

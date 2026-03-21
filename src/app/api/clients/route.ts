@@ -116,17 +116,6 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Non autorisé" }, { status: 403 });
   }
 
-  // Check for linked quotes/invoices
-  const quoteCount = await prisma.quote.count({ where: { clientId: id } });
-  const invoiceCount = await prisma.invoice.count({ where: { clientId: id } });
-
-  if (quoteCount > 0 || invoiceCount > 0) {
-    return NextResponse.json(
-      { error: "Impossible de supprimer un client lié à des devis ou factures" },
-      { status: 400 }
-    );
-  }
-
   await prisma.client.delete({ where: { id } });
 
   return NextResponse.json({ success: true });

@@ -441,9 +441,9 @@ export type ClientMinOrderByAggregateInput = {
   updatedAt?: Prisma.SortOrder
 }
 
-export type ClientScalarRelationFilter = {
-  is?: Prisma.ClientWhereInput
-  isNot?: Prisma.ClientWhereInput
+export type ClientNullableScalarRelationFilter = {
+  is?: Prisma.ClientWhereInput | null
+  isNot?: Prisma.ClientWhereInput | null
 }
 
 export type ClientCreateNestedManyWithoutUserInput = {
@@ -494,10 +494,12 @@ export type ClientCreateNestedOneWithoutQuotesInput = {
   connect?: Prisma.ClientWhereUniqueInput
 }
 
-export type ClientUpdateOneRequiredWithoutQuotesNestedInput = {
+export type ClientUpdateOneWithoutQuotesNestedInput = {
   create?: Prisma.XOR<Prisma.ClientCreateWithoutQuotesInput, Prisma.ClientUncheckedCreateWithoutQuotesInput>
   connectOrCreate?: Prisma.ClientCreateOrConnectWithoutQuotesInput
   upsert?: Prisma.ClientUpsertWithoutQuotesInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
   connect?: Prisma.ClientWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutQuotesInput, Prisma.ClientUpdateWithoutQuotesInput>, Prisma.ClientUncheckedUpdateWithoutQuotesInput>
 }
@@ -508,10 +510,12 @@ export type ClientCreateNestedOneWithoutInvoicesInput = {
   connect?: Prisma.ClientWhereUniqueInput
 }
 
-export type ClientUpdateOneRequiredWithoutInvoicesNestedInput = {
+export type ClientUpdateOneWithoutInvoicesNestedInput = {
   create?: Prisma.XOR<Prisma.ClientCreateWithoutInvoicesInput, Prisma.ClientUncheckedCreateWithoutInvoicesInput>
   connectOrCreate?: Prisma.ClientCreateOrConnectWithoutInvoicesInput
   upsert?: Prisma.ClientUpsertWithoutInvoicesInput
+  disconnect?: Prisma.ClientWhereInput | boolean
+  delete?: Prisma.ClientWhereInput | boolean
   connect?: Prisma.ClientWhereUniqueInput
   update?: Prisma.XOR<Prisma.XOR<Prisma.ClientUpdateToOneWithWhereWithoutInvoicesInput, Prisma.ClientUpdateWithoutInvoicesInput>, Prisma.ClientUncheckedUpdateWithoutInvoicesInput>
 }

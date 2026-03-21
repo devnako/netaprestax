@@ -74,7 +74,7 @@ export async function GET(
     tvaCollectee += invTVA;
     if (invTVA > 0) {
       collecteeDetails.push({
-        label: `${inv.number} — ${inv.client.name}`,
+        label: `${inv.number} — ${inv.clientName || inv.client?.name || ""}`,
         ht: Math.round(invHT * 100) / 100,
         tva: Math.round(invTVA * 100) / 100,
       });

@@ -44,11 +44,11 @@ export async function GET(request: NextRequest) {
       tvaAssujetti: quote.tvaAssujetti,
     },
     client: {
-      name: quote.client.name,
-      email: quote.client.email,
-      phone: quote.client.phone,
-      address: quote.client.address,
-      siret: quote.client.siret,
+      name: quote.clientName || quote.client?.name || "",
+      email: quote.clientEmail || quote.client?.email || null,
+      phone: quote.clientPhone || quote.client?.phone || null,
+      address: quote.clientAddress || quote.client?.address || null,
+      siret: quote.clientSiret || quote.client?.siret || null,
     },
     lines: quote.lines.map((l) => ({
       description: l.description,

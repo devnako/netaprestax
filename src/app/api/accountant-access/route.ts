@@ -134,10 +134,15 @@ export async function DELETE(request: NextRequest) {
     return NextResponse.json({ error: "Non trouvé" }, { status: 404 });
   }
 
-  await prisma.accountantAccess.update({
-    where: { id },
-    data: { status: "REVOKED" },
-  });
+  await prisma.$transaction([
+    prisma.accountantAccess.update({
+      where: { id },
+      data: { status: "REVOKED" },
+    }),
+    prisma.session.deleteMany({
+      where: { userId: access.accountantId },
+    }),
+  ]);
 
   return NextResponse.json({ success: true });
 }

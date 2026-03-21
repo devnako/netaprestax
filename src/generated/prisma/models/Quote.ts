@@ -31,6 +31,12 @@ export type QuoteMinAggregateOutputType = {
   number: string | null
   status: $Enums.QuoteStatus | null
   tvaAssujetti: boolean | null
+  activityType: $Enums.ActivityType | null
+  clientName: string | null
+  clientEmail: string | null
+  clientPhone: string | null
+  clientAddress: string | null
+  clientSiret: string | null
   notes: string | null
   paymentTerms: string | null
   paymentMethod: string | null
@@ -50,6 +56,12 @@ export type QuoteMaxAggregateOutputType = {
   number: string | null
   status: $Enums.QuoteStatus | null
   tvaAssujetti: boolean | null
+  activityType: $Enums.ActivityType | null
+  clientName: string | null
+  clientEmail: string | null
+  clientPhone: string | null
+  clientAddress: string | null
+  clientSiret: string | null
   notes: string | null
   paymentTerms: string | null
   paymentMethod: string | null
@@ -69,6 +81,12 @@ export type QuoteCountAggregateOutputType = {
   number: number
   status: number
   tvaAssujetti: number
+  activityType: number
+  clientName: number
+  clientEmail: number
+  clientPhone: number
+  clientAddress: number
+  clientSiret: number
   notes: number
   paymentTerms: number
   paymentMethod: number
@@ -90,6 +108,12 @@ export type QuoteMinAggregateInputType = {
   number?: true
   status?: true
   tvaAssujetti?: true
+  activityType?: true
+  clientName?: true
+  clientEmail?: true
+  clientPhone?: true
+  clientAddress?: true
+  clientSiret?: true
   notes?: true
   paymentTerms?: true
   paymentMethod?: true
@@ -109,6 +133,12 @@ export type QuoteMaxAggregateInputType = {
   number?: true
   status?: true
   tvaAssujetti?: true
+  activityType?: true
+  clientName?: true
+  clientEmail?: true
+  clientPhone?: true
+  clientAddress?: true
+  clientSiret?: true
   notes?: true
   paymentTerms?: true
   paymentMethod?: true
@@ -128,6 +158,12 @@ export type QuoteCountAggregateInputType = {
   number?: true
   status?: true
   tvaAssujetti?: true
+  activityType?: true
+  clientName?: true
+  clientEmail?: true
+  clientPhone?: true
+  clientAddress?: true
+  clientSiret?: true
   notes?: true
   paymentTerms?: true
   paymentMethod?: true
@@ -216,10 +252,16 @@ export type QuoteGroupByArgs<ExtArgs extends runtime.Types.Extensions.InternalAr
 export type QuoteGroupByOutputType = {
   id: string
   userId: string
-  clientId: string
+  clientId: string | null
   number: string
   status: $Enums.QuoteStatus
   tvaAssujetti: boolean
+  activityType: $Enums.ActivityType | null
+  clientName: string | null
+  clientEmail: string | null
+  clientPhone: string | null
+  clientAddress: string | null
+  clientSiret: string | null
   notes: string | null
   paymentTerms: string | null
   paymentMethod: string | null
@@ -256,10 +298,16 @@ export type QuoteWhereInput = {
   NOT?: Prisma.QuoteWhereInput | Prisma.QuoteWhereInput[]
   id?: Prisma.StringFilter<"Quote"> | string
   userId?: Prisma.StringFilter<"Quote"> | string
-  clientId?: Prisma.StringFilter<"Quote"> | string
+  clientId?: Prisma.StringNullableFilter<"Quote"> | string | null
   number?: Prisma.StringFilter<"Quote"> | string
   status?: Prisma.EnumQuoteStatusFilter<"Quote"> | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFilter<"Quote"> | boolean
+  activityType?: Prisma.EnumActivityTypeNullableFilter<"Quote"> | $Enums.ActivityType | null
+  clientName?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientEmail?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientPhone?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientAddress?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientSiret?: Prisma.StringNullableFilter<"Quote"> | string | null
   notes?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentMethod?: Prisma.StringNullableFilter<"Quote"> | string | null
@@ -271,7 +319,7 @@ export type QuoteWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   lines?: Prisma.DocumentLineListRelationFilter
   invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
 }
@@ -279,10 +327,16 @@ export type QuoteWhereInput = {
 export type QuoteOrderByWithRelationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tvaAssujetti?: Prisma.SortOrder
+  activityType?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientName?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientSiret?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -306,10 +360,16 @@ export type QuoteWhereUniqueInput = Prisma.AtLeast<{
   OR?: Prisma.QuoteWhereInput[]
   NOT?: Prisma.QuoteWhereInput | Prisma.QuoteWhereInput[]
   userId?: Prisma.StringFilter<"Quote"> | string
-  clientId?: Prisma.StringFilter<"Quote"> | string
+  clientId?: Prisma.StringNullableFilter<"Quote"> | string | null
   number?: Prisma.StringFilter<"Quote"> | string
   status?: Prisma.EnumQuoteStatusFilter<"Quote"> | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFilter<"Quote"> | boolean
+  activityType?: Prisma.EnumActivityTypeNullableFilter<"Quote"> | $Enums.ActivityType | null
+  clientName?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientEmail?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientPhone?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientAddress?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientSiret?: Prisma.StringNullableFilter<"Quote"> | string | null
   notes?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentMethod?: Prisma.StringNullableFilter<"Quote"> | string | null
@@ -321,7 +381,7 @@ export type QuoteWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Quote"> | Date | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-  client?: Prisma.XOR<Prisma.ClientScalarRelationFilter, Prisma.ClientWhereInput>
+  client?: Prisma.XOR<Prisma.ClientNullableScalarRelationFilter, Prisma.ClientWhereInput> | null
   lines?: Prisma.DocumentLineListRelationFilter
   invoice?: Prisma.XOR<Prisma.InvoiceNullableScalarRelationFilter, Prisma.InvoiceWhereInput> | null
 }, "id" | "userId_number">
@@ -329,10 +389,16 @@ export type QuoteWhereUniqueInput = Prisma.AtLeast<{
 export type QuoteOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
   userId?: Prisma.SortOrder
-  clientId?: Prisma.SortOrder
+  clientId?: Prisma.SortOrderInput | Prisma.SortOrder
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tvaAssujetti?: Prisma.SortOrder
+  activityType?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientName?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientEmail?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientPhone?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientAddress?: Prisma.SortOrderInput | Prisma.SortOrder
+  clientSiret?: Prisma.SortOrderInput | Prisma.SortOrder
   notes?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentTerms?: Prisma.SortOrderInput | Prisma.SortOrder
   paymentMethod?: Prisma.SortOrderInput | Prisma.SortOrder
@@ -354,10 +420,16 @@ export type QuoteScalarWhereWithAggregatesInput = {
   NOT?: Prisma.QuoteScalarWhereWithAggregatesInput | Prisma.QuoteScalarWhereWithAggregatesInput[]
   id?: Prisma.StringWithAggregatesFilter<"Quote"> | string
   userId?: Prisma.StringWithAggregatesFilter<"Quote"> | string
-  clientId?: Prisma.StringWithAggregatesFilter<"Quote"> | string
+  clientId?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
   number?: Prisma.StringWithAggregatesFilter<"Quote"> | string
   status?: Prisma.EnumQuoteStatusWithAggregatesFilter<"Quote"> | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolWithAggregatesFilter<"Quote"> | boolean
+  activityType?: Prisma.EnumActivityTypeNullableWithAggregatesFilter<"Quote"> | $Enums.ActivityType | null
+  clientName?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  clientEmail?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  clientPhone?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  clientAddress?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
+  clientSiret?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
   notes?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
   paymentMethod?: Prisma.StringNullableWithAggregatesFilter<"Quote"> | string | null
@@ -375,6 +447,12 @@ export type QuoteCreateInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -386,7 +464,7 @@ export type QuoteCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutQuotesInput
-  client: Prisma.ClientCreateNestedOneWithoutQuotesInput
+  client?: Prisma.ClientCreateNestedOneWithoutQuotesInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutQuoteInput
   invoice?: Prisma.InvoiceCreateNestedOneWithoutQuoteInput
 }
@@ -394,10 +472,16 @@ export type QuoteCreateInput = {
 export type QuoteUncheckedCreateInput = {
   id?: string
   userId: string
-  clientId: string
+  clientId?: string | null
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -417,6 +501,12 @@ export type QuoteUpdateInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -428,7 +518,7 @@ export type QuoteUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutQuotesNestedInput
-  client?: Prisma.ClientUpdateOneRequiredWithoutQuotesNestedInput
+  client?: Prisma.ClientUpdateOneWithoutQuotesNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutQuoteNestedInput
   invoice?: Prisma.InvoiceUpdateOneWithoutQuoteNestedInput
 }
@@ -436,10 +526,16 @@ export type QuoteUpdateInput = {
 export type QuoteUncheckedUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -457,10 +553,16 @@ export type QuoteUncheckedUpdateInput = {
 export type QuoteCreateManyInput = {
   id?: string
   userId: string
-  clientId: string
+  clientId?: string | null
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -478,6 +580,12 @@ export type QuoteUpdateManyMutationInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -493,10 +601,16 @@ export type QuoteUpdateManyMutationInput = {
 export type QuoteUncheckedUpdateManyInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -531,6 +645,12 @@ export type QuoteCountOrderByAggregateInput = {
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tvaAssujetti?: Prisma.SortOrder
+  activityType?: Prisma.SortOrder
+  clientName?: Prisma.SortOrder
+  clientEmail?: Prisma.SortOrder
+  clientPhone?: Prisma.SortOrder
+  clientAddress?: Prisma.SortOrder
+  clientSiret?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
@@ -550,6 +670,12 @@ export type QuoteMaxOrderByAggregateInput = {
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tvaAssujetti?: Prisma.SortOrder
+  activityType?: Prisma.SortOrder
+  clientName?: Prisma.SortOrder
+  clientEmail?: Prisma.SortOrder
+  clientPhone?: Prisma.SortOrder
+  clientAddress?: Prisma.SortOrder
+  clientSiret?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
@@ -569,6 +695,12 @@ export type QuoteMinOrderByAggregateInput = {
   number?: Prisma.SortOrder
   status?: Prisma.SortOrder
   tvaAssujetti?: Prisma.SortOrder
+  activityType?: Prisma.SortOrder
+  clientName?: Prisma.SortOrder
+  clientEmail?: Prisma.SortOrder
+  clientPhone?: Prisma.SortOrder
+  clientAddress?: Prisma.SortOrder
+  clientSiret?: Prisma.SortOrder
   notes?: Prisma.SortOrder
   paymentTerms?: Prisma.SortOrder
   paymentMethod?: Prisma.SortOrder
@@ -711,6 +843,12 @@ export type QuoteCreateWithoutUserInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -721,17 +859,23 @@ export type QuoteCreateWithoutUserInput = {
   validUntil?: Date | string | null
   createdAt?: Date | string
   updatedAt?: Date | string
-  client: Prisma.ClientCreateNestedOneWithoutQuotesInput
+  client?: Prisma.ClientCreateNestedOneWithoutQuotesInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutQuoteInput
   invoice?: Prisma.InvoiceCreateNestedOneWithoutQuoteInput
 }
 
 export type QuoteUncheckedCreateWithoutUserInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -778,10 +922,16 @@ export type QuoteScalarWhereInput = {
   NOT?: Prisma.QuoteScalarWhereInput | Prisma.QuoteScalarWhereInput[]
   id?: Prisma.StringFilter<"Quote"> | string
   userId?: Prisma.StringFilter<"Quote"> | string
-  clientId?: Prisma.StringFilter<"Quote"> | string
+  clientId?: Prisma.StringNullableFilter<"Quote"> | string | null
   number?: Prisma.StringFilter<"Quote"> | string
   status?: Prisma.EnumQuoteStatusFilter<"Quote"> | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFilter<"Quote"> | boolean
+  activityType?: Prisma.EnumActivityTypeNullableFilter<"Quote"> | $Enums.ActivityType | null
+  clientName?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientEmail?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientPhone?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientAddress?: Prisma.StringNullableFilter<"Quote"> | string | null
+  clientSiret?: Prisma.StringNullableFilter<"Quote"> | string | null
   notes?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentTerms?: Prisma.StringNullableFilter<"Quote"> | string | null
   paymentMethod?: Prisma.StringNullableFilter<"Quote"> | string | null
@@ -799,6 +949,12 @@ export type QuoteCreateWithoutClientInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -820,6 +976,12 @@ export type QuoteUncheckedCreateWithoutClientInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -865,6 +1027,12 @@ export type QuoteCreateWithoutInvoiceInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -876,17 +1044,23 @@ export type QuoteCreateWithoutInvoiceInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutQuotesInput
-  client: Prisma.ClientCreateNestedOneWithoutQuotesInput
+  client?: Prisma.ClientCreateNestedOneWithoutQuotesInput
   lines?: Prisma.DocumentLineCreateNestedManyWithoutQuoteInput
 }
 
 export type QuoteUncheckedCreateWithoutInvoiceInput = {
   id?: string
   userId: string
-  clientId: string
+  clientId?: string | null
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -921,6 +1095,12 @@ export type QuoteUpdateWithoutInvoiceInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -932,17 +1112,23 @@ export type QuoteUpdateWithoutInvoiceInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutQuotesNestedInput
-  client?: Prisma.ClientUpdateOneRequiredWithoutQuotesNestedInput
+  client?: Prisma.ClientUpdateOneWithoutQuotesNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutQuoteNestedInput
 }
 
 export type QuoteUncheckedUpdateWithoutInvoiceInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -961,6 +1147,12 @@ export type QuoteCreateWithoutLinesInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -972,17 +1164,23 @@ export type QuoteCreateWithoutLinesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   user: Prisma.UserCreateNestedOneWithoutQuotesInput
-  client: Prisma.ClientCreateNestedOneWithoutQuotesInput
+  client?: Prisma.ClientCreateNestedOneWithoutQuotesInput
   invoice?: Prisma.InvoiceCreateNestedOneWithoutQuoteInput
 }
 
 export type QuoteUncheckedCreateWithoutLinesInput = {
   id?: string
   userId: string
-  clientId: string
+  clientId?: string | null
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1017,6 +1215,12 @@ export type QuoteUpdateWithoutLinesInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1028,17 +1232,23 @@ export type QuoteUpdateWithoutLinesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   user?: Prisma.UserUpdateOneRequiredWithoutQuotesNestedInput
-  client?: Prisma.ClientUpdateOneRequiredWithoutQuotesNestedInput
+  client?: Prisma.ClientUpdateOneWithoutQuotesNestedInput
   invoice?: Prisma.InvoiceUpdateOneWithoutQuoteNestedInput
 }
 
 export type QuoteUncheckedUpdateWithoutLinesInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   userId?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1054,10 +1264,16 @@ export type QuoteUncheckedUpdateWithoutLinesInput = {
 
 export type QuoteCreateManyUserInput = {
   id?: string
-  clientId: string
+  clientId?: string | null
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1075,6 +1291,12 @@ export type QuoteUpdateWithoutUserInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1085,17 +1307,23 @@ export type QuoteUpdateWithoutUserInput = {
   validUntil?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  client?: Prisma.ClientUpdateOneRequiredWithoutQuotesNestedInput
+  client?: Prisma.ClientUpdateOneWithoutQuotesNestedInput
   lines?: Prisma.DocumentLineUpdateManyWithoutQuoteNestedInput
   invoice?: Prisma.InvoiceUpdateOneWithoutQuoteNestedInput
 }
 
 export type QuoteUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1112,10 +1340,16 @@ export type QuoteUncheckedUpdateWithoutUserInput = {
 
 export type QuoteUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
-  clientId?: Prisma.StringFieldUpdateOperationsInput | string
+  clientId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1134,6 +1368,12 @@ export type QuoteCreateManyClientInput = {
   number: string
   status?: $Enums.QuoteStatus
   tvaAssujetti?: boolean
+  activityType?: $Enums.ActivityType | null
+  clientName?: string | null
+  clientEmail?: string | null
+  clientPhone?: string | null
+  clientAddress?: string | null
+  clientSiret?: string | null
   notes?: string | null
   paymentTerms?: string | null
   paymentMethod?: string | null
@@ -1151,6 +1391,12 @@ export type QuoteUpdateWithoutClientInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1172,6 +1418,12 @@ export type QuoteUncheckedUpdateWithoutClientInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1192,6 +1444,12 @@ export type QuoteUncheckedUpdateManyWithoutClientInput = {
   number?: Prisma.StringFieldUpdateOperationsInput | string
   status?: Prisma.EnumQuoteStatusFieldUpdateOperationsInput | $Enums.QuoteStatus
   tvaAssujetti?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  activityType?: Prisma.NullableEnumActivityTypeFieldUpdateOperationsInput | $Enums.ActivityType | null
+  clientName?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientEmail?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientPhone?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientAddress?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  clientSiret?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   notes?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentTerms?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   paymentMethod?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
@@ -1242,6 +1500,12 @@ export type QuoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   number?: boolean
   status?: boolean
   tvaAssujetti?: boolean
+  activityType?: boolean
+  clientName?: boolean
+  clientEmail?: boolean
+  clientPhone?: boolean
+  clientAddress?: boolean
+  clientSiret?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1253,7 +1517,7 @@ export type QuoteSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Quote$clientArgs<ExtArgs>
   lines?: boolean | Prisma.Quote$linesArgs<ExtArgs>
   invoice?: boolean | Prisma.Quote$invoiceArgs<ExtArgs>
   _count?: boolean | Prisma.QuoteCountOutputTypeDefaultArgs<ExtArgs>
@@ -1266,6 +1530,12 @@ export type QuoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   number?: boolean
   status?: boolean
   tvaAssujetti?: boolean
+  activityType?: boolean
+  clientName?: boolean
+  clientEmail?: boolean
+  clientPhone?: boolean
+  clientAddress?: boolean
+  clientSiret?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1277,7 +1547,7 @@ export type QuoteSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Quote$clientArgs<ExtArgs>
 }, ExtArgs["result"]["quote"]>
 
 export type QuoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1287,6 +1557,12 @@ export type QuoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   number?: boolean
   status?: boolean
   tvaAssujetti?: boolean
+  activityType?: boolean
+  clientName?: boolean
+  clientEmail?: boolean
+  clientPhone?: boolean
+  clientAddress?: boolean
+  clientSiret?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1298,7 +1574,7 @@ export type QuoteSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
   createdAt?: boolean
   updatedAt?: boolean
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Quote$clientArgs<ExtArgs>
 }, ExtArgs["result"]["quote"]>
 
 export type QuoteSelectScalar = {
@@ -1308,6 +1584,12 @@ export type QuoteSelectScalar = {
   number?: boolean
   status?: boolean
   tvaAssujetti?: boolean
+  activityType?: boolean
+  clientName?: boolean
+  clientEmail?: boolean
+  clientPhone?: boolean
+  clientAddress?: boolean
+  clientSiret?: boolean
   notes?: boolean
   paymentTerms?: boolean
   paymentMethod?: boolean
@@ -1320,38 +1602,44 @@ export type QuoteSelectScalar = {
   updatedAt?: boolean
 }
 
-export type QuoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "number" | "status" | "tvaAssujetti" | "notes" | "paymentTerms" | "paymentMethod" | "bankAccountHolder" | "bankIban" | "bankBic" | "issuedAt" | "validUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["quote"]>
+export type QuoteOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "userId" | "clientId" | "number" | "status" | "tvaAssujetti" | "activityType" | "clientName" | "clientEmail" | "clientPhone" | "clientAddress" | "clientSiret" | "notes" | "paymentTerms" | "paymentMethod" | "bankAccountHolder" | "bankIban" | "bankBic" | "issuedAt" | "validUntil" | "createdAt" | "updatedAt", ExtArgs["result"]["quote"]>
 export type QuoteInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Quote$clientArgs<ExtArgs>
   lines?: boolean | Prisma.Quote$linesArgs<ExtArgs>
   invoice?: boolean | Prisma.Quote$invoiceArgs<ExtArgs>
   _count?: boolean | Prisma.QuoteCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type QuoteIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Quote$clientArgs<ExtArgs>
 }
 export type QuoteIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.UserDefaultArgs<ExtArgs>
-  client?: boolean | Prisma.ClientDefaultArgs<ExtArgs>
+  client?: boolean | Prisma.Quote$clientArgs<ExtArgs>
 }
 
 export type $QuotePayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "Quote"
   objects: {
     user: Prisma.$UserPayload<ExtArgs>
-    client: Prisma.$ClientPayload<ExtArgs>
+    client: Prisma.$ClientPayload<ExtArgs> | null
     lines: Prisma.$DocumentLinePayload<ExtArgs>[]
     invoice: Prisma.$InvoicePayload<ExtArgs> | null
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
     userId: string
-    clientId: string
+    clientId: string | null
     number: string
     status: $Enums.QuoteStatus
     tvaAssujetti: boolean
+    activityType: $Enums.ActivityType | null
+    clientName: string | null
+    clientEmail: string | null
+    clientPhone: string | null
+    clientAddress: string | null
+    clientSiret: string | null
     notes: string | null
     paymentTerms: string | null
     paymentMethod: string | null
@@ -1757,7 +2045,7 @@ readonly fields: QuoteFieldRefs;
 export interface Prisma__QuoteClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
   user<T extends Prisma.UserDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.UserDefaultArgs<ExtArgs>>): Prisma.Prisma__UserClient<runtime.Types.Result.GetResult<Prisma.$UserPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
-  client<T extends Prisma.ClientDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.ClientDefaultArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  client<T extends Prisma.Quote$clientArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Quote$clientArgs<ExtArgs>>): Prisma.Prisma__ClientClient<runtime.Types.Result.GetResult<Prisma.$ClientPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   lines<T extends Prisma.Quote$linesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Quote$linesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DocumentLinePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   invoice<T extends Prisma.Quote$invoiceArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Quote$invoiceArgs<ExtArgs>>): Prisma.Prisma__InvoiceClient<runtime.Types.Result.GetResult<Prisma.$InvoicePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   /**
@@ -1795,6 +2083,12 @@ export interface QuoteFieldRefs {
   readonly number: Prisma.FieldRef<"Quote", 'String'>
   readonly status: Prisma.FieldRef<"Quote", 'QuoteStatus'>
   readonly tvaAssujetti: Prisma.FieldRef<"Quote", 'Boolean'>
+  readonly activityType: Prisma.FieldRef<"Quote", 'ActivityType'>
+  readonly clientName: Prisma.FieldRef<"Quote", 'String'>
+  readonly clientEmail: Prisma.FieldRef<"Quote", 'String'>
+  readonly clientPhone: Prisma.FieldRef<"Quote", 'String'>
+  readonly clientAddress: Prisma.FieldRef<"Quote", 'String'>
+  readonly clientSiret: Prisma.FieldRef<"Quote", 'String'>
   readonly notes: Prisma.FieldRef<"Quote", 'String'>
   readonly paymentTerms: Prisma.FieldRef<"Quote", 'String'>
   readonly paymentMethod: Prisma.FieldRef<"Quote", 'String'>
@@ -2203,6 +2497,25 @@ export type QuoteDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Interna
    * Limit how many Quotes to delete.
    */
   limit?: number
+}
+
+/**
+ * Quote.client
+ */
+export type Quote$clientArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the Client
+   */
+  select?: Prisma.ClientSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the Client
+   */
+  omit?: Prisma.ClientOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.ClientInclude<ExtArgs> | null
+  where?: Prisma.ClientWhereInput
 }
 
 /**

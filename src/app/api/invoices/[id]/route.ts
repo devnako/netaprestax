@@ -210,7 +210,7 @@ export async function PATCH(
           amount: Math.round(totalHT * 100) / 100,
           month: paidAt.getMonth() + 1,
           year: paidAt.getFullYear(),
-          description: `Facture ${invoice.number} — ${invoice.client.name}`,
+          description: `Facture ${invoice.number} — ${invoice.clientName || invoice.client?.name || ""}`,
           activityType: invoice.activityType || null,
           invoiceId: id,
           locked: true,

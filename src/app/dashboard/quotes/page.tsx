@@ -15,10 +15,11 @@ interface QuoteLine {
 interface Quote {
   id: string;
   number: string;
-  clientId: string;
+  clientId: string | null;
+  clientName: string | null;
   client: {
     name: string;
-  };
+  } | null;
   status: string;
   tvaAssujetti: boolean;
   createdAt: string;
@@ -171,7 +172,7 @@ export default function QuotesPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-foreground font-semibold">{quote.client.name}</p>
+                  <p className="mt-1 text-sm text-foreground font-semibold">{quote.clientName || quote.client?.name || ""}</p>
                   <p className="text-xs text-muted-foreground">
                     {new Date(quote.createdAt).toLocaleDateString("fr-FR")}
                   </p>

@@ -15,10 +15,11 @@ interface InvoiceLine {
 interface Invoice {
   id: string;
   number: string;
-  clientId: string;
+  clientId: string | null;
+  clientName: string | null;
   client: {
     name: string;
-  };
+  } | null;
   status: string;
   tvaAssujetti: boolean;
   createdAt: string;
@@ -112,7 +113,7 @@ export default function InvoicesPage() {
       if (searchQuery.trim()) {
         const q = searchQuery.toLowerCase().trim();
         const totalHT = computeTotalHT(inv.lines);
-        const matchName = inv.client.name.toLowerCase().includes(q);
+        const matchName = (inv.clientName || inv.client?.name || "").toLowerCase().includes(q);
         const matchNumber = inv.number.toLowerCase().includes(q);
         const matchAmount = formatEuro(totalHT).toLowerCase().includes(q) || totalHT.toString().includes(q);
         if (!matchName && !matchNumber && !matchAmount) return false;
@@ -232,7 +233,7 @@ export default function InvoicesPage() {
                       </span>
                     )}
                   </div>
-                  <p className="mt-1 text-sm text-foreground font-semibold">{invoice.client.name}</p>
+                  <p className="mt-1 text-sm text-foreground font-semibold">{invoice.clientName || invoice.client?.name || ""}</p>
                   <p className="text-xs text-muted-foreground">
                     {new Date(invoice.createdAt).toLocaleDateString("fr-FR")}
                   </p>

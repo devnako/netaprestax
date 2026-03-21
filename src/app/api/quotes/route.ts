@@ -26,15 +26,23 @@ export async function POST(request: NextRequest) {
   if (!session) return NextResponse.json({ error: "Non authentifié" }, { status: 401 });
 
   const body = await request.json();
-  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, validUntil, lines } = body;
+  const { clientId, notes, paymentTerms, paymentMethod, bankAccountHolder, bankIban, bankBic, validUntil, lines, activityType } = body;
 
   if (!clientId || !lines || lines.length === 0) {
     return NextResponse.json({ error: "clientId et lines sont requis" }, { status: 400 });
   }
 
+  const client = await prisma.client.findUnique({
+    where: { id: clientId },
+  });
+
+  if (!client || client.userId !== session.user.id) {
+    return NextResponse.json({ error: "Client non trouvé" }, { status: 404 });
+  }
+
   const [number, profile] = await Promise.all([
     getNextQuoteNumber(session.user.id, new Date().getFullYear()),
-    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { tvaAssujetti: true } }),
+    prisma.fiscalProfile.findUnique({ where: { userId: session.user.id }, select: { tvaAssujetti: true, activityType: true } }),
   ]);
   const tvaAssujetti = profile?.tvaAssujetti ?? false;
 
@@ -44,6 +52,12 @@ export async function POST(request: NextRequest) {
       clientId,
       number,
       tvaAssujetti,
+      activityType: activityType || profile?.activityType || null,
+      clientName: client.name,
+      clientEmail: client.email,
+      clientPhone: client.phone,
+      clientAddress: client.address,
+      clientSiret: client.siret,
       notes: notes || null,
       paymentTerms: paymentTerms || null,
       paymentMethod: paymentMethod || null,

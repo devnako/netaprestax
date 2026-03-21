@@ -24,10 +24,11 @@ interface LineItemInput {
 interface Invoice {
   id: string;
   number: string;
-  clientId: string;
+  clientId: string | null;
+  clientName: string | null;
   client: {
     name: string;
-  };
+  } | null;
   status: string;
   tvaAssujetti: boolean;
   activityType: string | null;
@@ -342,7 +343,7 @@ export default function InvoiceDetailPage() {
             <div className="grid sm:grid-cols-2 gap-4">
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">Client</p>
-                <p className="text-foreground font-semibold">{invoice.client.name}</p>
+                <p className="text-foreground font-semibold">{invoice.clientName || invoice.client?.name || ""}</p>
               </div>
               <div>
                 <p className="text-xs font-medium text-muted-foreground mb-1">Date</p>

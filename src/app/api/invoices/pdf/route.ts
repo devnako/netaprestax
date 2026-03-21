@@ -49,11 +49,11 @@ export async function GET(request: NextRequest) {
       tvaAssujetti: invoice.tvaAssujetti,
     },
     client: {
-      name: invoice.client.name,
-      email: invoice.client.email,
-      phone: invoice.client.phone,
-      address: invoice.client.address,
-      siret: invoice.client.siret,
+      name: invoice.clientName || invoice.client?.name || "",
+      email: invoice.clientEmail || invoice.client?.email || null,
+      phone: invoice.clientPhone || invoice.client?.phone || null,
+      address: invoice.clientAddress || invoice.client?.address || null,
+      siret: invoice.clientSiret || invoice.client?.siret || null,
     },
     lines: invoice.lines.map((l) => ({
       description: l.description,

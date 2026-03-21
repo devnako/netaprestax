@@ -181,25 +181,31 @@ model Client {
 }
 
 model Quote {
-  id                String      @id @default(cuid())
+  id                String        @id @default(cuid())
   userId            String
-  clientId          String
+  clientId          String?
   number            String
-  status            QuoteStatus @default(DRAFT)
-  tvaAssujetti      Boolean     @default(false)
+  status            QuoteStatus   @default(DRAFT)
+  tvaAssujetti      Boolean       @default(false)
+  activityType      ActivityType?
+  clientName        String?
+  clientEmail       String?
+  clientPhone       String?
+  clientAddress     String?
+  clientSiret       String?
   notes             String?
   paymentTerms      String?
   paymentMethod     String?
   bankAccountHolder String?
   bankIban          String?
   bankBic           String?
-  issuedAt          DateTime    @default(now())
+  issuedAt          DateTime      @default(now())
   validUntil        DateTime?
-  createdAt         DateTime    @default(now())
-  updatedAt         DateTime    @updatedAt
+  createdAt         DateTime      @default(now())
+  updatedAt         DateTime      @updatedAt
 
   user    User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  client  Client         @relation(fields: [clientId], references: [id])
+  client  Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
   lines   DocumentLine[]
   invoice Invoice?
 
@@ -210,13 +216,18 @@ model Quote {
 model Invoice {
   id                String        @id @default(cuid())
   userId            String
-  clientId          String
+  clientId          String?
   quoteId           String?       @unique
   parentInvoiceId   String?
   number            String
   status            InvoiceStatus @default(DRAFT)
   tvaAssujetti      Boolean       @default(false)
   activityType      ActivityType?
+  clientName        String?
+  clientEmail       String?
+  clientPhone       String?
+  clientAddress     String?
+  clientSiret       String?
   notes             String?
   paymentTerms      String?
   paymentMethod     String?
@@ -229,7 +240,7 @@ model Invoice {
   updatedAt         DateTime      @updatedAt
 
   user          User           @relation(fields: [userId], references: [id], onDelete: Cascade)
-  client        Client         @relation(fields: [clientId], references: [id])
+  client        Client?        @relation(fields: [clientId], references: [id], onDelete: SetNull)
   quote         Quote?         @relation(fields: [quoteId], references: [id])
   parentInvoice Invoice?       @relation("CreditNotes", fields: [parentInvoiceId], references: [id])
   creditNotes   Invoice[]      @relation("CreditNotes")

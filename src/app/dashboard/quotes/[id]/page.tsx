@@ -22,15 +22,24 @@ interface LineItemInput {
   vatRate: string;
 }
 
+const ACTIVITY_LABELS: Record<string, string> = {
+  BIC_VENTE: "Vente de marchandises",
+  BIC_PRESTATION: "Prestation de services (BIC)",
+  BNC_LIBERAL_URSSAF: "Profession libérale (URSSAF)",
+  BNC_LIBERAL_CIPAV: "Profession libérale (CIPAV)",
+};
+
 interface Quote {
   id: string;
   number: string;
-  clientId: string;
+  clientId: string | null;
+  clientName: string | null;
   client: {
     name: string;
-  };
+  } | null;
   status: string;
   tvaAssujetti: boolean;
+  activityType: string | null;
   createdAt: string;
   lines: QuoteLine[];
   notes: string | null;
@@ -65,6 +74,7 @@ export default function QuoteDetailPage() {
   const [editBankIban, setEditBankIban] = useState("");
   const [editBankBic, setEditBankBic] = useState("");
   const [editValidUntil, setEditValidUntil] = useState("");
+  const [editActivityType, setEditActivityType] = useState("");
   useEffect(() => {
     const loadData = async () => {
       try {
@@ -101,6 +111,7 @@ export default function QuoteDetailPage() {
     setEditBankIban(q.bankIban || "");
     setEditBankBic(q.bankBic || "");
     setEditValidUntil(q.validUntil ? q.validUntil.split("T")[0] : "");
+    setEditActivityType(q.activityType || "BIC_PRESTATION");
   };
 
   const handleSaveEdit = async () => {
@@ -114,6 +125,7 @@ export default function QuoteDetailPage() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           clientId: quote.clientId,
+          activityType: editActivityType,
           lines: editLines.map((line) => ({
             description: line.description,
             quantity: parseFloat(line.quantity) || 0,
@@ -223,6 +235,7 @@ export default function QuoteDetailPage() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
         clientId: quote?.clientId,
+        activityType: quote?.activityType,
         lines: quote?.lines.map((line) => ({
           description: line.description,
           quantity: line.quantity,
@@ -447,10 +460,30 @@ export default function QuoteDetailPage() {
           <div className="rounded-2xl border border-border bg-white p-4 md:p-6 space-y-4">
             <div>
               <h2 className="text-sm font-medium text-muted-foreground">Client</h2>
-              <p className="mt-1 text-lg font-semibold text-foreground">{quote.client.name}</p>
+              <p className="mt-1 text-lg font-semibold text-foreground">{quote.clientName || quote.client?.name || ""}</p>
             </div>
 
             <div className="grid grid-cols-2 gap-4">
+              {isEditing ? (
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground">Type d&apos;activité</h3>
+                  <select
+                    value={editActivityType}
+                    onChange={(e) => setEditActivityType(e.target.value)}
+                    className="mt-1 w-full rounded-lg border border-border px-3 py-2 text-sm text-foreground focus:border-primary focus:outline-none"
+                  >
+                    <option value="BIC_VENTE">Vente de marchandises</option>
+                    <option value="BIC_PRESTATION">Prestation de services (BIC)</option>
+                    <option value="BNC_LIBERAL_URSSAF">Profession libérale (URSSAF)</option>
+                    <option value="BNC_LIBERAL_CIPAV">Profession libérale (CIPAV)</option>
+                  </select>
+                </div>
+              ) : quote.activityType ? (
+                <div>
+                  <h3 className="text-sm font-medium text-muted-foreground">Type d&apos;activité</h3>
+                  <p className="mt-1 text-foreground">{ACTIVITY_LABELS[quote.activityType] || quote.activityType}</p>
+                </div>
+              ) : null}
               <div>
                 <h3 className="text-sm font-medium text-muted-foreground">Date</h3>
                 <p className="mt-1 text-foreground">
