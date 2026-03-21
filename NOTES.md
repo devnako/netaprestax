@@ -108,7 +108,7 @@ src/
 │   ├── db.ts                      # Singleton Prisma + PrismaPg adapter
 │   ├── utils.ts                   # Utilitaires
 │   ├── fiscal/
-│   │   ├── engine.ts              # Moteur calcul fiscal (IR, cotisations, CFP, net)
+│   │   ├── engine.ts              # Moteur calcul fiscal (IR, cotisations, CFP, net, calculerMoisMixte)
 │   │   ├── rates.ts               # Barèmes et taux 2026
 │   │   ├── types.ts               # Types fiscaux
 │   │   └── __tests__/engine.test.ts # 32 tests unitaires
@@ -154,6 +154,9 @@ User ──────────── FiscalProfile (1:1)
 - `attachmentUrl` / `attachmentName` — pièce jointe via Vercel Blob
 
 **Champs notables sur Invoice et Quote :**
+- `activityType` — type d'activité choisi pour ce document (peut différer du profil)
+- `clientName` / `clientEmail` / `clientPhone` / `clientAddress` / `clientSiret` — snapshot client au moment de la création
+- `clientId` — nullable (`onDelete: SetNull`), permet la suppression de clients sans casser les documents
 - `paymentMethod` — moyen de paiement (Virement bancaire, Chèque, Espèces, Carte bancaire, Autre)
 - `bankAccountHolder` / `bankIban` / `bankBic` — coordonnées bancaires (uniquement si virement)
 
@@ -207,6 +210,41 @@ CRON_SECRET                 # Auth pour endpoints cron
 ---
 
 ## Historique de développement
+
+### Fait — 21 mars 2026 (session 11)
+
+- **Renommage "Historique" → "Bilan"** partout (sidebar, mobile nav, titres, landing page)
+- **Type d'activité par facture et devis** :
+  - Champ `activityType` ajouté sur Invoice (déjà fait) et Quote (schema Prisma)
+  - Sélecteur type d'activité sur les formulaires de création et modification (factures + devis)
+  - Pré-rempli depuis le profil fiscal, modifiable par document
+  - Le revenu créé lors du paiement utilise le type de la facture (pas celui du profil)
+  - Conversion devis → facture copie le `activityType` du devis
+- **Vérification et correction de 8 points d'intégrité** :
+  1. ✅ Revenue `activityType` préservé quand les settings changent — OK (pas de recalcul)
+  2. 🐛 Conversion devis → facture ne copiait pas le `activityType` — **corrigé** (ajout champ sur Quote + API)
+  3. 🐛 Avoir ne copiait pas le `activityType` + snapshot client du parent — **corrigé**
+  4. ✅ Alertes seuils utilisent bien le HT — OK
+  5. 🐛 Révocation comptable n'invalidait pas les sessions — **corrigé** (`prisma.$transaction` avec `session.deleteMany`)
+  6. 🐛 Exports ne comptaient pas les avoirs (revenus négatifs) — **corrigé** (avoir crée un revenu négatif au lieu de supprimer l'original)
+  7. ✅ Frais en export affichent bien le HT — OK
+  8. 🐛 Client snapshot manquant sur documents — **corrigé** :
+     - `clientId` rendu nullable (`onDelete: SetNull`) sur Invoice et Quote
+     - Champs snapshot `clientName`, `clientEmail`, `clientPhone`, `clientAddress`, `clientSiret` ajoutés
+     - Frontend gère `client: null` avec fallback `clientName || client?.name || ""`
+     - Backfill des 10 factures et 1 devis existants en production
+- **Vérification et correction de 4 points supplémentaires** :
+  1. ✅ Tokens de réinitialisation de mot de passe — OK (Better Auth gère l'expiration via `Verification.expiresAt`)
+  2. ✅ ACRE auto-expiration après 4 trimestres — OK (`isAcreActive()` vérifie avant d'appliquer le taux réduit)
+  3. 🐛 Changement de type d'activité en cours d'année recalculait tous les mois avec le nouveau taux — **corrigé** :
+     - Nouvelle fonction `calculerMoisMixte()` dans `engine.ts`
+     - Utilise le `activityType` stocké sur chaque revenu au lieu du type courant du profil
+     - Corrigé dans 4 routes : `/api/history`, `/api/accountant/[clientId]/history`, `/api/export/csv`, `/api/export/pdf`
+  4. 🐛 Session expirée : pas de redirection, erreur silencieuse — **corrigé** :
+     - Dashboard layout redirige vers `/login` si session invalide en DB (au lieu de `catch {}` silencieux)
+     - Proxy passe le paramètre `redirect` vers `/login` pour retour après connexion
+     - Page login utilise le paramètre `redirect` pour renvoyer à la page d'origine
+- **UI page Clients** : formulaire d'ajout masqué par défaut, bouton "+ Nouveau client" en haut à droite, bouton "Annuler" pour refermer
 
 ### Fait — 20 mars 2026 (session 10)
 
