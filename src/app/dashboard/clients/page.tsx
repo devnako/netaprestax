@@ -28,6 +28,7 @@ export default function ClientsPage() {
   const [notes, setNotes] = useState("");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [showForm, setShowForm] = useState(false);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -56,6 +57,7 @@ export default function ClientsPage() {
     setSiret("");
     setNotes("");
     setEditingId(null);
+    setShowForm(false);
     setError(null);
   };
 
@@ -67,6 +69,7 @@ export default function ClientsPage() {
     setSiret(client.siret || "");
     setNotes(client.notes || "");
     setEditingId(client.id);
+    setShowForm(true);
     setError(null);
   };
 
@@ -125,9 +128,20 @@ export default function ClientsPage() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <h1 className="text-2xl font-bold text-foreground">Clients</h1>
-        <span className="text-sm text-muted-foreground">
-          {clients.length} client{clients.length !== 1 ? "s" : ""}
-        </span>
+        <div className="flex items-center gap-3">
+          <span className="text-sm text-muted-foreground">
+            {clients.length} client{clients.length !== 1 ? "s" : ""}
+          </span>
+          {!showForm && (
+            <button
+              onClick={() => { resetForm(); setShowForm(true); }}
+              className="flex items-center gap-1.5 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-primary-foreground hover:bg-primary/90"
+            >
+              <Plus className="h-4 w-4" />
+              Nouveau client
+            </button>
+          )}
+        </div>
       </div>
 
       {/* Search bar */}
@@ -143,106 +157,114 @@ export default function ClientsPage() {
       </div>
 
       {/* Form */}
-      <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
-        <div className="flex items-center justify-between">
-          <h2 className="font-semibold text-foreground">
-            {editingId ? "Modifier le client" : "Ajouter un client"}
-          </h2>
-          {editingId && (
+      {showForm && (
+        <div className="rounded-2xl border border-border bg-white p-4 md:p-6">
+          <div className="flex items-center justify-between">
+            <h2 className="font-semibold text-foreground">
+              {editingId ? "Modifier le client" : "Nouveau client"}
+            </h2>
             <button
               onClick={resetForm}
               className="p-1 text-muted-foreground hover:text-foreground"
             >
               <X className="h-4 w-4" />
             </button>
+          </div>
+
+          {error && (
+            <div className="mt-3 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
+              {error}
+            </div>
           )}
+
+          <form onSubmit={handleSave} className="mt-4 space-y-3">
+            <div>
+              <label className="text-sm font-medium text-foreground">Nom *</label>
+              <input
+                type="text"
+                placeholder="Nom du client"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                required
+                className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground">Email</label>
+              <input
+                type="email"
+                placeholder="email@example.com"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground">Téléphone</label>
+              <input
+                type="tel"
+                placeholder="Téléphone"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground">Adresse *</label>
+              <input
+                type="text"
+                placeholder="Adresse complète"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                required
+                className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground">SIRET</label>
+              <input
+                type="text"
+                placeholder="SIRET"
+                value={siret}
+                onChange={(e) => setSiret(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm font-medium text-foreground">Notes</label>
+              <textarea
+                placeholder="Notes supplémentaires..."
+                value={notes}
+                onChange={(e) => setNotes(e.target.value)}
+                className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
+                rows={3}
+              />
+            </div>
+
+            <div className="flex gap-3">
+              <button
+                type="submit"
+                disabled={saving || !name || !address}
+                className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
+              >
+                {saving ? (editingId ? "Modification..." : "Ajout...") : editingId ? "Modifier" : "Ajouter"}
+              </button>
+              <button
+                type="button"
+                onClick={resetForm}
+                className="rounded-lg border border-border px-4 py-2.5 font-medium text-foreground hover:bg-muted"
+              >
+                Annuler
+              </button>
+            </div>
+          </form>
         </div>
-
-        {error && (
-          <div className="mt-3 rounded-lg bg-destructive/10 p-3 text-sm text-destructive">
-            {error}
-          </div>
-        )}
-
-        <form onSubmit={handleSave} className="mt-4 space-y-3">
-          <div>
-            <label className="text-sm font-medium text-foreground">Nom *</label>
-            <input
-              type="text"
-              placeholder="Nom du client"
-              value={name}
-              onChange={(e) => setName(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-foreground">Email</label>
-            <input
-              type="email"
-              placeholder="email@example.com"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-foreground">Téléphone</label>
-            <input
-              type="tel"
-              placeholder="Téléphone"
-              value={phone}
-              onChange={(e) => setPhone(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-foreground">Adresse *</label>
-            <input
-              type="text"
-              placeholder="Adresse complète"
-              value={address}
-              onChange={(e) => setAddress(e.target.value)}
-              required
-              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-foreground">SIRET</label>
-            <input
-              type="text"
-              placeholder="SIRET"
-              value={siret}
-              onChange={(e) => setSiret(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-            />
-          </div>
-
-          <div>
-            <label className="text-sm font-medium text-foreground">Notes</label>
-            <textarea
-              placeholder="Notes supplémentaires..."
-              value={notes}
-              onChange={(e) => setNotes(e.target.value)}
-              className="mt-1 w-full rounded-lg border border-border px-4 py-2.5 text-foreground placeholder:text-muted-foreground focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary"
-              rows={3}
-            />
-          </div>
-
-          <button
-            type="submit"
-            disabled={saving || !name || !address}
-            className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-50"
-          >
-            <Plus className="h-4 w-4" />
-            {saving ? (editingId ? "Modification..." : "Ajout...") : editingId ? "Modifier" : "Ajouter"}
-          </button>
-        </form>
-      </div>
+      )}
 
       {/* Clients list */}
       <div className="space-y-3">
