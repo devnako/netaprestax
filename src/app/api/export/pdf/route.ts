@@ -2,7 +2,7 @@ import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { headers } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
-import { calculerNetReel } from "@/lib/fiscal/engine";
+import { calculerMoisMixte } from "@/lib/fiscal/engine";
 import { ACTIVITY_LABELS, SEUILS_CA } from "@/lib/fiscal/rates";
 import type { FiscalProfile } from "@/lib/fiscal/types";
 
@@ -67,8 +67,9 @@ export async function GET(request: NextRequest) {
     const ca = monthRevenues.reduce((sum, r) => sum + Number(r.amount), 0);
     const frais = monthExpenses.reduce((sum, e) => sum + Number(e.amount), 0);
 
-    if (ca > 0) {
-      const result = calculerNetReel({ ca, fraisReels: frais, profile: fiscalProfile });
+    const result = calculerMoisMixte(monthRevenues, frais, fiscalProfile);
+
+    if (result) {
       totalCA += ca;
       totalCot += result.cotisationsSociales;
       totalCFP += result.cfp;

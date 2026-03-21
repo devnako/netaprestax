@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { redirect } from "next/navigation";
 import { LayoutDashboard, Receipt, Wallet, Settings, BarChart3, Bell, Calculator, Download, Users, FileText, FileCheck, Briefcase, Percent } from "lucide-react";
 import { SignOutButton } from "@/components/dashboard/sign-out-button";
 import { MobileNav } from "@/components/dashboard/mobile-nav";
@@ -11,23 +12,23 @@ export default async function DashboardLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const session = await auth.api.getSession({ headers: await headers() });
+  if (!session) redirect("/login");
+
   let hasClients = false;
   let tvaAssujetti = false;
   try {
-    const session = await auth.api.getSession({ headers: await headers() });
-    if (session) {
-      const [accessCount, profile] = await Promise.all([
-        prisma.accountantAccess.count({
-          where: { accountantId: session.user.id, status: "ACTIVE" },
-        }),
-        prisma.fiscalProfile.findUnique({
-          where: { userId: session.user.id },
-          select: { tvaAssujetti: true },
-        }),
-      ]);
-      hasClients = accessCount > 0;
-      tvaAssujetti = profile?.tvaAssujetti ?? false;
-    }
+    const [accessCount, profile] = await Promise.all([
+      prisma.accountantAccess.count({
+        where: { accountantId: session.user.id, status: "ACTIVE" },
+      }),
+      prisma.fiscalProfile.findUnique({
+        where: { userId: session.user.id },
+        select: { tvaAssujetti: true },
+      }),
+    ]);
+    hasClients = accessCount > 0;
+    tvaAssujetti = profile?.tvaAssujetti ?? false;
   } catch {}
 
   const navItems = [

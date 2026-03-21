@@ -1,4 +1,4 @@
-import type { CalculInput, CalculResult, SituationFamiliale } from "./types";
+import type { CalculInput, CalculResult, FiscalProfile, SituationFamiliale } from "./types";
 import {
   COTISATIONS_RATES,
   CFP_RATES,
@@ -98,6 +98,64 @@ export function getTauxCotisations(
 
   // Sans date : applique le nouveau régime (backward compat)
   return tauxNormal * (1 - ACRE_REDUCTION_AFTER_JULY_2026);
+}
+
+/**
+ * Calcule les cotisations pour un mois en respectant le type d'activité
+ * stocké sur chaque revenu (et non le type courant du profil).
+ */
+export function calculerMoisMixte(
+  monthRevenues: { amount: number | { toString(): string }; activityType: string | null }[],
+  fraisReels: number,
+  profile: FiscalProfile,
+  referenceDate?: Date
+): CalculResult | null {
+  const ca = monthRevenues.reduce((sum, r) => sum + Number(r.amount), 0);
+  if (ca <= 0) return null;
+
+  // Group revenues by their stored activityType (fallback to profile)
+  const byType = new Map<string, number>();
+  for (const rev of monthRevenues) {
+    const type = rev.activityType || profile.activityType;
+    byType.set(type, (byType.get(type) || 0) + Number(rev.amount));
+  }
+
+  // Single type: straightforward
+  if (byType.size === 1) {
+    const actType = [...byType.keys()][0] as FiscalProfile["activityType"];
+    return calculerNetReel({ ca, fraisReels, profile: { ...profile, activityType: actType }, referenceDate });
+  }
+
+  // Multiple types: aggregate cotisations per type
+  let totalCot = 0, totalCFP = 0, totalIR = 0;
+  for (const [actType, actCA] of byType) {
+    const r = calculerNetReel({
+      ca: actCA,
+      fraisReels: 0,
+      profile: { ...profile, activityType: actType as FiscalProfile["activityType"] },
+      referenceDate,
+    });
+    totalCot += r.cotisationsSociales;
+    totalCFP += r.cfp;
+    totalIR += r.impotRevenu;
+  }
+
+  const dominant = [...byType.entries()].sort((a, b) => b[1] - a[1])[0][0] as FiscalProfile["activityType"];
+  const ref = calculerNetReel({ ca, fraisReels, profile: { ...profile, activityType: dominant }, referenceDate });
+
+  return {
+    ca,
+    cotisationsSociales: totalCot,
+    cfp: totalCFP,
+    impotRevenu: totalIR,
+    fraisReels,
+    netReel: Math.round((ca - totalCot - totalCFP - totalIR - fraisReels) * 100) / 100,
+    tauxCotisations: ref.tauxCotisations,
+    tauxCFP: ref.tauxCFP,
+    tauxIR: ref.tauxIR,
+    revenuImposable: ref.revenuImposable,
+    partsFiscales: ref.partsFiscales,
+  };
 }
 
 /**

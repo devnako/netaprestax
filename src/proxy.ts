@@ -16,7 +16,11 @@ export function proxy(request: NextRequest) {
 
   // Redirect to login if not authenticated
   if (isProtected && !sessionToken) {
-    return NextResponse.redirect(new URL("/login", request.url));
+    const loginUrl = new URL("/login", request.url);
+    if (pathname !== "/dashboard") {
+      loginUrl.searchParams.set("redirect", pathname);
+    }
+    return NextResponse.redirect(loginUrl);
   }
 
   // Redirect to dashboard if already authenticated
