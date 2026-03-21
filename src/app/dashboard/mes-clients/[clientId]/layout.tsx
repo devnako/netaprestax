@@ -21,7 +21,7 @@ const NAV_ITEMS = [
   { href: "/expenses", icon: Receipt, label: "Frais" },
   { href: "/invoices", icon: FileCheck, label: "Factures" },
   { href: "/quotes", icon: FileText, label: "Devis" },
-  { href: "/history", icon: BarChart3, label: "Historique" },
+  { href: "/history", icon: BarChart3, label: "Bilan" },
 ];
 
 interface ClientInfo {

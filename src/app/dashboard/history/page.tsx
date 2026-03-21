@@ -86,7 +86,7 @@ export default function HistoryPage() {
     <div className="space-y-8">
       {/* Header + Year selector */}
       <div className="flex items-center justify-between">
-        <h1 className="text-2xl font-bold text-foreground">Historique</h1>
+        <h1 className="text-2xl font-bold text-foreground">Bilan</h1>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setYear((y) => y - 1)}

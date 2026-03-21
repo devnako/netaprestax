@@ -189,7 +189,7 @@ export default function Home() {
               </div>
               <ul className="mt-8 space-y-3">
                 <PricingFeature text="Tout le plan Gratuit" />
-                <PricingFeature text="Historique complet mois par mois" />
+                <PricingFeature text="Bilan complet mois par mois" />
                 <PricingFeature text="Graphiques d'évolution" />
                 <PricingFeature text="Alertes seuils auto-entrepreneur" />
                 <PricingFeature text="Simulation de scénarios" />

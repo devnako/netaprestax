@@ -12,7 +12,7 @@ const PRIMARY = [
   { href: "/dashboard", icon: LayoutDashboard, label: "Accueil" },
   { href: "/dashboard/revenue", icon: Wallet, label: "Revenus" },
   { href: "/dashboard/expenses", icon: Receipt, label: "Frais" },
-  { href: "/dashboard/history", icon: BarChart3, label: "Historique" },
+  { href: "/dashboard/history", icon: BarChart3, label: "Bilan" },
 ];
 
 const SECONDARY = [

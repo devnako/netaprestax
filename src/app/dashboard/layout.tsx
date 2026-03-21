@@ -38,7 +38,7 @@ export default async function DashboardLayout({
     { href: "/dashboard/quotes", icon: FileText, label: "Devis" },
     { href: "/dashboard/invoices", icon: FileCheck, label: "Factures" },
     ...(tvaAssujetti ? [{ href: "/dashboard/tva", icon: Percent, label: "TVA" }] : []),
-    { href: "/dashboard/history", icon: BarChart3, label: "Historique" },
+    { href: "/dashboard/history", icon: BarChart3, label: "Bilan" },
     { href: "/dashboard/alerts", icon: Bell, label: "Alertes" },
     { href: "/dashboard/simulation", icon: Calculator, label: "Simulation" },
     { href: "/dashboard/export", icon: Download, label: "Exporter" },
